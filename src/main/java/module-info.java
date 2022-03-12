@@ -6,6 +6,6 @@ module com.example.crazyputtin {
     requires com.dlsc.formsfx;
     requires org.kordamp.bootstrapfx.core;
 
-    opens com.example.crazyputtin to javafx.fxml;
-    exports com.example.crazyputtin;
+    opens graphics to javafx.fxml;
+    exports graphics;
 }
