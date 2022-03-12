@@ -15,6 +15,8 @@ public class Ball {
 
     private Vector2D position ;
     private Vector2D velocity ;
+    private Vector2D acceleration;
+
 
     private Sphere sphere;
 
@@ -23,6 +25,7 @@ public class Ball {
     public Ball(Vector2D position , Vector2D velocity) {
         this.position = position ;
         this.velocity = velocity ;
+        acceleration = setAcceleration(position , velocity);
         createSphere();
     }
 
@@ -56,10 +59,10 @@ public class Ball {
         this.velocity = velocity ;
     }
 
+
     public double getRADIUS() {
         return this.RADIUS;
     }
-
     public Sphere getSphere() {
         return this.sphere;
     }
