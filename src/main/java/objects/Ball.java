@@ -1,8 +1,13 @@
 package objects;
 
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Material;
+import javafx.scene.paint.PhongMaterial;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Sphere;
 import physics.Vector2D;
-
 import java.util.Vector;
+
 
 public class Ball {
     private final double MASS = 0.0459;
@@ -11,11 +16,23 @@ public class Ball {
     private Vector2D position ;
     private Vector2D velocity ;
 
+    private Sphere sphere;
+
 
     // TODO store a Mesh object for graphics!!!
     public Ball(Vector2D position , Vector2D velocity) {
         this.position = position ;
         this.velocity = velocity ;
+        createSphere();
+    }
+
+    private void createSphere() {
+        this.sphere = new Sphere(RADIUS);
+        this.sphere.setTranslateX(this.position.getX());
+        this.sphere.setTranslateY(this.position.getY());;
+        Material material = new PhongMaterial(Color.BLUEVIOLET);
+        this.sphere.setMaterial(material);
+        // TODO add material etc.
     }
 
     public Vector2D getPosition(){
@@ -37,6 +54,14 @@ public class Ball {
     }
     public void setVelocity(Vector2D velocity){
         this.velocity = velocity ;
+    }
+
+    public double getRADIUS() {
+        return this.RADIUS;
+    }
+
+    public Sphere getSphere() {
+        return this.sphere;
     }
 
 

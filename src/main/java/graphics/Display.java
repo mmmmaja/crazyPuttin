@@ -6,9 +6,10 @@ import javafx.scene.PerspectiveCamera;
 import javafx.scene.Scene;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.PhongMaterial;
-import javafx.scene.shape.Box;
+import javafx.scene.shape.Line;
 import javafx.stage.Stage;
+import objects.Ball;
+import physics.Vector2D;
 
 
 public class Display extends Application {
@@ -16,13 +17,19 @@ public class Display extends Application {
     public static final int FRAME_WIDTH = 1100;
     public static final int FRAME_HEIGHT = 600;
 
+    private SmartGroup group;
+
 
     @Override
     public void start(Stage stage) throws Exception {
-        SmartGroup group = new SmartGroup();
+
+        this.group = new SmartGroup();
 
         Scene scene = new Scene(group, FRAME_WIDTH, FRAME_HEIGHT);
         scene.setFill(Color.BLACK);
+
+        addBall();
+        addCartesianCoordinates();
 
         Camera camera = new PerspectiveCamera();
         scene.setCamera(camera);
@@ -31,7 +38,7 @@ public class Display extends Application {
         // FIXME might not need it yet
         group.translateXProperty().set(FRAME_WIDTH / 2.0);
         group.translateYProperty().set(FRAME_HEIGHT / 2.0);
-        group.translateZProperty().set(-800);
+        group.translateZProperty().set(-600); // make it a little closer
 
         group.initMouseControl(scene);
 
@@ -41,6 +48,30 @@ public class Display extends Application {
         stage.setTitle("display");
         stage.setScene(scene);
         stage.show();
+    }
+
+    /**
+     * TODO change access later
+     */
+    private void addBall() {
+        // fixme location of the ball!!!
+        Ball ball = new Ball(new Vector2D(10, 10), new Vector2D(0, 0));
+        this.group.getChildren().add(ball.getSphere());
+    }
+
+    private void addCartesianCoordinates() {
+        Line axisX = new Line(0, 0, 1000, 0);
+        Line axisY = new Line(0, 0, 0, 1000);
+
+        axisX.setStroke(Color.PALEVIOLETRED);
+        axisY.setStroke(Color.FORESTGREEN);
+        this.group.getChildren().add(axisX);
+        this.group.getChildren().add(axisY);
+
+    }
+
+    private void addMesh() {
+
     }
 
 }
