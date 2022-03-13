@@ -1,5 +1,6 @@
 package objects;
 
+import graphics.Display;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Material;
 import javafx.scene.paint.PhongMaterial;
@@ -21,7 +22,7 @@ public class Ball extends PhysicEngine implements GameObject {
 
 
     public Ball(Vector2D position) {
-        this.position = position ;
+        this.position = position;
         this.previousPosition = position ;
         velocity = new Vector2D(0,0);
         setAcceleration(velocity);
@@ -30,10 +31,10 @@ public class Ball extends PhysicEngine implements GameObject {
 
     private void createSphere() {
         this.sphere = new Sphere(RADIUS);
-        this.sphere.setTranslateX(this.position.getX());
-        this.sphere.setTranslateY(this.position.getY());
+        this.sphere.setTranslateX(this.position.getX() - Display.translateX);
+        this.sphere.setTranslateY(this.position.getY() - Display.translateY);
         this.sphere.setTranslateZ(TerrainGenerator.getHeight(this.position)); // TODO figure it out!
-
+        System.out.println(TerrainGenerator.getHeight(this.position));
         // TODO add material etc.
         Material material = new PhongMaterial(Color.BLUEVIOLET);
         this.sphere.setMaterial(material);
@@ -83,6 +84,9 @@ public class Ball extends PhysicEngine implements GameObject {
     public void setPosition(Vector2D position){
         this.position = position;
     }
+    public void translateObject( double x , double y ){
+        this.position = new Vector2D( this.getPositionX() + x , this.getPositionY() + y);
+    }
     public void setVelocity(Vector2D velocity){
         this.velocity = velocity ;
     }
@@ -101,6 +105,5 @@ public class Ball extends PhysicEngine implements GameObject {
     public Sphere getSphere() {
         return this.sphere;
     }
-
 
 }

@@ -1,8 +1,8 @@
-package graphics;
+package Main;
 
+import graphics.Display;
 import javafx.application.Application;
 import objects.FileReader;
-import objects.Universe;
 
 
 public class Main {
@@ -11,10 +11,11 @@ public class Main {
 
     public static void main(String[] args) {
         universe = new Universe(new FileReader());
-
+        Game game = new Game(universe);
+        game.start();
         // TODO here call the new Thread and wait for the action
 
-        Application.launch(Display.class, args);
+//        Application.launch(Display.class, args);
     }
 
     public static Universe getUniverse() {

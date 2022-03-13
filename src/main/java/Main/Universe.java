@@ -1,4 +1,4 @@
-package objects;
+package Main;
 
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
@@ -6,10 +6,16 @@ import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.CullFace;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.shape.MeshView;
+import objects.Ball;
+import objects.FileReader;
+import objects.Target;
+import objects.Terrain;
+import physics.Euler;
+import physics.PhysicEngine;
 import physics.Vector2D;
 
 
-public class Universe {
+public class Universe extends Euler {
 
     private final FileReader fileReader;
 

@@ -26,11 +26,10 @@ public class Terrain {
 
 
    private void addPoints() {
-        int translateX = Display.FRAME_WIDTH / 3;
-        int translateY = Display.FRAME_HEIGHT / 3;
+
         for (float i = 0; i < TERRAIN_HEIGHT; i+= STEP) {
             for (float j = 0; j < TERRAIN_WIDTH; j+= STEP) {
-                this.mesh.getPoints().addAll(i - translateX, j - translateY, (float) TerrainGenerator.getHeight(new Vector2D(i, j)));
+                this.mesh.getPoints().addAll(i - Display.translateX, j - Display.translateY, (float) TerrainGenerator.getHeight(new Vector2D(i, j)));
             }
         }
    }

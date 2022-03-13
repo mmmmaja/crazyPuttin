@@ -1,24 +1,18 @@
 package graphics;
 
+import Main.Main;
 import javafx.application.Application;
-import javafx.scene.AmbientLight;
 import javafx.scene.Camera;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.Scene;
-import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Material;
-import javafx.scene.paint.PhongMaterial;
-import javafx.scene.shape.CullFace;
-import javafx.scene.shape.DrawMode;
-import javafx.scene.shape.Line;
-import javafx.scene.shape.MeshView;
 import javafx.stage.Stage;
+import Main.Universe;
 import objects.Ball;
-import objects.FileReader;
-import objects.Terrain;
-import objects.Universe;
+import objects.TerrainGenerator;
 import physics.Vector2D;
 
 
@@ -26,6 +20,10 @@ public class Display extends Application {
 
     public static final int FRAME_WIDTH = 1100;
     public static final int FRAME_HEIGHT = 600;
+
+    // translate all the objects to the middle of the frame (used just for the display)
+    public static final int translateX = FRAME_WIDTH / 3;
+    public static final int translateY =  FRAME_HEIGHT / 3;
 
     private SmartGroup group;
 
@@ -55,8 +53,21 @@ public class Display extends Application {
         // zoomIn, zoomOut added on scroll event
         stage.addEventHandler(ScrollEvent.SCROLL, event -> group.zoom(event.getDeltaY()));
 
+        scene.setOnKeyPressed(e -> {
+            if (e.getCode() == KeyCode.W) {
+                Vector2D position = universe.getBall().getPosition();
+                universe.getBall().getSphere().setTranslateX(position.getX() - Display.translateX+1);
+                universe.getBall().translateObject(1, 0);
+                universe.getBall().getSphere().setTranslateZ(TerrainGenerator.getHeight(position));
+
+            }
+        });
+
+
         stage.setScene(scene);
         stage.show();
     }
+
+
 
 }

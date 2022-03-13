@@ -9,8 +9,7 @@ import javafx.scene.transform.Rotate;
 
 
 /**
- * TODO prevent location!!! -> change angleX -> -68
- * we don't want y rotation!
+ * FIXME start from the same point when rotating
  */
 public class SmartGroup extends Group {
 
@@ -23,8 +22,9 @@ public class SmartGroup extends Group {
     private double anchorAngleX, anchorAngleY;
 
     // update these after dragging the mouse
-    private final DoubleProperty angleX = new SimpleDoubleProperty(0);
+    private final DoubleProperty angleX = new SimpleDoubleProperty(-50);
     private final DoubleProperty angleY = new SimpleDoubleProperty(0);
+    private final DoubleProperty angleZ = new SimpleDoubleProperty(0);
 
 
     /**
@@ -42,25 +42,37 @@ public class SmartGroup extends Group {
     public void initMouseControl(Scene scene) {
         Rotate rotateX;
         Rotate rotateY;
+        Rotate rotateZ;
 
         this.getTransforms().addAll(
                 rotateX = new Rotate(0, Rotate.X_AXIS),
-                rotateY = new Rotate(0, Rotate.Y_AXIS)
+                rotateY = new Rotate(0, Rotate.Y_AXIS),
+                rotateZ = new Rotate(0, Rotate.Z_AXIS)
         );
         rotateX.angleProperty().bind(angleX);
         rotateY.angleProperty().bind(angleY);
+        rotateZ.angleProperty().bind(angleZ);
 
         scene.setOnMousePressed(mouseEvent -> {
             this.anchorX = mouseEvent.getSceneX();
             this.anchorY = mouseEvent.getSceneY();
+
             this.anchorAngleX = angleX.get();
             this.anchorAngleY = angleY.get();
         });
 
         scene.setOnMouseDragged(mouseEvent -> {
-
-            this.angleX.set(this.anchorAngleX - (this.anchorY - mouseEvent.getSceneY()));
-            this.angleY.set(this.anchorAngleY + this.anchorX - mouseEvent.getSceneX());
+            // lock the X rotation, so we can see under the surface
+            if (this.anchorAngleX - (this.anchorY - mouseEvent.getSceneY()) > -68.0) {
+                if (this.anchorAngleX - (this.anchorY - mouseEvent.getSceneY()) < 60) {
+                    this.angleX.set(this.anchorAngleX - (this.anchorY - mouseEvent.getSceneY()));
+                }
+            }
+            this.angleZ.set(this.anchorAngleY + this.anchorX - mouseEvent.getSceneX());
+//            System.out.println("X: "+angleX);
+//            System.out.println("Y: "+angleY);
+//            System.out.println("Z: "+angleZ);
+//            System.out.println();
         });
     }
 }

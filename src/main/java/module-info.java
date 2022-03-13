@@ -8,4 +8,6 @@ module com.example.crazyputtin {
 
     opens graphics to javafx.fxml;
     exports graphics;
+    exports Main;
+    opens Main to javafx.fxml;
 }
