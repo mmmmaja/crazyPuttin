@@ -1,14 +1,15 @@
 package physics;
 
 import objects.Terrain;
+import objects.TerrainGenerator;
 
 public abstract class PhysicEngine {
 	//TODO terrain might be changed.
 	Terrain terrain = new Terrain();
 	private final double g =  9.81;
 	private final double MASS = 0.0459;
-	private double mu_K = terrain.getKineticFrictionCoefficient();
-	private double mu_S = terrain.getStaticFrictionCoefficient();
+	private double mu_K = 0.06;
+	private double mu_S = 0.15;
 	private double STEP = 0.01667; // 1/60
 
 	public PhysicEngine(){}
@@ -31,6 +32,16 @@ public abstract class PhysicEngine {
 //		double dHdY = terrain.getSlopeY(position);
 //		return (-1 * mu_K * getMASS() *  )
 //	}
+	public double getSlopeX( Vector2D currentPosition){
+		double x = currentPosition.getX() ;
+		double y = currentPosition.getY() ;
+		return ( TerrainGenerator.getHeight( new Vector2D( x + STEP , y ) ) - TerrainGenerator.getHeight( currentPosition ) ) / STEP ;
+	}
+	public double getSlopeY( Vector2D currentPosition){
+		double x = currentPosition.getX() ;
+		double y = currentPosition.getY() ;
+		return ( TerrainGenerator.getHeight( new Vector2D( x , y + STEP ) ) - TerrainGenerator.getHeight( currentPosition ) ) / STEP ;
+	}
 
 
 	public double getG() {return g;}

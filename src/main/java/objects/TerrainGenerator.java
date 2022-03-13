@@ -5,7 +5,7 @@ import physics.Vector2D;
 public class TerrainGenerator {
     private double STEP_SIZE = 0.01;
     // TODO
-    public double getHeight(Vector2D position) {
+    public static double getHeight(Vector2D position) {
 
         double x = position.getX();
         double y = position.getY();
