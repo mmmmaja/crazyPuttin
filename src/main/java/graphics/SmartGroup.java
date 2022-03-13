@@ -10,6 +10,7 @@ import javafx.scene.transform.Rotate;
 
 /**
  * TODO prevent location!!! -> change angleX -> -68
+ * we don't want y rotation!
  */
 public class SmartGroup extends Group {
 
@@ -57,12 +58,9 @@ public class SmartGroup extends Group {
         });
 
         scene.setOnMouseDragged(mouseEvent -> {
-            if (this.anchorAngleX - (this.anchorY - mouseEvent.getSceneY()) > -68.0) {
-                this.angleX.set(this.anchorAngleX - (this.anchorY - mouseEvent.getSceneY()));
-            }
+
+            this.angleX.set(this.anchorAngleX - (this.anchorY - mouseEvent.getSceneY()));
             this.angleY.set(this.anchorAngleY + this.anchorX - mouseEvent.getSceneX());
-            System.out.println(angleX);
-            System.out.println(angleY+"\n");
         });
     }
 }
