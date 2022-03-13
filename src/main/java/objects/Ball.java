@@ -8,20 +8,18 @@ import physics.PhysicEngine;
 import physics.Vector2D;
 
 
-public class Ball extends PhysicEngine {
-    private final double RADIUS = 5 ;
+public class Ball extends PhysicEngine implements GameObject {
+
+    private double RADIUS = 5 ;
 
     private Vector2D position ;
     private Vector2D previousPosition;
     private Vector2D velocity ;
     private Vector2D acceleration;
 
-
     private Sphere sphere;
 
 
-    // TODO store a Mesh object for graphics!!!
-    // TODO remove velocity ?
     public Ball(Vector2D position) {
         this.position = position ;
         this.previousPosition = position ;
@@ -33,15 +31,38 @@ public class Ball extends PhysicEngine {
     private void createSphere() {
         this.sphere = new Sphere(RADIUS);
         this.sphere.setTranslateX(this.position.getX());
-        this.sphere.setTranslateY(this.position.getY());;
+        this.sphere.setTranslateY(this.position.getY());
+        this.sphere.setTranslateZ(TerrainGenerator.getHeight(this.position)); // TODO figure it out!
+
+        // TODO add material etc.
         Material material = new PhongMaterial(Color.BLUEVIOLET);
         this.sphere.setMaterial(material);
-        // TODO add material etc.
     }
 
     public Vector2D getPosition(){
         return position;
     }
+
+    @Override
+    public void setDimension(Vector2D dimension) {
+        this.RADIUS = dimension.getX();
+    }
+
+    @Override
+    public Vector2D getDimension() {
+        return new Vector2D(RADIUS, RADIUS);
+    }
+
+    @Override
+    public boolean isMoving() {
+        return false;
+    }
+
+    @Override
+    public boolean isOnSlope() {
+        return false;
+    }
+
     public Vector2D getVelocity(){
         return velocity;
     }
@@ -55,9 +76,9 @@ public class Ball extends PhysicEngine {
     public Vector2D getPreviousPosition() { return previousPosition; }
     public Vector2D getAcceleration(){ return acceleration;}
 
-    public double getMASS(){ return getMASS(); }
-
-
+    public double getMass(){
+        return getMASS();
+    }
 
     public void setPosition(Vector2D position){
         this.position = position;
@@ -73,11 +94,10 @@ public class Ball extends PhysicEngine {
     }
 
 
-
-
     public double getRADIUS() {
         return this.RADIUS;
     }
+
     public Sphere getSphere() {
         return this.sphere;
     }

@@ -39,9 +39,10 @@ public class Display extends Application {
         Scene scene = new Scene(group, FRAME_WIDTH, FRAME_HEIGHT);
         scene.setFill(Color.BLACK);
 
+        this.group.getChildren().add(universe.getMeshView());
         Ball ball = universe.getBall();
         this.group.getChildren().add(ball.getSphere());
-        this.group.getChildren().add(universe.getMeshView());
+
 
         Camera camera = new PerspectiveCamera();
         scene.setCamera(camera);

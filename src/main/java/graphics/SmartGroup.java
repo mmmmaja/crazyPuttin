@@ -8,7 +8,9 @@ import javafx.scene.Scene;
 import javafx.scene.transform.Rotate;
 
 
-
+/**
+ * TODO prevent location!!! -> change angleX -> -68
+ */
 public class SmartGroup extends Group {
 
     private static final double zoomFactor = 1.2;
@@ -55,8 +57,12 @@ public class SmartGroup extends Group {
         });
 
         scene.setOnMouseDragged(mouseEvent -> {
-            this.angleX.set(this.anchorAngleX - (this.anchorY - mouseEvent.getSceneY()));
+            if (this.anchorAngleX - (this.anchorY - mouseEvent.getSceneY()) > -68.0) {
+                this.angleX.set(this.anchorAngleX - (this.anchorY - mouseEvent.getSceneY()));
+            }
             this.angleY.set(this.anchorAngleY + this.anchorX - mouseEvent.getSceneX());
+            System.out.println(angleX);
+            System.out.println(angleY+"\n");
         });
     }
 }

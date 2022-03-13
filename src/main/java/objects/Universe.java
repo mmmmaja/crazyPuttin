@@ -1,5 +1,6 @@
 package objects;
 
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.CullFace;
@@ -7,19 +8,23 @@ import javafx.scene.shape.DrawMode;
 import javafx.scene.shape.MeshView;
 import physics.Vector2D;
 
+
 public class Universe {
 
     private final FileReader fileReader;
 
     private Ball ball;
     private Terrain terrain;
+    private Target target;
+
+    // object needed just for the display
     private MeshView meshView;
 
     public Universe(FileReader fileReader) {
         this.fileReader = fileReader;
         createBall();
         createTerrain();
-
+        createTarget();
     }
 
     private void createBall() {
@@ -27,14 +32,16 @@ public class Universe {
         this.ball = new Ball(new Vector2D(initialPosition.getX(), initialPosition.getY()));
     }
 
+    /**
+     * TODO add sandpits!
+     */
     private void createTerrain() {
         this.meshView = new MeshView();
-        this.meshView.setMesh(new Terrain().getMesh());
+        this.terrain = new Terrain();
+        this.meshView.setMesh(this.terrain.getMesh());
 
         // adding grass material
         PhongMaterial material = new PhongMaterial();
-        String materialPath = "file:///C:\\Users\\majag\\Desktop\\green.jpg"; // TODO change path later
-        //material.setDiffuseMap(new Image(materialPath));
         material.setDiffuseColor(Color.FORESTGREEN);
 
         this.meshView.setMaterial(material);
@@ -43,12 +50,23 @@ public class Universe {
     }
 
 
+    private void createTarget() {
+        this.target = new Target(this.fileReader.getTargetPosition());
+        this.target.setDimension(new Vector2D(this.fileReader.getTargetRadius(), this.fileReader.getTargetRadius()));
+    }
+
+
+
     public Ball getBall() {
         return this.ball;
     }
 
     public Terrain getTerrain() {
         return this.terrain;
+    }
+
+    public Target getTarget() {
+        return this.target;
     }
 
     public MeshView getMeshView() {
