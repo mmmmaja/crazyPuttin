@@ -22,10 +22,10 @@ public class Ball extends PhysicEngine {
 
     // TODO store a Mesh object for graphics!!!
     // TODO remove velocity ?
-    public Ball(Vector2D position , Vector2D velocity) {
+    public Ball(Vector2D position) {
         this.position = position ;
         this.previousPosition = position ;
-        this.velocity = velocity;
+        velocity = new Vector2D(0,0);
         setAcceleration(velocity);
         createSphere();
     }

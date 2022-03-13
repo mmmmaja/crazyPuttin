@@ -12,7 +12,7 @@ public class Terrain {
 
     private final TriangleMesh mesh;
 
-    private static final int TERRAIN_WIDTH = 1100;
+    private static final int TERRAIN_WIDTH = 500;
     private static final int TERRAIN_HEIGHT = 900;
     private static final double STEP = 2;
 
@@ -26,9 +26,11 @@ public class Terrain {
 
 
    private void addPoints() {
+        int translateX = Display.FRAME_WIDTH / 3;
+        int translateY = Display.FRAME_HEIGHT / 3;
         for (float i = 0; i < TERRAIN_HEIGHT; i+= STEP) {
             for (float j = 0; j < TERRAIN_WIDTH; j+= STEP) {
-                this.mesh.getPoints().addAll(i, j, (float) TerrainGenerator.getHeight(new Vector2D(i, j)));
+                this.mesh.getPoints().addAll(i - translateX, j - translateY, (float) TerrainGenerator.getHeight(new Vector2D(i, j)));
             }
         }
    }

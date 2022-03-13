@@ -3,7 +3,9 @@ package objects;
 import physics.Vector2D;
 
 public class TerrainGenerator {
-    private double STEP_SIZE = 0.01;
+    private static final double STEP_SIZE = 0.01;
+
+
     // TODO
     public static double getHeight(Vector2D position) {
 
@@ -13,6 +15,7 @@ public class TerrainGenerator {
         return Math.sin(x/6 + y / 6);
 //        return Math.sin(x/6 + y/10) + Math.cos(Math.exp(y/100 + x/1000) + 0.8;
     }
+
     public double getStepSize(){
         return STEP_SIZE;
     }
