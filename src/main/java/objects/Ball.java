@@ -3,17 +3,16 @@ package objects;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Material;
 import javafx.scene.paint.PhongMaterial;
-import javafx.scene.shape.Circle;
 import javafx.scene.shape.Sphere;
+import physics.PhysicEngine;
 import physics.Vector2D;
-import java.util.Vector;
 
 
-public class Ball {
-    private final double MASS = 0.0459;
+public class Ball extends PhysicEngine {
     private final double RADIUS = 5 ;
 
     private Vector2D position ;
+    private Vector2D previousPosition;
     private Vector2D velocity ;
     private Vector2D acceleration;
 
@@ -22,10 +21,12 @@ public class Ball {
 
 
     // TODO store a Mesh object for graphics!!!
+    // TODO remove velocity ?
     public Ball(Vector2D position , Vector2D velocity) {
         this.position = position ;
-        this.velocity = velocity ;
-        acceleration = setAcceleration(position , velocity);
+        this.previousPosition = position ;
+        this.velocity = velocity;
+        setAcceleration(velocity);
         createSphere();
     }
 
@@ -51,6 +52,12 @@ public class Ball {
         return position.getY();
     }
 
+    public Vector2D getPreviousPosition() { return previousPosition; }
+    public Vector2D getAcceleration(){ return acceleration;}
+
+    public double getMASS(){ return getMASS(); }
+
+
 
     public void setPosition(Vector2D position){
         this.position = position;
@@ -58,6 +65,14 @@ public class Ball {
     public void setVelocity(Vector2D velocity){
         this.velocity = velocity ;
     }
+    public void setAcceleration(Vector2D velocity){
+        this.acceleration = calculateAcceleration(velocity);
+    }
+    public void setPreviousPosition(Vector2D previousPosition){
+        this.previousPosition = previousPosition;
+    }
+
+
 
 
     public double getRADIUS() {

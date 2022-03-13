@@ -5,6 +5,7 @@ public class Vector2D {
     private double x;
     private double y;
 
+    public Vector2D(){}
     public Vector2D(double x, double y) {
         this.x = x;
         this.y = y;
@@ -25,5 +26,9 @@ public class Vector2D {
 
     public void setY(double y) {
         this.y = y;
+    }
+
+    public double getMagnitude(){
+        return Math.sqrt( Math.pow(x,2)  + Math.pow(y,2));
     }
 }
