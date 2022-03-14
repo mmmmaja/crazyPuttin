@@ -4,15 +4,11 @@ import graphics.Display;
 import javafx.scene.shape.TriangleMesh;
 import physics.Vector2D;
 
-
-/**
- * TODO setSmooth()
- */
 public class Terrain {
 
     private final TriangleMesh mesh;
 
-    private static final int TERRAIN_WIDTH = 500;
+    private static final int TERRAIN_WIDTH = 900;
     private static final int TERRAIN_HEIGHT = 900;
     private static final double STEP = 2;
 
@@ -32,13 +28,6 @@ public class Terrain {
                 this.mesh.getPoints().addAll(i - Display.translateX, j - Display.translateY, (float) TerrainGenerator.getHeight(new Vector2D(i, j)));
             }
         }
-   }
-
-    /**
-     * fix the texture
-     */
-   private void addTexture() {
-
    }
 
 
@@ -64,6 +53,7 @@ public class Terrain {
             }
         }
     }
+
 
    public TriangleMesh getMesh() {
         return this.mesh;

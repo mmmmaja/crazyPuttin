@@ -2,9 +2,7 @@ package graphics;
 
 import Main.Main;
 import javafx.application.Application;
-import javafx.scene.Camera;
-import javafx.scene.PerspectiveCamera;
-import javafx.scene.Scene;
+import javafx.scene.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.ScrollEvent;
@@ -16,6 +14,10 @@ import objects.TerrainGenerator;
 import physics.Vector2D;
 
 
+/**
+ * TODO add sandpits
+ * why hole disappears?
+ */
 public class Display extends Application {
 
     public static final int FRAME_WIDTH = 1100;
@@ -25,21 +27,22 @@ public class Display extends Application {
     public static final int translateX = FRAME_WIDTH / 3;
     public static final int translateY =  FRAME_HEIGHT / 3;
 
+    // to which all the objects are added
     private SmartGroup group;
 
 
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage) {
+
         Universe universe = Main.getUniverse();
 
         this.group = new SmartGroup();
-
         Scene scene = new Scene(group, FRAME_WIDTH, FRAME_HEIGHT);
         scene.setFill(Color.BLACK);
 
         this.group.getChildren().add(universe.getMeshView());
         this.group.getChildren().add(universe.getBall().getSphere());
-
+        this.group.getChildren().add(universe.getTarget().getCircle());
 
         Camera camera = new PerspectiveCamera();
         scene.setCamera(camera);
@@ -56,18 +59,16 @@ public class Display extends Application {
         scene.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.W) {
                 Vector2D position = universe.getBall().getPosition();
-                universe.getBall().getSphere().setTranslateX(position.getX() - Display.translateX+1);
+                universe.getBall().getSphere().setTranslateX(position.getX() - Display.translateX + 1);
                 universe.getBall().translateObject(1, 0);
                 universe.getBall().getSphere().setTranslateZ(TerrainGenerator.getHeight(position));
 
             }
         });
 
-
         stage.setScene(scene);
         stage.show();
     }
-
 
 
 }

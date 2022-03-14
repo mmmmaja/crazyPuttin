@@ -7,9 +7,9 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.transform.Rotate;
 
-
 /**
- * FIXME start from the same point when rotating
+ * class used for holding all the objects added to the display
+ * provides rotation and zooming-in and zooming-out when mouse is moved
  */
 public class SmartGroup extends Group {
 
@@ -58,7 +58,7 @@ public class SmartGroup extends Group {
             this.anchorY = mouseEvent.getSceneY();
 
             this.anchorAngleX = angleX.get();
-            this.anchorAngleY = angleY.get();
+            this.anchorAngleY = angleZ.get();
         });
 
         scene.setOnMouseDragged(mouseEvent -> {
@@ -69,10 +69,7 @@ public class SmartGroup extends Group {
                 }
             }
             this.angleZ.set(this.anchorAngleY + this.anchorX - mouseEvent.getSceneX());
-//            System.out.println("X: "+angleX);
-//            System.out.println("Y: "+angleY);
-//            System.out.println("Z: "+angleZ);
-//            System.out.println();
+
         });
     }
 }

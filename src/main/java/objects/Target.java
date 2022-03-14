@@ -1,15 +1,23 @@
 package objects;
 
+import graphics.Display;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import physics.Vector2D;
 
 public class Target implements GameObject {
 
     private Vector2D position;
     private Vector2D dimension;
+    private final Circle circle;
 
-
-    public Target(Vector2D position) {
+    public Target(Vector2D position, double radius) {
         this.position = position;
+        this.circle = new Circle(radius);
+        this.circle.setCenterX(position.getX() - Display.translateX);
+        this.circle.setCenterY(position.getY() - Display.translateY);
+        this.circle.setFill(Color.BLACK);
+        this.circle.setTranslateZ(TerrainGenerator.getHeight(position));
     }
 
     @Override
@@ -41,5 +49,9 @@ public class Target implements GameObject {
     @Override
     public boolean isOnSlope() {
         return false;
+    }
+
+    public Circle getCircle() {
+        return this.circle;
     }
 }

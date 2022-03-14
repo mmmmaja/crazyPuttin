@@ -15,6 +15,9 @@ import physics.PhysicEngine;
 import physics.Vector2D;
 
 
+/**
+ * holds all the objects used in the game and the physics engine
+ */
 public class Universe extends Euler {
 
     private final FileReader fileReader;
@@ -23,7 +26,7 @@ public class Universe extends Euler {
     private Terrain terrain;
     private Target target;
 
-    // object needed just for the display
+    // object needed for the display
     private MeshView meshView;
 
     public Universe(FileReader fileReader) {
@@ -37,6 +40,7 @@ public class Universe extends Euler {
         Vector2D initialPosition = this.fileReader.getInitialPosition();
         this.ball = new Ball(new Vector2D(initialPosition.getX(), initialPosition.getY()));
     }
+
 
     /**
      * TODO add sandpits!
@@ -57,8 +61,7 @@ public class Universe extends Euler {
 
 
     private void createTarget() {
-        this.target = new Target(this.fileReader.getTargetPosition());
-        this.target.setDimension(new Vector2D(this.fileReader.getTargetRadius(), this.fileReader.getTargetRadius()));
+        this.target = new Target(this.fileReader.getTargetPosition(), this.fileReader.getTargetRadius());
     }
 
 

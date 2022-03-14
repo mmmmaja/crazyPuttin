@@ -5,7 +5,7 @@ import physics.Vector2D;
 public class FileReader {
 
     public Vector2D getInitialPosition() {
-        return new Vector2D(0, 0);
+        return new Vector2D(200, 200);
     }
 
     public Vector2D getTargetPosition() {
@@ -13,7 +13,16 @@ public class FileReader {
     }
 
     public double getTargetRadius() {
-        return 0.0;
+        return 5;
     }
+
+    public Vector2D getSandPitX() {
+        return new Vector2D(-1, -1);
+    }
+
+    public Vector2D getSandPitY() {
+        return new Vector2D(1, 2);
+    }
+
 
 }
