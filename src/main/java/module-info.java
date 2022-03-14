@@ -5,8 +5,9 @@ module com.example.crazyputtin {
     requires org.controlsfx.controls;
     requires com.dlsc.formsfx;
     requires org.kordamp.bootstrapfx.core;
+	requires exp4j;
 
-    opens graphics to javafx.fxml;
+	opens graphics to javafx.fxml;
     exports graphics;
     exports Main;
     opens Main to javafx.fxml;

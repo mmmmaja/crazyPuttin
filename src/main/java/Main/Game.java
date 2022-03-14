@@ -1,19 +1,9 @@
 package Main;
 
-//import graphics.Display;
 import graphics.Display;
-import graphics.SmartGroup;
+
 import javafx.application.Application;
-import javafx.scene.Camera;
-import javafx.scene.PerspectiveCamera;
-import javafx.scene.Scene;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.ScrollEvent;
-import javafx.scene.paint.Color;
-import javafx.stage.Stage;
-import objects.FileReader;
-import objects.TerrainGenerator;
-import physics.Vector2D;
+
 
 public class Game implements Runnable {
 
@@ -28,8 +18,7 @@ public class Game implements Runnable {
     public static final int translateY =  FRAME_HEIGHT / 3;
 
     public Game( Universe universe ) {
-        FileReader fileReader = new FileReader();
-        this.universe = new Universe(fileReader);
+        this.universe = universe;
     }
 
 

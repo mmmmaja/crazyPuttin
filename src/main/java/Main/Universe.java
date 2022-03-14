@@ -38,7 +38,7 @@ public class Universe extends Euler {
 
 
     private void createTerrain() {
-        this.terrain = new Terrain(new SandPit(this.fileReader.getSandPitX(), this.fileReader.getSandPitY()));
+        this.terrain = new Terrain(new SandPit(this.fileReader.getSandPitStart(), this.fileReader.getSandPitEnd()));
 
         MeshView meshViewGrass = new MeshView();
         meshViewGrass.setMesh(this.terrain.getGrassMesh());
