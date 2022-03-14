@@ -29,9 +29,15 @@ public class Target implements GameObject {
     public Vector2D getVelocity() { return new Vector2D(0,0); }
 
     @Override
-    public void setVelocity(Vector2D velocity) {
+    public void setVelocity(Vector2D velocity) {}
 
+    @Override
+    public Vector2D getPreviousPosition() {
+        return position;
     }
+
+    @Override
+    public void setPreviousPosition(Vector2D previousPosition) {}
 
     public Vector2D getPosition(){
         return position;
@@ -53,6 +59,8 @@ public class Target implements GameObject {
         return false;
     }
 
+    @Override
+    public boolean willMove() { return false; }
 
     @Override
     public boolean isOnSlope() {

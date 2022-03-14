@@ -60,6 +60,11 @@ public class Ball extends PhysicEngine implements GameObject {
     }
 
     @Override
+    public boolean willMove() {
+        return false;
+    }
+
+    @Override
     public boolean isOnSlope() {
         return false;
     }

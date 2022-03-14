@@ -1,10 +1,10 @@
 package physics;
 
 import objects.Ball;
+import objects.GameObject;
 
-public class Euler {
+public class Euler extends PhysicEngine implements Solver {
 
-	private PhysicEngine physicEngine = new PhysicEngine();
 
 	public Euler(){
 
@@ -12,39 +12,39 @@ public class Euler {
 
 	//FIXME it can return void instead of Vector2D
 
-	public void nextStep(Ball ball ){
+	public void nextStep(GameObject gameObject){
 
-		Vector2D nextVelocity = calculateNextVelocity(ball);
-		Vector2D nextPosition = calculateNextPosition(ball);
+		Vector2D nextVelocity = calculateNextVelocity(gameObject);
+		Vector2D nextPosition = calculateNextPosition(gameObject);
 
-		ball.setPreviousPosition(ball.getPosition());
-		ball.setVelocity(nextVelocity);
-		ball.setPosition(nextPosition);
+		gameObject.setPreviousPosition(gameObject.getPosition());
+		gameObject.setVelocity(nextVelocity);
+		gameObject.setPosition(nextPosition);
 
 	}
-	public Vector2D calculateNextVelocity(Ball ball ){
+	public Vector2D calculateNextVelocity(GameObject gameObject ){
 		//v1 = v0 + h * a0
-		Vector2D position = ball.getVelocity() ;
-		Vector2D velocity = ball.getVelocity() ;
-		Vector2D acceleration = physicEngine.calculateAcceleration(ball , position ,  velocity) ;
+		Vector2D position = gameObject.getVelocity() ;
+		Vector2D velocity = gameObject.getVelocity() ;
+		Vector2D acceleration = calculateAcceleration(gameObject) ;
 
 		double aX = acceleration.getX();
 		double aY = acceleration.getY();
 
-		double new_vX =  velocity.getX() + physicEngine.getSTEP() * aX ;
-		double new_vY =  velocity.getY() + physicEngine.getSTEP() * aY ;
+		double new_vX =  velocity.getX() + getSTEP() * aX ;
+		double new_vY =  velocity.getY() + getSTEP() * aY ;
 
 		return new Vector2D( new_vX , new_vY );
 	}
-	public Vector2D calculateNextPosition(Ball ball){
-		double x = ball.getPositionX() ;
-		double y = ball.getPositionY() ;
+	public Vector2D calculateNextPosition(GameObject gameObject){
+		double x = gameObject.getPosition().getX();
+		double y = gameObject.getPosition().getY();
 
-		double vX = ball.getVelocity().getX();
-		double vY = ball.getVelocity().getY();
+		double vX = gameObject.getVelocity().getX();
+		double vY = gameObject.getVelocity().getY();
 
-		double new_X = x + physicEngine.getSTEP() * vX ;
-		double new_Y = y + physicEngine.getSTEP() * vY ;
+		double new_X = x + getSTEP() * vX ;
+		double new_Y = y + getSTEP() * vY ;
 
 		return new Vector2D( new_X , new_Y);
 

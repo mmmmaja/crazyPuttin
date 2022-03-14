@@ -27,11 +27,11 @@ public class FileReader {
 
     public FileReader() {
         try {
-            shotFile = new File("C:\\Users\\majag\\IdeaProjects\\crazyPuttin\\src\\main\\java\\shot.txt");
+            shotFile = new File("C:\\Users\\bpk_e\\Desktop\\crazyPuttin2\\src\\main\\java\\shot.txt");
             if(shotFile.exists()){
                 shotReader = new Scanner(shotFile);
             }
-            inputFile = new File("C:\\Users\\majag\\IdeaProjects\\crazyPuttin\\src\\main\\java\\example_inputfile.txt");
+            inputFile = new File("C:\\Users\\bpk_e\\Desktop\\crazyPuttin2\\src\\main\\java\\example_inputfile.txt");
             if(inputFile.exists()){
                 inputReader = new Scanner(inputFile);
                 while(inputReader.hasNextLine()){

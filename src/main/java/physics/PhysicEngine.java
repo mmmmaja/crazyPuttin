@@ -1,6 +1,7 @@
 package physics;
 
 import objects.Ball;
+import objects.GameObject;
 import objects.Terrain;
 import objects.TerrainGenerator;
 
@@ -18,11 +19,22 @@ public class PhysicEngine {
 	public PhysicEngine(){}
 
 
-	public Vector2D calculateAcceleration(Ball ball , Vector2D position , Vector2D velocity){
-		double vX = velocity.getX();
-		double vY = velocity.getY();
-		double sqrt = Math.sqrt( Math.pow( vX , 2 ) + Math.pow( vY , 2 ));
-		return new Vector2D( -1 * g -  mu_K * g * vX/ sqrt , -1 * g - mu_K * vY / sqrt );
+	public Vector2D calculateAcceleration(GameObject gameObject){
+		double vX = gameObject.getVelocity().getX();
+		double vY = gameObject.getVelocity().getY();
+		double partial_x = TerrainGenerator.getSlopeX(gameObject.getPosition());
+		double partial_y = TerrainGenerator.getSlopeY(gameObject.getPosition());
+		Vector2D partials = new Vector2D(partial_x , partial_y);
+
+		if(!gameObject.isMoving() && gameObject.isOnSlope() && gameObject.willMove() ){
+			double aX = mu_K * g * partial_x / partials.getMagnitude();
+			double aY = mu_K * g * partial_y / partials.getMagnitude();
+			return new Vector2D( aX , aY);
+		}
+		double aX = -1 * g * partial_x -  mu_K * g * vX / gameObject.getVelocity().getMagnitude();
+		double aY = -1 * g * partial_y -  mu_K * g * vY / gameObject.getVelocity().getMagnitude();
+
+		return new Vector2D( aX , aY );
 	}
 
 	public Vector3D gravitation_force(){
