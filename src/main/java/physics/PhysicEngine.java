@@ -1,9 +1,10 @@
 package physics;
 
+import objects.Ball;
 import objects.Terrain;
 import objects.TerrainGenerator;
 
-public abstract class PhysicEngine {
+public class PhysicEngine {
 
 
 	//TODO terrain might be changed.
@@ -17,7 +18,7 @@ public abstract class PhysicEngine {
 	public PhysicEngine(){}
 
 
-	public Vector2D calculateAcceleration(Vector2D velocity){
+	public Vector2D calculateAcceleration(Ball ball , Vector2D position , Vector2D velocity){
 		double vX = velocity.getX();
 		double vY = velocity.getY();
 		double sqrt = Math.sqrt( Math.pow( vX , 2 ) + Math.pow( vY , 2 ));
@@ -34,16 +35,7 @@ public abstract class PhysicEngine {
 //		double dHdY = terrain.getSlopeY(position);
 //		return (-1 * mu_K * getMASS() *  )
 //	}
-	public double getSlopeX( Vector2D currentPosition){
-		double x = currentPosition.getX() ;
-		double y = currentPosition.getY() ;
-		return ( TerrainGenerator.getHeight( new Vector2D( x + STEP , y ) ) - TerrainGenerator.getHeight( currentPosition ) ) / STEP ;
-	}
-	public double getSlopeY( Vector2D currentPosition){
-		double x = currentPosition.getX() ;
-		double y = currentPosition.getY() ;
-		return ( TerrainGenerator.getHeight( new Vector2D( x , y + STEP ) ) - TerrainGenerator.getHeight( currentPosition ) ) / STEP ;
-	}
+
 
 
 	public double getG() {return g;}

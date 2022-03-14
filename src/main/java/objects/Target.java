@@ -25,6 +25,14 @@ public class Target implements GameObject {
         this.position = position;
     }
 
+    @Override
+    public Vector2D getVelocity() { return new Vector2D(0,0); }
+
+    @Override
+    public void setVelocity(Vector2D velocity) {
+
+    }
+
     public Vector2D getPosition(){
         return position;
     }
