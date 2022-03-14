@@ -7,7 +7,7 @@ public abstract class PhysicEngine {
 
 
 	//TODO terrain might be changed.
-	Terrain terrain = new Terrain();
+	//Terrain terrain = new Terrain();
 	private final double g =  9.81;
 	private final double MASS = 0.0459;
 	private double mu_K = 0.06;

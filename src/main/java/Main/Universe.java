@@ -1,17 +1,12 @@
 package Main;
 
-import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.CullFace;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.shape.MeshView;
-import objects.Ball;
-import objects.FileReader;
-import objects.Target;
-import objects.Terrain;
+import objects.*;
 import physics.Euler;
-import physics.PhysicEngine;
 import physics.Vector2D;
 
 
@@ -27,7 +22,7 @@ public class Universe extends Euler {
     private Target target;
 
     // object needed for the display
-    private MeshView meshView;
+    private MeshView[] meshViews;
 
     public Universe(FileReader fileReader) {
         this.fileReader = fileReader;
@@ -42,21 +37,41 @@ public class Universe extends Euler {
     }
 
 
-    /**
-     * TODO add sandpits!
-     */
     private void createTerrain() {
-        this.meshView = new MeshView();
-        this.terrain = new Terrain();
-        this.meshView.setMesh(this.terrain.getMesh());
+        this.terrain = new Terrain(new SandPit(this.fileReader.getSandPitX(), this.fileReader.getSandPitY()));
+
+        MeshView meshViewGrass = new MeshView();
+        meshViewGrass.setMesh(this.terrain.getGrassMesh());
+        MeshView meshViewSandPit = new MeshView();
+        meshViewSandPit.setMesh(this.terrain.getSandPitMesh());
+        MeshView meshViewWater = new MeshView();
+        meshViewWater.setMesh(this.terrain.getWaterMesh());
 
         // adding grass material
-        PhongMaterial material = new PhongMaterial();
-        material.setDiffuseColor(Color.FORESTGREEN);
+        PhongMaterial grassMaterial = new PhongMaterial();
+        grassMaterial.setDiffuseColor(Color.FORESTGREEN);
 
-        this.meshView.setMaterial(material);
-        this.meshView.setCullFace(CullFace.NONE);
-        this.meshView.setDrawMode(DrawMode.FILL);
+        // adding water material
+        PhongMaterial waterMaterial = new PhongMaterial();
+        waterMaterial.setDiffuseColor(Color.ROYALBLUE);
+
+        // adding sandPit material
+        PhongMaterial sandPitMaterial = new PhongMaterial();
+        sandPitMaterial.setDiffuseColor(Color.YELLOW);
+
+        meshViewGrass.setMaterial(grassMaterial);
+        meshViewGrass.setCullFace(CullFace.NONE);
+        meshViewGrass.setDrawMode(DrawMode.FILL);
+
+        meshViewSandPit.setMaterial(sandPitMaterial);
+        meshViewSandPit.setCullFace(CullFace.NONE);
+        meshViewSandPit.setDrawMode(DrawMode.FILL);
+
+        meshViewWater.setMaterial(waterMaterial);
+        meshViewWater.setCullFace(CullFace.NONE);
+        meshViewWater.setDrawMode(DrawMode.FILL);
+
+        this.meshViews = new MeshView[] {meshViewGrass, meshViewWater, meshViewSandPit};
     }
 
 
@@ -78,7 +93,7 @@ public class Universe extends Euler {
         return this.target;
     }
 
-    public MeshView getMeshView() {
-        return this.meshView;
+    public MeshView[] getMeshViews() {
+        return this.meshViews;
     }
 }

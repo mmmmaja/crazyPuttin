@@ -17,11 +17,11 @@ public class FileReader {
     }
 
     public Vector2D getSandPitX() {
-        return new Vector2D(-1, -1);
+        return new Vector2D(10, 50);
     }
 
     public Vector2D getSandPitY() {
-        return new Vector2D(1, 2);
+        return new Vector2D(10, 100);
     }
 
 

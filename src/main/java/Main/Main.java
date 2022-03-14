@@ -15,7 +15,6 @@ public class Main {
         game.start();
         // TODO here call the new Thread and wait for the action
 
-//        Application.launch(Display.class, args);
     }
 
     public static Universe getUniverse() {

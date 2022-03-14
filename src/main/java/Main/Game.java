@@ -5,7 +5,7 @@ import javafx.application.Application;
 
 public class Game implements Runnable {
 
-    private Universe universe;
+    private final Universe universe;
     private boolean running;
     private Thread thread;
 

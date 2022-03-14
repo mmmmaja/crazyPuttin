@@ -4,19 +4,17 @@ import Main.Main;
 import javafx.application.Application;
 import javafx.scene.*;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.MeshView;
 import javafx.stage.Stage;
 import Main.Universe;
-import objects.Ball;
 import objects.TerrainGenerator;
 import physics.Vector2D;
 
 
 /**
- * TODO add sandpits
- * why hole disappears?
+ * fixme why hole disappears?
  */
 public class Display extends Application {
 
@@ -40,7 +38,11 @@ public class Display extends Application {
         Scene scene = new Scene(group, FRAME_WIDTH, FRAME_HEIGHT);
         scene.setFill(Color.BLACK);
 
-        this.group.getChildren().add(universe.getMeshView());
+        // add 3 different components for the mesh: grass, sandPits and water
+        MeshView[] meshViews = universe.getMeshViews();
+        for (MeshView meshView : meshViews) {
+            this.group.getChildren().add(meshView);
+        }
         this.group.getChildren().add(universe.getBall().getSphere());
         this.group.getChildren().add(universe.getTarget().getCircle());
 
