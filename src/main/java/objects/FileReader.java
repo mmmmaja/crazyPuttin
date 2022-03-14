@@ -1,121 +1,140 @@
 package objects;
-import physics.Vector2D;
-import java.io.File;
-import java.io.IOException;
-import java.util.Scanner;
-import java.util.regex.*;
-import net.objecthunter.exp4j.Expression;
-import net.objecthunter.exp4j.ExpressionBuilder;
 
+import physics.PhysicEngine;
+import physics.Vector2D;
+import Main.Universe;
+import java.util.Scanner;
+import java.io.*;
 
 public class FileReader {
+    Scanner inputReader;
+    Scanner shotReader;
+    File inputFile;
+    File shotFile;
+    String fileString = "";
+    double x0;
+    double y0;
+    double xt;
+    double yt;
+    double r;
+    double muk;
+    double mus;
+    String heightProfile;
+    Vector2D sandPitX;
+    Vector2D sandPitY;
+    double muks;
+    double muss;
 
-    float x0 ;            // x-coordinate of the initial position
-    float y0 ;            // y-coordinate of the initial position
-    Vector2D position0;
-    float xt ;            // x-coordinate of the target position
-    float yt ;            // y-coordinate of the target position
-    Vector2D positionTarget;
-    float r ;           // radius of the target
-    float muk;          // kinetic friction coefficient of grass
-    float mus ;         // static friction coefficient of grass
-    float heightProfile ;
-    float sandPitXmin ;        // x start of a sandpit
-    float sandPitXmax ;        // x end of a sandpit
-    float sandPitYmin ;        // y start of a sand pit
-    float sandPitYmax ;        // y end of a sandpit
-    Vector2D sandPitStart;
-    Vector2D sandPitEnd;
-    float muks ;        // kinetic friction coefficient of sand
-    float muss ;        // static friction coefficient of sand
-    File file;
-
-
-    public FileReader(File file) {
-        this.file=file;
+    public FileReader() {
         try {
-            Scanner scanner = new Scanner(file);
+            shotFile = new File("C:\\Users\\majag\\IdeaProjects\\crazyPuttin\\src\\main\\java\\shot.txt");
+            if(shotFile.exists()){
+                shotReader = new Scanner(shotFile);
+            }
+            inputFile = new File("C:\\Users\\majag\\IdeaProjects\\crazyPuttin\\src\\main\\java\\example_inputfile.txt");
+            if(inputFile.exists()){
+                inputReader = new Scanner(inputFile);
+                while(inputReader.hasNextLine()){
+                    String[] next = inputReader.nextLine().split("=");
+                    for (int i = 0; i < next.length; i++) {
+                        next[i] = next[i].strip();
+                    }
+                    switch (next[0]){
+                        case "x0":
+                            x0 = Double.parseDouble(next[1]);
+                            break;
+                        case "y0":
+                            y0 = Double.parseDouble(next[1]);
+                            break;
+                        case "xt":
+                            xt = Double.parseDouble(next[1]);
+                            break;
+                        case "yt":
+                            yt = Double.parseDouble(next[1]);
+                            break;
+                        case "r":
+                            r = Double.parseDouble(next[1]);
+                            break;
+                        case "muk":
+                            muk = Double.parseDouble(next[1]);
+                            break;
+                        case "mus":
+                            mus = Double.parseDouble(next[1]);
+                            break;
+                        case "heightProfile":
+                            heightProfile = next[1];
+                            break;
+                        case "sandPitX":
+                            String[] pitX = next[1].split("<");
+                            sandPitX = new Vector2D(Double.parseDouble(pitX[0]),Double.parseDouble(pitX[2]));
+                            break;
+                        case "sandPitY":
+                            String[] pitY = next[1].split("<");
+                            sandPitY = new Vector2D(Double.parseDouble(pitY[0]),Double.parseDouble(pitY[2]));
+                            break;
+                        case "muks":
+                            muks = Double.parseDouble(next[1]);
+                            break;
+                        case "muss":
+                            muss = Double.parseDouble(next[1]);
+                            break;
+                    }
 
-            this.x0=Float.parseFloat(checkRegex(scanner.nextLine(),"\\s[+-]?([0-9]*[.])?[0-9]\\s"));
-            this.y0=Float.parseFloat(checkRegex(scanner.nextLine(),"\\s[+-]?([0-9]*[.])?[0-9]\\s"));
-            position0=new Vector2D(x0,y0);
-            this.xt=Float.parseFloat(checkRegex(scanner.nextLine(),"\\s[+-]?([0-9]*[.])?[0-9]\\s"));
-            this.yt=Float.parseFloat(checkRegex(scanner.nextLine(),"\\s[+-]?([0-9]*[.])?[0-9]\\s"));
-            this.positionTarget=new Vector2D(x0,y0);
-            this.r=Float.parseFloat(checkRegex(scanner.nextLine(),"\\s[+-]?([0-9]*[.])?[0-9]\\s"));
-            this.muk=Float.parseFloat(checkRegex(scanner.nextLine(),"\\s[+-]?([0-9]*[.])?[0-9]\\s"));
-            this.mus=Float.parseFloat(checkRegex(scanner.nextLine(),"\\s[+-]?([0-9]*[.])?[0-9]\\s"));
-            this.heightProfile=calculator(checkRegex(scanner.nextLine(),"(?<= = )(.*)"));
-            String string = scanner.nextLine();
-            this.sandPitXmin=Float.parseFloat(checkRegex(string,"(?<= = )[+-]?([0-9]*[.])?[0-9]"));
-            this.sandPitXmax=Float.parseFloat(checkRegex(string,"(?<=<x<)[+-]?([0-9]*[.])?[0-9]"));
-            string = scanner.nextLine();
-            this.sandPitYmin=Float.parseFloat(checkRegex(string,"(?<= = )[+-]?([0-9]*[.])?[0-9]"));
-            this.sandPitYmax=Float.parseFloat(checkRegex(string,"(?<=<y<)[+-]?([0-9]*[.])?[0-9]"));
-            this.sandPitStart=new Vector2D(sandPitXmin,sandPitYmin);
-            this.sandPitEnd=new Vector2D(sandPitXmax,sandPitYmax);
-            this.muks=Float.parseFloat(checkRegex(scanner.nextLine(),"\\s[+-]?([0-9]*[.])?[0-9]\\s"));
-            this.muss=Float.parseFloat(checkRegex(scanner.nextLine(),"\\s[+-]?([0-9]*[.])?[0-9]\\s"));
+                }
+            }
 
         }
-
-        catch (IOException exception)
-        {
-            exception.printStackTrace();
-        }
+        catch (Exception e){}
     }
 
-    public Vector2D getInitialPosition()
-    {
-        return this.position0;
+    public Vector2D getInitialPosition() {
+        return new Vector2D(x0,y0);
+    }
+    public Vector2D getTargetPosition() {
+        return new Vector2D(xt,yt);
+    }
+    public double getTargetRadius() {
+        return r;
+    }
+    public double getKineticFriction(){
+        return muk;
+    }
+    public double getStaticFriction(){
+        return mus;
+    }
+    public double getSandPitKineticFriction(){
+        return muks;
+    }
+    public double getSandPitStaticFriction(){
+        return muss;
+    }
+    public Vector2D getSandPitX(){
+        return sandPitX;
+    }
+    public Vector2D getSandPitY(){
+        return sandPitY;
+    }
+    public String getHeightProfile(){
+        return heightProfile;
+    }
+    public Vector2D getNextShotFromFile(){
+        String next = shotReader.nextLine();
+        String[] shot = next.split(",");
+        return new Vector2D(Double.parseDouble(shot[0]), Double.parseDouble(shot[1]));
     }
 
-    public Vector2D getTargetPosition()
-    {
-        return this.positionTarget;
+    public static void main(String[] args) {
+        FileReader f = new FileReader();
+        System.out.println(f.x0 + ", " + f.y0);
+        System.out.println(f.xt + ", " + f.yt);
+        System.out.println(f.r);
+        System.out.println(f.muk);
+        System.out.println(f.mus);
+        System.out.println(f.heightProfile);
+        System.out.println(f.sandPitX);
+        System.out.println(f.sandPitY);
+        System.out.println(f.muks);
+        System.out.println(f.muss);
     }
-
-    public double getTargetRadius()
-    {
-        return this.r;
-    }
-
-    public Vector2D getSandPitStart()
-    {
-        return this.sandPitStart;
-    }
-
-    public Vector2D getSandPitEnd()
-    {
-        return this.sandPitEnd;
-    }
-
-
-
-    public static String checkRegex (String string, String regex)
-    {
-        Pattern pattern = Pattern.compile(string);
-        Matcher matcher = pattern.matcher(regex);
-        boolean isMatch = matcher.find();
-
-        return matcher.group();
-    }
-
-    public float calculator(String equation) {
-        Expression expression = new ExpressionBuilder(equation)
-                .variables("x", "y")
-                .build()
-                .setVariable("x", this.xt)
-                .setVariable("y", this.yt);
-
-        float result = (float) expression.evaluate();
-
-        //Assertions.assertEquals(1, result);
-
-        return result;
-
-    }
-
-
 
 }

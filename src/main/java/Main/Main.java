@@ -1,27 +1,26 @@
 package Main;
 
 
+import graphics.Display;
+import javafx.application.Application;
 import objects.FileReader;
 
-import java.io.File;
 
 public class Main {
     private static Universe universe ;
 
     public static void main(String[] args) {
 
-        File file = new File("C:\\Users\\bpk_e\\Desktop\\crazyPuttin2\\src\\main\\java\\example_inputfile.txt");
-        universe = new Universe(new FileReader(file));
+        FileReader fileReader = new FileReader();
+        System.out.println(fileReader.getHeightProfile());
 
-        Game game = new Game(universe);
-        game.start();
-        // TODO here call the new Thread and wait for the action
+        universe = new Universe(new FileReader());
+
+        Application.launch(Display.class);
 
     }
     public static Universe getUniverse(){
-//        if(universe == null )
-//            return
-    return universe;
+        return universe;
     }
 
 }

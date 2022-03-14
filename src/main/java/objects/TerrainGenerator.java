@@ -1,39 +1,54 @@
 package objects;
 
+import net.objecthunter.exp4j.Expression;
+import net.objecthunter.exp4j.ExpressionBuilder;
 import physics.Vector2D;
 
+
+/**
+ * TODO make it not static: problem getSlope methods
+ */
 public class TerrainGenerator {
+
     private static final double STEP_SIZE = 0.01;
 
-    public TerrainGenerator(){}
-    // TODO
-    private static final double STEP = 0.167 ;
-    public static double getHeight(Vector2D position) {
+    public TerrainGenerator(){
+//        Expression expression = new ExpressionBuilder(equation)
+//                .variables("x", "y")
+//                .build()
+//                .setVariable("x", this.xt)
+//                .setVariable("y", this.yt);
+//
+//        float result = (float) expression.evaluate();
+
+        //Assertions.assertEquals(1, result);
+
+    }
+
+    public static double getHeight( Vector2D position) {
 
         double x = position.getX();
         double y = position.getY();
 
-//        return  1/100.0 * x * x + 1/100.0 * y*y;
-//        return Math.sin(x/6 + y / 6);
-//        return Math.pow(1.05, x)+ Math.pow(1.08, y);
-//        return Math.sin(x/6 + y/10) + Math.cos(Math.exp(y/100 + x/1000) + 0.8;
-        return 0.5 * ( Math.sin( x - y ) / 7 + 0.9 ) ;
+        return Math.sin(x/6 + y / 6)*10;
     }
+
+
     public static double getSlopeX( Vector2D currentPosition){
         double x = currentPosition.getX() ;
         double y = currentPosition.getY() ;
-        return ( getHeight( new Vector2D( x + STEP , y ) ) - getHeight(new Vector2D( x - STEP , y ) ) ) / ( 2*STEP) ;
+        return ( getHeight( new Vector2D( x + STEP_SIZE , y ) ) - getHeight(new Vector2D( x - STEP_SIZE , y ) ) ) / ( 2*STEP_SIZE) ;
     }
+
     public static double getSlopeY( Vector2D currentPosition){
         double x = currentPosition.getX() ;
         double y = currentPosition.getY() ;
-        return ( getHeight( new Vector2D( x , y + STEP ) ) - getHeight(  new Vector2D( x , y - STEP ) ) ) / ( 2*STEP) ;
+        return ( getHeight( new Vector2D( x , y + STEP_SIZE ) ) - getHeight(  new Vector2D( x , y - STEP_SIZE ) ) ) / ( 2*STEP_SIZE) ;
     }
 
     public double getStepSize(){
         return STEP_SIZE;
     }
-
 
 
 }

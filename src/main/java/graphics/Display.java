@@ -6,6 +6,7 @@ import javafx.scene.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Line;
 import javafx.scene.shape.MeshView;
 import javafx.stage.Stage;
 import Main.Universe;
@@ -17,6 +18,7 @@ import physics.Vector2D;
  * fixme why hole disappears?
  */
 public class Display extends Application {
+    Universe universe = Main.getUniverse();
 
     public static final int FRAME_WIDTH = 1100;
     public static final int FRAME_HEIGHT = 600;
@@ -32,7 +34,7 @@ public class Display extends Application {
     @Override
     public void start(Stage stage) {
 
-        Universe universe = Main.getUniverse();
+
 
         this.group = new SmartGroup();
         Scene scene = new Scene(group, FRAME_WIDTH, FRAME_HEIGHT);
@@ -45,6 +47,7 @@ public class Display extends Application {
         }
         this.group.getChildren().add(universe.getBall().getSphere());
         this.group.getChildren().add(universe.getTarget().getCircle());
+        //addAxis();
 
         Camera camera = new PerspectiveCamera();
         scene.setCamera(camera);
@@ -60,17 +63,22 @@ public class Display extends Application {
 
         scene.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.W) {
-                Vector2D position = universe.getBall().getPosition();
-                universe.getBall().getSphere().setTranslateX(position.getX() - Display.translateX + 1);
-                universe.getBall().translateObject(1, 0);
-                universe.getBall().getSphere().setTranslateZ(TerrainGenerator.getHeight(position));
-
+                move(1,1);
             }
         });
+
 
         stage.setScene(scene);
         stage.show();
     }
 
+
+    public void move(double deltaX , double deltaY){
+        Vector2D position = universe.getBall().getPosition();
+        universe.getBall().getSphere().setTranslateX(position.getX() - Display.translateX + deltaX);
+        universe.getBall().getSphere().setTranslateY(position.getY() - Display.translateY + deltaY);
+        universe.getBall().getSphere().setTranslateZ(TerrainGenerator.getHeight(position));
+        universe.getBall().translateObject(deltaX, deltaY);
+    }
 
 }

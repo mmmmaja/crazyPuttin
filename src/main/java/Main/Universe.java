@@ -1,5 +1,6 @@
 package Main;
 
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.CullFace;
@@ -36,9 +37,12 @@ public class Universe extends Euler {
         this.ball = new Ball(new Vector2D(initialPosition.getX(), initialPosition.getY()));
     }
 
-
+    /**
+     * creates 3 meshes: grass, water, sandPits
+     */
     private void createTerrain() {
-        this.terrain = new Terrain(new SandPit(this.fileReader.getSandPitStart(), this.fileReader.getSandPitEnd()));
+        this.terrain = new Terrain(fileReader.getSandPitX(), fileReader.getSandPitY());
+//        this.terrain = new Terrain(new SandPit(fileReader.getSandPitX(), fileReader.getSandPitY()));
 
         MeshView meshViewGrass = new MeshView();
         meshViewGrass.setMesh(this.terrain.getGrassMesh());
@@ -47,6 +51,11 @@ public class Universe extends Euler {
         MeshView meshViewWater = new MeshView();
         meshViewWater.setMesh(this.terrain.getWaterMesh());
 
+//        PhongMaterial material = new PhongMaterial();
+////        String path = "file:///C:\\Users\\majag\\Desktop\\texture.png";
+//        String path = "file:///C:\\Users\\majag\\IdeaProjects\\crazyPuttin\\src\\main\\java\\texture.png";
+//        material.setDiffuseMap(new Image(path));
+//        System.out.println("g");
         // adding grass material
         PhongMaterial grassMaterial = new PhongMaterial();
         grassMaterial.setDiffuseColor(Color.FORESTGREEN);
@@ -71,9 +80,8 @@ public class Universe extends Euler {
         meshViewWater.setCullFace(CullFace.NONE);
         meshViewWater.setDrawMode(DrawMode.FILL);
 
-        this.meshViews = new MeshView[] {meshViewGrass, meshViewWater, meshViewSandPit};
+        this.meshViews = new MeshView[] { meshViewWater, meshViewGrass, meshViewSandPit};
     }
-
 
     private void createTarget() {
         this.target = new Target(this.fileReader.getTargetPosition(), this.fileReader.getTargetRadius());
@@ -95,5 +103,9 @@ public class Universe extends Euler {
 
     public MeshView[] getMeshViews() {
         return this.meshViews;
+    }
+
+    public void takeShot() {
+
     }
 }
