@@ -27,9 +27,7 @@ import physics.Vector2D;
 import java.util.EventListener;
 
 
-/**
- * fixme why hole disappears?
- */
+
 public class Display extends Application {
     public static Universe universe = Main.getUniverse();
 
@@ -41,10 +39,7 @@ public class Display extends Application {
     public static final int translateY =  FRAME_HEIGHT / 3;
 
     // to which all the objects are added (rotation built-in)
-    private SmartGroup root;
     private SmartGroup group;
-
-    private Pane displayPane;
     private GridPane gridPane;
 
 
@@ -65,26 +60,26 @@ public class Display extends Application {
 
         Camera camera = new PerspectiveCamera();
 
-        this.displayPane = new Pane();
+        Pane displayPane = new Pane();
         displayPane.setPrefSize(FRAME_WIDTH, FRAME_HEIGHT);
 
         this.gridPane = new GridPane();
         addPanel();
-        this.displayPane.getChildren().add(this.gridPane);
+        displayPane.getChildren().add(this.gridPane);
         gridPane.setTranslateX(FRAME_WIDTH - 200);
         subScene.setCamera(camera);
 
         Pane pane3D = new Pane();
         pane3D.setPrefSize(FRAME_WIDTH - 200, FRAME_HEIGHT);
         pane3D.getChildren().add(subScene);
-        this.displayPane.getChildren().add(pane3D);
+        displayPane.getChildren().add(pane3D);
 
-        Scene scene = new Scene(this.displayPane);
+        Scene scene = new Scene(displayPane);
 
         // move the objects the middle
-        group.translateXProperty().set(FRAME_WIDTH / 2.0);
+        group.translateXProperty().set((FRAME_WIDTH - 200)/ 2.0);
         group.translateYProperty().set(FRAME_HEIGHT / 2.0);
-        group.translateZProperty().set(-300); // move it a little closer
+        group.translateZProperty().set(-200); // move it a little closer
         group.initMouseControl(scene);
 
         // zoomIn, zoomOut added on scroll event

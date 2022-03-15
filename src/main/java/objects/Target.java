@@ -17,7 +17,7 @@ public class Target implements GameObject {
         this.circle.setCenterX(position.getX() - Display.translateX);
         this.circle.setCenterY(position.getY() - Display.translateY);
         this.circle.setFill(Color.BLACK);
-        this.circle.setTranslateZ(TerrainGenerator.getHeight(position));
+        this.circle.setTranslateZ(TerrainGenerator.getHeight(position)-5);
     }
 
     @Override

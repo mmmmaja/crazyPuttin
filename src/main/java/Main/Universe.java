@@ -107,7 +107,7 @@ public class Universe extends Euler {
         Vector2D position = ball.getPosition();
         ball.getSphere().setTranslateX(position.getX() - Display.translateX + ( ball.getPositionX() - ball.getPreviousPosition().getX() ) );
         ball.getSphere().setTranslateY(position.getY() - Display.translateY + ( ball.getPositionY() - ball.getPreviousPosition().getY() ) );
-        ball.getSphere().setTranslateZ(TerrainGenerator.getHeight(position));
+        ball.getSphere().setTranslateZ(TerrainGenerator.getHeight(position) - ball.getRADIUS());
     }
 
     /**
