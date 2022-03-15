@@ -27,14 +27,12 @@ public class Display extends Application {
     public static final int translateX = FRAME_WIDTH / 3;
     public static final int translateY =  FRAME_HEIGHT / 3;
 
-    // to which all the objects are added
+    // to which all the objects are added (rotation built-in)
     private SmartGroup group;
 
 
     @Override
     public void start(Stage stage) {
-
-
 
         this.group = new SmartGroup();
         Scene scene = new Scene(group, FRAME_WIDTH, FRAME_HEIGHT);
@@ -47,7 +45,6 @@ public class Display extends Application {
         }
         this.group.getChildren().add(universe.getBall().getSphere());
         this.group.getChildren().add(universe.getTarget().getCircle());
-        //addAxis();
 
         Camera camera = new PerspectiveCamera();
         scene.setCamera(camera);
@@ -71,7 +68,5 @@ public class Display extends Application {
         stage.setScene(scene);
         stage.show();
     }
-
-
 
 }

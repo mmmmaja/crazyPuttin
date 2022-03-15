@@ -53,26 +53,21 @@ public class Terrain extends TerrainGenerator {
                 int bottomLeft = topLeft + (TERRAIN_WIDTH / STEP);
                 int bottomRight = bottomLeft + 1;
 
-//                // add texture and faces to grass mesh; here fixme
-//                if (!isSandPit(i * STEP, j * STEP) && TerrainGenerator.getHeight(new Vector2D(i * STEP, j * STEP) ) <= 0) {
-//                    this.grassMesh.getFaces().addAll(topLeft, 1, topRight, 1, bottomLeft, 1);
-//                    this.grassMesh.getFaces().addAll(bottomLeft, 1, topRight, 1, bottomRight, 1);
-//                }
-//                // add texture and faces to water mesh
-//                if (TerrainGenerator.getHeight(new Vector2D(i * STEP, j * STEP)) > 0) {
-//                    this.waterMesh.getFaces().addAll(topLeft, 1, topRight, 1, bottomLeft, 1);
-//                    this.waterMesh.getFaces().addAll(bottomLeft, 1, topRight, 1, bottomRight, 1);
-//
-//                }
+
+                // add texture and faces to water mesh
+                if (TerrainGenerator.getHeight(new Vector2D(i * STEP, j * STEP)) > 0) {
+                    this.waterMesh.getFaces().addAll(topLeft, 1, topRight, 1, bottomLeft, 1);
+                    //this.waterMesh.getFaces().addAll(bottomLeft, 1, topRight, 1, bottomRight, 1);
+
+                }
                 // add texture and faces to sandPit mesh
-                // perfecto
                 if (isSandPit(i * STEP, j * STEP)) {
                     this.sandPitMesh.getFaces().addAll(topLeft, 1, topRight, 1, bottomLeft, 1);
                     this.sandPitMesh.getFaces().addAll(bottomLeft, 1, topRight, 1, bottomRight, 1);
                 }
                 else {
                     this.grassMesh.getFaces().addAll(topLeft, 1, topRight, 1, bottomLeft, 1);
-                    this.grassMesh.getFaces().addAll(bottomLeft, 1, topRight, 1, bottomRight, 1);
+                   // this.grassMesh.getFaces().addAll(bottomLeft, 1, topRight, 1, bottomRight, 1);
                 }
             }
         }
@@ -99,6 +94,5 @@ public class Terrain extends TerrainGenerator {
         }
         return false;
     }
-
 
 }

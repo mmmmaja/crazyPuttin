@@ -51,11 +51,6 @@ public class Universe extends Euler {
         MeshView meshViewWater = new MeshView();
         meshViewWater.setMesh(this.terrain.getWaterMesh());
 
-//        PhongMaterial material = new PhongMaterial();
-////        String path = "file:///C:\\Users\\majag\\Desktop\\texture.png";
-//        String path = "file:///C:\\Users\\majag\\IdeaProjects\\crazyPuttin\\src\\main\\java\\texture.png";
-//        material.setDiffuseMap(new Image(path));
-//        System.out.println("g");
         // adding grass material
         PhongMaterial grassMaterial = new PhongMaterial();
         grassMaterial.setDiffuseColor(Color.FORESTGREEN);
@@ -80,7 +75,7 @@ public class Universe extends Euler {
         meshViewWater.setCullFace(CullFace.NONE);
         meshViewWater.setDrawMode(DrawMode.FILL);
 
-        this.meshViews = new MeshView[] { meshViewWater, meshViewGrass, meshViewSandPit};
+        this.meshViews = new MeshView[] {meshViewGrass, meshViewWater,meshViewSandPit};
     }
 
     private void createTarget() {
@@ -111,6 +106,7 @@ public class Universe extends Euler {
         ball.getSphere().setTranslateY(position.getY() - Display.translateY + ( ball.getPositionY() - ball.getPreviousPosition().getY() ) );
         ball.getSphere().setTranslateZ(TerrainGenerator.getHeight(position));
     }
+
     public void takeShot(Vector2D velocity) {
         ball.setVelocity(velocity);
         while(ball.isMoving()){
