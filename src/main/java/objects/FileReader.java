@@ -31,11 +31,11 @@ public class FileReader {
 
     public FileReader() {
         try {
-            shotFile = new File("src\\main\\java\\shot.txtC:\\Users\\Hadar\\Documents\\GitHub\\crazyPuttin\\src\\main\\java\\objects\\shotFile");
+            shotFile = new File("C:\\Users\\majag\\IdeaProjects\\crazyPutting\\src\\main\\java\\shot.txt");
             if(shotFile.exists()){
                 shotReader = new Scanner(shotFile);
             }
-            inputFile = new File("C:\\Users\\Hadar\\Documents\\GitHub\\crazyPuttin\\src\\main\\java\\objects\\inputFile");
+            inputFile = new File("C:\\Users\\majag\\IdeaProjects\\crazyPutting\\src\\main\\java\\example_inputfile.txt");
             if(inputFile.exists()){
                 inputReader = new Scanner(inputFile);
                 while(inputReader.hasNextLine()){
@@ -159,7 +159,7 @@ public class FileReader {
 
     public static void main(String[] args) {
         FileReader f = new FileReader();
-        /*System.out.println(f.x0 + ", " + f.y0);
+        System.out.println(f.x0 + ", " + f.y0);
         System.out.println(f.xt + ", " + f.yt);
         System.out.println(f.r);
         System.out.println(f.muk);
@@ -170,7 +170,7 @@ public class FileReader {
         System.out.println(f.muks);
         System.out.println(f.muss);
 
-         */
+
         System.out.println(f.equation);
         System.out.println(f.calculator(3,4));
 

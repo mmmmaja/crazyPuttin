@@ -1,6 +1,7 @@
 package Main;
 
 import graphics.Display;
+import javafx.application.Application;
 import javafx.concurrent.Task;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
@@ -11,8 +12,6 @@ import objects.*;
 import physics.Euler;
 import physics.Vector2D;
 
-import java.util.Timer;
-import java.util.TimerTask;
 
 
 /**
@@ -117,25 +116,30 @@ public class Universe extends Euler {
     public void takeShot(Vector2D velocity) {
         ball.setVelocity(velocity);
 
-        Task<Void> task = new Task<Void>() {
-
-            @Override
-            public Void call() {
+//        Task<Void> task = new Task<Void>() {
+//
+//            @Override
+//            public Void call() {
                 while (getBall().isMoving()) {
-                    try {
-                        Thread.sleep(2);
+//                    try {
+//                        Thread.sleep(20);
                         if (ball.isMoving()) {
                             nextStep(ball);
                             updateBallsPosition();
                             System.out.println(ball.getPositionX() + " " + ball.getPositionY());
                         }
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-                return null;
-            }
-        };
-        new Thread(task).start();
+
+//                    } catch (InterruptedException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//                return null;
+//            }
+//        };
+//        new Thread(task).start();
+    }}
+
+    public FileReader getFileReader() {
+        return this.fileReader;
     }
 }

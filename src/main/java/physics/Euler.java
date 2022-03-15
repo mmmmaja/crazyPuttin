@@ -18,15 +18,15 @@ public class Euler extends PhysicEngine implements Solver {
 		gameObject.setState(calculateNextPosition(gameObject ) , calculateNextVelocity(gameObject ));
 
 
-		System.out.println("------pos " + ( gameObject.getPosition().getX() - gameObject.getPreviousPosition().getX() ) );
-		System.out.println("vel " + gameObject.getVelocity());
+//		System.out.println("------pos " + ( gameObject.getPosition().getX() - gameObject.getPreviousPosition().getX() ) );
+//		System.out.println("vel " + gameObject.getVelocity());
 
 	}
 	public Vector2D calculateNextVelocity(GameObject gameObject ){
 		//v1 = v0 + h * a0
 		Vector2D velocity = gameObject.getVelocity() ;
 		Vector2D acceleration = calculateAcceleration(gameObject) ;
-		System.out.println("AAAAAAAAAAAAAAAAAAAAACCCCCCCCCCCCCCCCCCC " + acceleration);
+		//System.out.println("AAAAAAAAAAAAAAAAAAAAACCCCCCCCCCCCCCCCCCC " + acceleration);
 		double aX = acceleration.getX();
 		double aY = acceleration.getY();
 
