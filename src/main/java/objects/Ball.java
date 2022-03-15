@@ -35,10 +35,11 @@ public class Ball extends PhysicEngine implements GameObject {
         this.sphere.setTranslateY(this.position.getY() - Display.translateY);
         this.sphere.setTranslateZ(TerrainGenerator.getHeight(this.position));
         System.out.println(TerrainGenerator.getHeight(this.position));
-        // TODO add material etc.
         Material material = new PhongMaterial(Color.BLUEVIOLET);
         this.sphere.setMaterial(material);
     }
+
+
     public boolean isMoving(){ return velocity.getMagnitude() > 0.2; }
     public boolean willMove(){return getMu_S() < ( Math.sqrt( Math.pow(TerrainGenerator.getSlopeX(position) , 2 ) + Math.pow( TerrainGenerator.getSlopeY( getPosition()) ,2) ) ) ;}
     public boolean isOnSlope() {return TerrainGenerator.getSlopeX(position) != 0  || TerrainGenerator.getSlopeY(position) != 0 ; }

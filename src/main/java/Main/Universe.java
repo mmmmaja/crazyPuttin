@@ -20,12 +20,9 @@ import physics.Vector2D;
 public class Universe extends Euler {
 
     private final FileReader fileReader;
-
     private Ball ball;
     private Terrain terrain;
     private Target target;
-
-    // object needed for the display
     private MeshView[] meshViews;
 
     public Universe(FileReader fileReader) {
@@ -37,15 +34,15 @@ public class Universe extends Euler {
 
     private void createBall() {
         Vector2D initialPosition = this.fileReader.getInitialPosition();
-        this.ball = new Ball(new Vector2D(initialPosition.getX(), initialPosition.getY()) );
+        this.ball = new Ball(new Vector2D(initialPosition.getX(), initialPosition.getY()));
     }
 
+
     /**
-     * creates 3 meshes: grass, water, sandPits
+     * creates 3 meshes: grass, water, sandPits and adds the textures
      */
     private void createTerrain() {
-        this.terrain = new Terrain(fileReader.getSandPitX(), fileReader.getSandPitY());
-//        this.terrain = new Terrain(new SandPit(fileReader.getSandPitX(), fileReader.getSandPitY()));
+        this.terrain = new Terrain(this.fileReader);
 
         MeshView meshViewGrass = new MeshView();
         meshViewGrass.setMesh(this.terrain.getGrassMesh());
@@ -81,10 +78,10 @@ public class Universe extends Euler {
         this.meshViews = new MeshView[] {meshViewGrass, meshViewWater,meshViewSandPit};
     }
 
+
     private void createTarget() {
         this.target = new Target(this.fileReader.getTargetPosition(), this.fileReader.getTargetRadius());
     }
-
 
 
     public Ball getBall() {

@@ -17,9 +17,10 @@ public class Terrain extends TerrainGenerator {
     private static final int STEP = 2;
 
 
-    public  Terrain(Vector2D sandPitX, Vector2D sandPitY) {
-        this.sandPitX = sandPitX;
-        this.sandPitY = sandPitY;
+    public Terrain(FileReader fileReader) {
+        super(fileReader);
+        this.sandPitX = fileReader.getSandPitX();
+        this.sandPitY = fileReader.getSandPitY();
         this.grassMesh   = new TriangleMesh();
         this.waterMesh   = new TriangleMesh();
         this.sandPitMesh = new TriangleMesh();
@@ -57,7 +58,6 @@ public class Terrain extends TerrainGenerator {
                 // add texture and faces to water mesh
                 if (TerrainGenerator.getHeight(new Vector2D(i * STEP, j * STEP)) > 0) {
                     this.waterMesh.getFaces().addAll(topLeft, 1, topRight, 1, bottomLeft, 1);
-                    //this.waterMesh.getFaces().addAll(bottomLeft, 1, topRight, 1, bottomRight, 1);
 
                 }
                 // add texture and faces to sandPit mesh
@@ -67,7 +67,6 @@ public class Terrain extends TerrainGenerator {
                 }
                 else {
                     this.grassMesh.getFaces().addAll(topLeft, 1, topRight, 1, bottomLeft, 1);
-                   // this.grassMesh.getFaces().addAll(bottomLeft, 1, topRight, 1, bottomRight, 1);
                 }
             }
         }

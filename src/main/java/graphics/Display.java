@@ -3,6 +3,8 @@ package graphics;
 import Main.Main;
 import Main.Shot;
 import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.*;
 import javafx.scene.control.Button;
@@ -18,27 +20,29 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import Main.Universe;
+import javafx.stage.WindowEvent;
 import physics.Vector2D;
+
+import java.util.Objects;
 
 
 public class Display extends Application {
+
     public static Universe universe = Main.getUniverse();
 
     public static final int FRAME_WIDTH = 1100;
     public static final int FRAME_HEIGHT = 600;
 
-    // translate all the objects to the middle of the frame (used just for the display)
+    // translate all the objects to the middle of the frame
     public static final int translateX = FRAME_WIDTH / 3;
     public static final int translateY =  FRAME_HEIGHT / 3;
 
-    // to which all the objects are added (rotation built-in)
+    // to smartGroup all the objects are added (rotation built-in)
     private SmartGroup group;
+
     private GridPane gridPane;
-
     private Text text;
-
     private int shotCounter = 0;
-
 
 
     @Override
@@ -55,15 +59,15 @@ public class Display extends Application {
         SubScene subScene = new SubScene(this.group, FRAME_WIDTH - 200, FRAME_HEIGHT, true, SceneAntialiasing.BALANCED);
         subScene.setFill(Color.BLACK);
 
-        Camera camera = new PerspectiveCamera();
-
         Pane displayPane = new Pane();
         displayPane.setPrefSize(FRAME_WIDTH, FRAME_HEIGHT);
 
         this.gridPane = new GridPane();
         addPanel();
         displayPane.getChildren().add(this.gridPane);
-        gridPane.setTranslateX(FRAME_WIDTH - 200);
+        this.gridPane.setTranslateX(FRAME_WIDTH - 200);
+
+        Camera camera = new PerspectiveCamera();
         subScene.setCamera(camera);
 
         Pane pane3D = new Pane();
@@ -82,27 +86,28 @@ public class Display extends Application {
         // zoomIn, zoomOut added on scroll event
         stage.addEventHandler(ScrollEvent.SCROLL, event -> group.zoom(event.getDeltaY()));
 
-        scene.setOnKeyPressed(e -> {
-            if (e.getCode() == KeyCode.W) {
-                new Shot(universe, new Vector2D(200, 200));
-                this.shotCounter++;
-                updatePanel();
-
-            }
+        // exit the application when the window is closed by the user
+        stage.setOnCloseRequest(t -> {
+            Platform.exit();
+            System.exit(0);
         });
-
 
         stage.setScene(scene);
         stage.show();
     }
 
+    /**
+     * update x and y position of the ball and counter of the shoots
+     */
     private void updatePanel() {
         this.text.setText(" X-position:  " + Math.round(universe.getBall().getPositionX())  +
                 " \n Y-position:  " + Math.round(universe.getBall().getPositionY()) +
                 " \n Number of shots: "+ this.shotCounter+"\n");
     }
 
-
+    /**
+     * adds the panel with the buttons at the right-hand side
+     */
     private void addPanel() {
         gridPane.setPrefSize(200, FRAME_HEIGHT);
         gridPane.setStyle("-fx-background-color: darkgrey");
@@ -172,7 +177,23 @@ public class Display extends Application {
         gridPane.add(new HBox(30, button), 0, 12);
 
         button.setOnMouseClicked(mouseEvent -> {
-            // TODO
+            Vector2D velocity;
+
+            if (!Objects.equals(xvel.getText(), "") && !Objects.equals(yvel.getText(), ""))
+            {
+                int xV = Integer.parseInt(xvel.getText());
+                int yV = Integer.parseInt(yvel.getText());
+                velocity = new Vector2D(xV, yV);
+            }
+            else {
+                velocity = universe.getFileReader().getNextShotFromFile();
+            }
+            // TODO what if we run out of shots???
+            if (velocity != null) {
+                new Shot(universe, velocity);
+                this.shotCounter++;
+                updatePanel();
+            }
         });
     }
 

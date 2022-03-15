@@ -3,15 +3,20 @@ package Main;
 import objects.Ball;
 import physics.Vector2D;
 
+
+/**
+ * creates a Thread when displaying the animation of the moving ball
+ */
 public class Shot implements Runnable {
 
     private final Ball ball;
     private final Universe universe;
+    private boolean running = false;
+    private Thread thread;
 
     public Shot(Universe universe, Vector2D velocity) {
         this.universe = universe;
         this.ball = universe.getBall();
-
         this.ball.setVelocity(velocity);
 
         if (velocity.getMagnitude() > universe.getMAX_SPEED()) {
@@ -21,8 +26,6 @@ public class Shot implements Runnable {
         start();
     }
 
-    private boolean running = false;
-    private Thread thread;
 
     public synchronized void start() {
         running = true;
@@ -42,11 +45,12 @@ public class Shot implements Runnable {
     @Override
     public void run() {
 
-
         double delta = 0;
         long lastTime = System.nanoTime();
-        final double nanos = Math.pow(10, 9) / 900;
-        // number of nanoseconds between each update: 400 times per second
+
+        // number of nanoseconds between each update: SPEED times per second
+        int SPEED = 900;
+        final double nanos = Math.pow(10, 9) / SPEED;
 
         while (running) {
 
@@ -61,7 +65,6 @@ public class Shot implements Runnable {
                 universe.updateBallsPosition();
                 delta--;
             }
-
         }
         stop();
     }

@@ -5,23 +5,15 @@ import net.objecthunter.exp4j.ExpressionBuilder;
 import physics.Vector2D;
 
 
-/**
- * TODO make it not static: problem getSlope methods
- */
 public class TerrainGenerator {
 
     private static final double STEP_SIZE = 0.01;
+    private static FileReader fileReader;
+    private static Expression expression;
 
-    public TerrainGenerator() {
-//        Expression expression = new ExpressionBuilder(equation)
-//                .variables("x", "y")
-//                .build()
-//                .setVariable("x", this.xt)
-//                .setVariable("y", this.yt);
-//
-//        float result = (float) expression.evaluate();
-
-        //Assertions.assertEquals(1, result);
+    public TerrainGenerator(FileReader fileReader) {
+        TerrainGenerator.fileReader = fileReader;
+        TerrainGenerator.expression = fileReader.getExpression();
     }
 
     public static double getHeight( Vector2D position) {
@@ -30,6 +22,9 @@ public class TerrainGenerator {
         double y = position.getY();
 
         return Math.sin(x/6 + y / 6);
+
+        // FIXME troubles with evaluating the expression
+       // return fileReader.calculator(expression, (float) x, (float) y);
     }
 
 
