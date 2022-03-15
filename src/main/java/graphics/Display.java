@@ -18,7 +18,7 @@ import physics.Vector2D;
  * fixme why hole disappears?
  */
 public class Display extends Application {
-    Universe universe = Main.getUniverse();
+    public static Universe universe = Main.getUniverse();
 
     public static final int FRAME_WIDTH = 1100;
     public static final int FRAME_HEIGHT = 600;
@@ -63,7 +63,7 @@ public class Display extends Application {
 
         scene.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.W) {
-                move(1,1);
+                universe.takeShot(new Vector2D(0,20));
             }
         });
 
@@ -73,12 +73,5 @@ public class Display extends Application {
     }
 
 
-    public void move(double deltaX , double deltaY){
-        Vector2D position = universe.getBall().getPosition();
-        universe.getBall().getSphere().setTranslateX(position.getX() - Display.translateX + deltaX);
-        universe.getBall().getSphere().setTranslateY(position.getY() - Display.translateY + deltaY);
-        universe.getBall().getSphere().setTranslateZ(TerrainGenerator.getHeight(position));
-        universe.getBall().translateObject(deltaX, deltaY);
-    }
 
 }

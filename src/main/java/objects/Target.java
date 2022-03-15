@@ -49,6 +49,11 @@ public class Target implements GameObject {
     }
 
     @Override
+    public void setState(Vector2D position, Vector2D velocity) {
+
+    }
+
+    @Override
     public Vector2D getDimension() {
         return this.dimension;
     }

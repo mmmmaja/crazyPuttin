@@ -1,6 +1,6 @@
 package Main;
 
-import javafx.scene.image.Image;
+import graphics.Display;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.CullFace;
@@ -34,7 +34,7 @@ public class Universe extends Euler {
 
     private void createBall() {
         Vector2D initialPosition = this.fileReader.getInitialPosition();
-        this.ball = new Ball(new Vector2D(initialPosition.getX(), initialPosition.getY()));
+        this.ball = new Ball(new Vector2D(initialPosition.getX(), initialPosition.getY()) );
     }
 
     /**
@@ -105,7 +105,18 @@ public class Universe extends Euler {
         return this.meshViews;
     }
 
-    public void takeShot() {
-
+    public void updateBallsPosition(){
+        Vector2D position = ball.getPosition();
+        ball.getSphere().setTranslateX(position.getX() - Display.translateX + ( ball.getPositionX() - ball.getPreviousPosition().getX() ) );
+        ball.getSphere().setTranslateY(position.getY() - Display.translateY + ( ball.getPositionY() - ball.getPreviousPosition().getY() ) );
+        ball.getSphere().setTranslateZ(TerrainGenerator.getHeight(position));
+    }
+    public void takeShot(Vector2D velocity) {
+        ball.setVelocity(velocity);
+        while(ball.isMoving()){
+            nextStep(ball);
+            updateBallsPosition();
+        }
+        System.out.println(ball.getPositionX() + " " + ball.getPositionY());
     }
 }

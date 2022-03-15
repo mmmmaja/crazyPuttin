@@ -39,77 +39,51 @@ public class Ball extends PhysicEngine implements GameObject {
         Material material = new PhongMaterial(Color.BLUEVIOLET);
         this.sphere.setMaterial(material);
     }
+    public boolean isMoving(){ return velocity.getMagnitude() > 0.2; }
+    public boolean willMove(){return getMu_S() < ( Math.sqrt( Math.pow(TerrainGenerator.getSlopeX(position) , 2 ) + Math.pow( TerrainGenerator.getSlopeY( getPosition()) ,2) ) ) ;}
+    public boolean isOnSlope() {return TerrainGenerator.getSlopeX(position) != 0  || TerrainGenerator.getSlopeY(position) != 0 ; }
 
     public Vector2D getPosition(){
         return position;
     }
+    public void setPosition(Vector2D position){this.position = position;    }
 
-    @Override
     public void setDimension(Vector2D dimension) {
         this.RADIUS = dimension.getX();
     }
+    public Vector2D getDimension() {return new Vector2D(RADIUS, RADIUS);}
 
-    @Override
-    public Vector2D getDimension() {
-        return new Vector2D(RADIUS, RADIUS);
-    }
-
-    @Override
-    public boolean isMoving() {
-        return false;
-    }
-
-    @Override
-    public boolean willMove() {
-        return false;
-    }
-
-    @Override
-    public boolean isOnSlope() {
-        return false;
-    }
-
-    public Vector2D getVelocity(){
-        return velocity;
-    }
-    public double getPositionX(){
-        return position.getX();
-    }
-    public double getPositionY(){
-        return position.getY();
-    }
-
-    public Vector2D getPreviousPosition() { return previousPosition; }
     public Vector2D getAcceleration(){ return acceleration;}
+    public void setAcceleration(Vector2D acceleration){ this.acceleration = acceleration;    }
 
-    public double getMass(){
-        return getMASS();
-    }
+    public Vector2D getVelocity(){return velocity;}
 
-    public void setPosition(Vector2D position){
-        this.position = position;
-    }
-    public void translateObject( double x , double y ){
-        this.position = new Vector2D( this.getPositionX() + x , this.getPositionY() + y);
-        this.setPosition(position);
-    }
     public void setVelocity(Vector2D velocity){
-        this.velocity = velocity ;
-    }
-    public void setAcceleration(Vector2D acceleration){
-        this.acceleration = acceleration;
-    }
-    public void setPreviousPosition(Vector2D previousPosition){
-        this.previousPosition = previousPosition;
-    }
+        if(velocity.getMagnitude() > getMAX_SPEED() ) {
+            Vector2D unit_vector = new Vector2D(velocity.getX() / velocity.getMagnitude(), velocity.getY() / velocity.getMagnitude());
+            this.velocity = new Vector2D(unit_vector.getX() * getMAX_SPEED(), unit_vector.getY() * getMAX_SPEED());
+            return;
+        }
+        this.velocity = velocity;}
+
+    public double getPositionX(){return position.getX();}
+    public double getPositionY(){return position.getY();}
+
+    public void setPreviousPosition(Vector2D previousPosition){this.previousPosition = previousPosition;}
+    public Vector2D getPreviousPosition() { return previousPosition; }
 
 
-    public double getRADIUS() {
-        return this.RADIUS;
+
+    public void translateObject( double x , double y ){
+        this.position = new Vector2D( this.getPosition().getX() + x , this.getPosition().getY() + y);
+    }
+    public void setState( Vector2D position , Vector2D velocity){
+        setPosition(position);
+        setVelocity(velocity);
     }
 
-    public Sphere getSphere() {
-        return this.sphere;
-    }
+    public double getRADIUS() {return this.RADIUS;}
+    public double getMass(){return getMASS();    }
+    public Sphere getSphere() {return this.sphere;}
 
 }

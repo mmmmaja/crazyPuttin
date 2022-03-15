@@ -80,7 +80,7 @@ public class Terrain extends TerrainGenerator {
 
 
 
-   public TriangleMesh getGrassMesh() {
+    public TriangleMesh getGrassMesh() {
         return this.grassMesh;
    }
 

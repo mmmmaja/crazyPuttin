@@ -31,4 +31,12 @@ public class Vector2D {
     public double getMagnitude(){
         return Math.sqrt( Math.pow(x,2)  + Math.pow(y,2));
     }
+
+    @Override
+    public String toString() {
+        return "Vector2D{" +
+                "x=" + x +
+                ", y=" + y +
+                '}';
+    }
 }

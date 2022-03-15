@@ -1,5 +1,6 @@
 package objects;
 
+import physics.PhysicEngine;
 import physics.Vector2D;
 
 public interface GameObject {
@@ -16,7 +17,7 @@ public interface GameObject {
     public Vector2D getDimension();
     public void setDimension(Vector2D dimension);
 
-
+    public void setState( Vector2D position , Vector2D velocity);
     public boolean isMoving();
     public boolean willMove();
     public boolean isOnSlope();
