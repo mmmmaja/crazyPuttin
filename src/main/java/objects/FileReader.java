@@ -5,6 +5,8 @@ import physics.Vector2D;
 import Main.Universe;
 import java.util.Scanner;
 import java.io.*;
+import net.objecthunter.exp4j.Expression;
+import net.objecthunter.exp4j.ExpressionBuilder;
 
 public class FileReader {
     Scanner inputReader;
@@ -24,14 +26,16 @@ public class FileReader {
     Vector2D sandPitY;
     double muks;
     double muss;
+    String equation;
+    Expression expression;
 
     public FileReader() {
         try {
-            shotFile = new File("src\\main\\java\\shot.txt");
+            shotFile = new File("src\\main\\java\\shot.txtC:\\Users\\Hadar\\Documents\\GitHub\\crazyPuttin\\src\\main\\java\\objects\\shotFile");
             if(shotFile.exists()){
                 shotReader = new Scanner(shotFile);
             }
-            inputFile = new File("src\\main\\java\\example_inputfile.txt");
+            inputFile = new File("C:\\Users\\Hadar\\Documents\\GitHub\\crazyPuttin\\src\\main\\java\\objects\\inputFile");
             if(inputFile.exists()){
                 inputReader = new Scanner(inputFile);
                 while(inputReader.hasNextLine()){
@@ -63,6 +67,10 @@ public class FileReader {
                             break;
                         case "heightProfile":
                             heightProfile = next[1];
+                            equation=next[1].replaceAll("Math.","");
+                            expression= new ExpressionBuilder(equation)
+                                    .variables("x", "y")
+                                    .build();
                             break;
                         case "sandPitX":
                             String[] pitX = next[1].split("<");
@@ -123,9 +131,35 @@ public class FileReader {
         return new Vector2D(Double.parseDouble(shot[0]), Double.parseDouble(shot[1]));
     }
 
+    public Expression getExpression()
+    {
+        return expression;
+    }
+
+
+
+    public float calculator( float x, float y)
+    {
+        return calculator(expression, x, y);
+    }
+
+    public float calculator(Expression expression, float x, float y)
+    {
+        expression
+                .setVariable("x", x)
+                .setVariable("y", y);
+
+        float result = (float) expression.evaluate();
+
+        //Assertions.assertEquals(1, result);
+
+        return result;
+
+    }
+
     public static void main(String[] args) {
         FileReader f = new FileReader();
-        System.out.println(f.x0 + ", " + f.y0);
+        /*System.out.println(f.x0 + ", " + f.y0);
         System.out.println(f.xt + ", " + f.yt);
         System.out.println(f.r);
         System.out.println(f.muk);
@@ -135,6 +169,11 @@ public class FileReader {
         System.out.println(f.sandPitY);
         System.out.println(f.muks);
         System.out.println(f.muss);
+
+         */
+        System.out.println(f.equation);
+        System.out.println(f.calculator(3,4));
+
     }
 
 }

@@ -2,6 +2,7 @@ package graphics;
 
 import Main.Main;
 import javafx.application.Application;
+import javafx.concurrent.Task;
 import javafx.scene.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.ScrollEvent;
@@ -61,6 +62,7 @@ public class Display extends Application {
         scene.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.W) {
                 universe.takeShot(new Vector2D(0,20));
+
             }
         });
 

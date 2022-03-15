@@ -1,6 +1,7 @@
 package Main;
 
 import graphics.Display;
+import javafx.concurrent.Task;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.CullFace;
@@ -9,6 +10,9 @@ import javafx.scene.shape.MeshView;
 import objects.*;
 import physics.Euler;
 import physics.Vector2D;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 
 /**
@@ -107,12 +111,31 @@ public class Universe extends Euler {
         ball.getSphere().setTranslateZ(TerrainGenerator.getHeight(position));
     }
 
+    /**
+     * TODO add timer to the next step
+     */
     public void takeShot(Vector2D velocity) {
         ball.setVelocity(velocity);
-        while(ball.isMoving()){
-            nextStep(ball);
-            updateBallsPosition();
-        }
-        System.out.println(ball.getPositionX() + " " + ball.getPositionY());
+
+        Task<Void> task = new Task<Void>() {
+
+            @Override
+            public Void call() {
+                while (getBall().isMoving()) {
+                    try {
+                        Thread.sleep(2);
+                        if (ball.isMoving()) {
+                            nextStep(ball);
+                            updateBallsPosition();
+                            System.out.println(ball.getPositionX() + " " + ball.getPositionY());
+                        }
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                return null;
+            }
+        };
+        new Thread(task).start();
     }
 }
