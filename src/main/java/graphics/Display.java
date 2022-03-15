@@ -1,10 +1,8 @@
 package graphics;
 
 import Main.Main;
+import Main.Shot;
 import javafx.application.Application;
-import javafx.concurrent.Task;
-import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.*;
 import javafx.scene.control.Button;
@@ -15,17 +13,12 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Line;
 import javafx.scene.shape.MeshView;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import Main.Universe;
-import objects.TerrainGenerator;
 import physics.Vector2D;
-
-import java.util.EventListener;
-
 
 
 public class Display extends Application {
@@ -91,8 +84,8 @@ public class Display extends Application {
 
         scene.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.W) {
-                universe.takeShot(new Vector2D(1,0));
-                //takeShot(new Vector2D(5,5), stage, scene);
+                new Shot(universe, new Vector2D(200, 200));
+                this.shotCounter++;
                 updatePanel();
 
             }
@@ -183,20 +176,5 @@ public class Display extends Application {
         });
     }
 
-
-    public void takeShot(Vector2D velocity, Stage stage, Scene scene) {
-        this.shotCounter++;
-        universe.getBall().setVelocity(velocity);
-        while (universe.getBall().isMoving()) {
-
-            if (universe.getBall().isMoving()) {
-                universe.nextStep(universe.getBall());
-                universe.updateBallsPosition();
-                System.out.println(universe.getBall().getPositionX() + " " + universe.getBall().getPositionY());
-            }
-
-
-        }
-    }
 
 }

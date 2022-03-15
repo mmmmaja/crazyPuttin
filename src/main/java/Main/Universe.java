@@ -110,39 +110,6 @@ public class Universe extends Euler {
         ball.getSphere().setTranslateZ(TerrainGenerator.getHeight(position) - ball.getRADIUS());
     }
 
-    /**
-     * TODO add timer to the next step
-     */
-    public void takeShot(Vector2D velocity) {
-        ball.setVelocity(velocity);
-        if(velocity.getMagnitude() > getMAX_SPEED() ) {
-            Vector2D unit_vector = new Vector2D(velocity.getX() / velocity.getMagnitude(), velocity.getY() / velocity.getMagnitude());
-            ball.setVelocity( new Vector2D(unit_vector.getX() * getMAX_SPEED(), unit_vector.getY() * getMAX_SPEED()) ) ;
-        }
-
-//        Task<Void> task = new Task<Void>() {
-//
-//            @Override
-//            public Void call() {
-        while (getBall().isMoving()) {
-//                    try {
-//                        Thread.sleep(20);
-            if (ball.isMoving()) {
-                nextStep(ball);
-                updateBallsPosition();
-                System.out.println(ball.getPositionX() + " " + ball.getPositionY());
-            }
-
-//                    } catch (InterruptedException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-//                return null;
-//            }
-//        };
-//        new Thread(task).start();
-        }
-    }
 
     public FileReader getFileReader() {
         return this.fileReader;
