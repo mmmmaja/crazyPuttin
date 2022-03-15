@@ -59,11 +59,7 @@ public class Ball extends PhysicEngine implements GameObject {
     public Vector2D getVelocity(){return velocity;}
 
     public void setVelocity(Vector2D velocity){
-        if(velocity.getMagnitude() > getMAX_SPEED() ) {
-            Vector2D unit_vector = new Vector2D(velocity.getX() / velocity.getMagnitude(), velocity.getY() / velocity.getMagnitude());
-            this.velocity = new Vector2D(unit_vector.getX() * getMAX_SPEED(), unit_vector.getY() * getMAX_SPEED());
-            return;
-        }
+
         this.velocity = velocity;}
 
     public double getPositionX(){return position.getX();}

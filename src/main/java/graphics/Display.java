@@ -42,6 +42,10 @@ public class Display extends Application {
     private SmartGroup group;
     private GridPane gridPane;
 
+    private Text text;
+
+    private int shotCounter = 0;
+
 
 
     @Override
@@ -87,7 +91,9 @@ public class Display extends Application {
 
         scene.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.W) {
-                takeShot(new Vector2D(5,5), stage, scene);
+                universe.takeShot(new Vector2D(1,0));
+                //takeShot(new Vector2D(5,5), stage, scene);
+                updatePanel();
 
             }
         });
@@ -95,6 +101,12 @@ public class Display extends Application {
 
         stage.setScene(scene);
         stage.show();
+    }
+
+    private void updatePanel() {
+        this.text.setText(" X-position:  " + Math.round(universe.getBall().getPositionX())  +
+                " \n Y-position:  " + Math.round(universe.getBall().getPositionY()) +
+                " \n Number of shots: "+ this.shotCounter+"\n");
     }
 
 
@@ -109,7 +121,7 @@ public class Display extends Application {
         Font font = new Font("Verdana", 14);
         Font bigFont = new Font("Verdana", 20);
 
-        Text title = new Text("Golf Game \n- by group 6");
+        Text title = new Text("Golf Game \n- group 6");
         title.setFill(Color.WHITE);
         title.setFont(bigFont);
         gridPane.add(new HBox(30, title), 0, 0);
@@ -117,11 +129,11 @@ public class Display extends Application {
         Text gap1 = new Text("");
         gridPane.add(new HBox(30, gap1), 0, 1);
 
-        Text text = new Text(" X-position:  " + Math.round(universe.getBall().getPositionX())  +
+        this.text = new Text(" X-position:  " + Math.round(universe.getBall().getPositionX())  +
                 " \n Y-position:  " + Math.round(universe.getBall().getPositionY()) +
-                " \n Number of shots: \n");
-        text.setFill(Color.WHITE);
-        text.setFont(font);
+                " \n Number of shots: "+ this.shotCounter+"\n");
+        this.text.setFill(Color.WHITE);
+        this.text.setFont(font);
         gridPane.add(new HBox(30, text), 0, 2);
 
         Text gap2 = new Text("");
@@ -134,6 +146,7 @@ public class Display extends Application {
 
         Button readFile = new Button("Read file");
         gridPane.add(new HBox(30, readFile), 0, 5);
+
         readFile.setOnMouseClicked(mouseEvent -> {
             universe.getFileReader().getNextShotFromFile();
         });
@@ -172,8 +185,8 @@ public class Display extends Application {
 
 
     public void takeShot(Vector2D velocity, Stage stage, Scene scene) {
+        this.shotCounter++;
         universe.getBall().setVelocity(velocity);
-        int counter = 0;
         while (universe.getBall().isMoving()) {
 
             if (universe.getBall().isMoving()) {

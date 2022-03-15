@@ -13,7 +13,7 @@ public class PhysicEngine {
 	private final double MAX_SPEED = 5 ;
 	private final double g =  9.81;
 	private final double MASS = 0.0459;
-	private double mu_K = 0.06;
+	private double mu_K = 0.1;
 	private double mu_S = 0.15;
 	private final double STEP = 0.01667; // 1/60
 
