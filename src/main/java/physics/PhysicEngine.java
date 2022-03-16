@@ -1,67 +1,107 @@
 package physics;
 
-import objects.Ball;
+import objects.FileReader;
 import objects.GameObject;
-import objects.Terrain;
 import objects.TerrainGenerator;
 
-public class PhysicEngine {
+public class PhysicEngine extends Solver {
 
 
 	//TODO terrain might be changed.
 	//Terrain terrain = new Terrain();
 	private final double MAX_SPEED = 5 ;
 	private final double g =  9.81;
-	private final double MASS = 0.0459;
-	private double mu_K = 0.1;
-	private double mu_S = 0.15;
-	private final double STEP = 0.01667; // 1/60
+
+	private final double STEP = 0.016; // 1/60
 
 	public PhysicEngine(){}
 
 
-	public Vector2D calculateAcceleration(GameObject gameObject){
+	public Vector2D calculateAcceleration(GameObject gameObject) {
+		double mu_K = TerrainGenerator.getKineticFrictionCoefficient(gameObject.getPosition());
 		double vX = gameObject.getVelocity().getX();
 		double vY = gameObject.getVelocity().getY();
 
 		double partial_x = TerrainGenerator.getSlopeX(gameObject.getPosition());
 		double partial_y = TerrainGenerator.getSlopeY(gameObject.getPosition());
 
-		Vector2D partials = new Vector2D(partial_x , partial_y);
+		Vector2D partials = new Vector2D(partial_x, partial_y);
+		if (gameObject.isMoving()) {
+			System.out.println("moving");
+			double aX = (-1 * g * partial_x) - (mu_K * g * vX / gameObject.getVelocity().getMagnitude());
+			double aY = (-1 * g * partial_y) - (mu_K * g * vY / gameObject.getVelocity().getMagnitude());
+			return new Vector2D(aX, aY);
 
-//		if(!gameObject.isMoving() && gameObject.isOnSlope() && gameObject.willMove() ){
-//			double aX = mu_K * g * partial_x / partials.getMagnitude();
-//			double aY = mu_K * g * partial_y / partials.getMagnitude();
-//			return new Vector2D( aX , aY);
+		} else if ( gameObject.willMove()) {
+			System.out.println("will move");
+			double aX = mu_K * g * partial_x / partials.getMagnitude();
+			double aY = mu_K * g * partial_y / partials.getMagnitude();
+
+			return new Vector2D(aX, aY);
+		} else {
+			System.out.println("stable");
+			return new Vector2D(0, 0);
+
+		}
+	}
+
+//	public Vector gravitation_force( GameObject gameObject ){
+//		double m = gameObject.getMass();
+//
+//		double dHdX = TerrainGenerator.getSlopeX( gameObject.getPosition() );
+//		double dHdY = TerrainGenerator.getSlopeY( gameObject.getPosition() );
+//
+//		return new Vector2D(  g * dHdX ,  g * dHdY ).reverseVector();
+//	}
+//	public Vector friction_force(GameObject gameObject) {
+//		double m = gameObject.getMass();
+//
+//		double x = gameObject.getPosition().getX();
+//		double y = gameObject.getPosition().getY();
+//
+//		double vX = gameObject.getVelocity().getX();
+//		double vY = gameObject.getVelocity().getY();
+//
+//		Vector2D v = gameObject.getVelocity();
+//
+//		double dHdX = TerrainGenerator.getSlopeX( gameObject.getPosition() );
+//		double dHdY = TerrainGenerator.getSlopeY( gameObject.getPosition() );
+//		Vector2D partials = new Vector2D( dHdX , dHdY);
+//
+//		Vector velocity_unit = gameObject.getVelocity().getUnitVector();
+//		Vector acceleration_unit = calculateAcceleration(gameObject).getUnitVector();
+//
+//		if(!gameObject.isMoving()){
+//			double fX = m * mu_K_grass * g * dHdX / partials.getMagnitude() ;
+//			double fY = m * mu_K_grass * g * dHdY / partials.getMagnitude() ;
+//			return new Vector2D( fX , fY);
 //		}
-		double aX = (-1 * g * partial_x) -  (mu_K * g * vX / gameObject.getVelocity().getMagnitude());
-		double aY = (-1 * g * partial_y) -  (mu_K * g * vY / gameObject.getVelocity().getMagnitude());
-
-		return new Vector2D( aX , aY );
-	}
-
-	public Vector3D gravitation_force(){
-		return new Vector3D( 0 , 0 , -1 * MASS * g);
-	}
-//	public Vector3D friction_force( Vector2D position , Vector2D velocity) {
-//		double vX = velocity.getX();
-//		double vY = velocity.getY();
-//		double dHdX = terrain.getSlopeX(position);
-//		double dHdY = terrain.getSlopeY(position);
-//		return (-1 * mu_K * getMASS() *  )
+//		double fX =  m * mu_K_grass * g * vX / v.getMagnitude() ;
+//		double fY =  m * mu_K_grass * g * vY / v.getMagnitude() ;
+//		return new Vector2D( fX , fY );
+//	}
+//	public Vector2D f ( GameObject gameObject){
+//		double m = gameObject.getMass();
+//
+//		double x = gameObject.getPosition().getX();
+//		double y = gameObject.getPosition().getY();
+//
+//		double vX = gameObject.getVelocity().getX();
+//		double vY = gameObject.getVelocity().getY();
+//
+//		Vector2D v = gameObject.getVelocity();
+//
+//		double dHdX = TerrainGenerator.getSlopeX( gameObject.getPosition() );
+//		double dHdY = TerrainGenerator.getSlopeY( gameObject.getPosition() );
+//		Vector2D partials = new Vector2D( dHdX , dHdY);
+//
+//		Vector acceleration = calculateAcceleration(gameObject);
+//
+//		return new Vector2D( acceleration.getX() * m , acceleration.getY()*m );
 //	}
 
 
-
-	public double getG() {return g;}
-	public double getMASS() {return MASS;}
 	public double getSTEP() { return STEP;}
 	public double getMAX_SPEED(){ return MAX_SPEED; }
-
-	public double getMu_K() {return mu_K;}
-	public double getMu_S() {return mu_S;}
-
-	public void setMu_K( double mu_K){ this.mu_K = mu_K ; }
-	public void setMu_S( double mu_S){ this.mu_S = mu_S ; }
 
 }

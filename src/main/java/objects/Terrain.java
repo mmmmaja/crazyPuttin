@@ -5,7 +5,7 @@ import javafx.scene.shape.TriangleMesh;
 import physics.Vector2D;
 
 public class Terrain extends TerrainGenerator {
-
+    private final FileReader fileReader ;
     private final TriangleMesh grassMesh;
     private final TriangleMesh waterMesh;
     private final TriangleMesh sandPitMesh;
@@ -18,7 +18,7 @@ public class Terrain extends TerrainGenerator {
 
 
     public Terrain(FileReader fileReader) {
-        super(fileReader);
+        this.fileReader = fileReader;
         this.sandPitX = fileReader.getSandPitX();
         this.sandPitY = fileReader.getSandPitY();
         this.grassMesh   = new TriangleMesh();
@@ -58,6 +58,7 @@ public class Terrain extends TerrainGenerator {
                 // add texture and faces to water mesh
                 if (TerrainGenerator.getHeight(new Vector2D(i * STEP, j * STEP)) > 0) {
                     this.waterMesh.getFaces().addAll(topLeft, 1, topRight, 1, bottomLeft, 1);
+                    //this.waterMesh.getFaces().addAll(bottomLeft, 1, topRight, 1, bottomRight, 1);
 
                 }
                 // add texture and faces to sandPit mesh
@@ -67,6 +68,7 @@ public class Terrain extends TerrainGenerator {
                 }
                 else {
                     this.grassMesh.getFaces().addAll(topLeft, 1, topRight, 1, bottomLeft, 1);
+                   // this.grassMesh.getFaces().addAll(bottomLeft, 1, topRight, 1, bottomRight, 1);
                 }
             }
         }
@@ -87,7 +89,7 @@ public class Terrain extends TerrainGenerator {
     }
 
 
-    private boolean isSandPit(int i, int j) {
+    public boolean isSandPit(int i, int j) {
         if (i >= this.sandPitX.getX() && i <= this.sandPitX.getY()) {
             return j >= this.sandPitY.getX() && j <= this.sandPitY.getY();
         }

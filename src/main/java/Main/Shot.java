@@ -1,22 +1,18 @@
 package Main;
 
 import objects.Ball;
+import objects.TerrainGenerator;
 import physics.Vector2D;
 
-
-/**
- * creates a Thread when displaying the animation of the moving ball
- */
 public class Shot implements Runnable {
 
     private final Ball ball;
     private final Universe universe;
-    private boolean running = false;
-    private Thread thread;
 
     public Shot(Universe universe, Vector2D velocity) {
         this.universe = universe;
         this.ball = universe.getBall();
+
         this.ball.setVelocity(velocity);
 
         if (velocity.getMagnitude() > universe.getMAX_SPEED()) {
@@ -26,6 +22,8 @@ public class Shot implements Runnable {
         start();
     }
 
+    private boolean running = false;
+    private Thread thread;
 
     public synchronized void start() {
         running = true;
@@ -34,6 +32,7 @@ public class Shot implements Runnable {
     }
 
     public synchronized void stop() {
+        System.out.println(ball.getPosition());
         running = false;
         try {
             this.thread.join();
@@ -45,12 +44,11 @@ public class Shot implements Runnable {
     @Override
     public void run() {
 
+
         double delta = 0;
         long lastTime = System.nanoTime();
-
-        // number of nanoseconds between each update: SPEED times per second
-        int SPEED = 900;
-        final double nanos = Math.pow(10, 9) / SPEED;
+        final double nanos = Math.pow(10, 9) / 60;
+        // number of nanoseconds between each update: 400 times per second
 
         while (running) {
 
@@ -58,13 +56,15 @@ public class Shot implements Runnable {
             delta+= (now - lastTime) / nanos;
             lastTime = now;
             while (delta >= 1) {
-                if (!ball.isMoving()) {
+                if (!ball.isMoving()  ) {
                     stop();
                 }
-                universe.nextStep(ball);
+                System.out.println(ball.getPosition());
+                universe.getSolver().nextStep(ball);
                 universe.updateBallsPosition();
                 delta--;
             }
+
         }
         stop();
     }

@@ -54,6 +54,11 @@ public class Target implements GameObject {
     }
 
     @Override
+    public double getMass() {
+        return 0;
+    }
+
+    @Override
     public Vector2D getDimension() {
         return this.dimension;
     }
