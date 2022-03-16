@@ -1,4 +1,4 @@
-![GitHub Dark](picture.png)
+![GitHub Dark](src/main/java/image.png)
 
 ## Crazy putting
 
@@ -13,8 +13,9 @@ In each game player tries to shoot the ball to the target entering the velocity 
 ### Instruction
 
 - #### Moving around the scene
-  - rotate around the scene using mouse (click and drag the frame)
-  - zoom-in and zoom-out by using the mouse wheel
+  - rotate around the scene using mouse (click and drag the frame).
+  - zoom-in and zoom-out by using the mouse wheel.
+  - You can also navigate around the scene using the keyboard.
 
 - #### Playing the game
   - once game is loaded all the values for the game scene are read from the file _inputFile.txt_.
@@ -26,7 +27,7 @@ In each game player tries to shoot the ball to the target entering the velocity 
 
 ***
 
-####Group 6
+### Group 6
 
 * Emre Karabulut
 * Gijs Theeuwen

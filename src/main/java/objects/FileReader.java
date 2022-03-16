@@ -12,7 +12,6 @@ import net.objecthunter.exp4j.ExpressionBuilder;
 
 public class FileReader {
     private Scanner shotReader;
-    private final String fileString = "";
     private double x0, y0;
     private double xt, yt;
     private double r;
@@ -30,7 +29,7 @@ public class FileReader {
                 shotReader = new Scanner(shotFile);
             }
 
-            File inputFile = new File("src\\main\\java\\example_inputfile.txt");
+            File inputFile = new File("src\\main\\java\\inputFile.txt");
 
             if(inputFile.exists()){
                 Scanner inputReader = new Scanner(inputFile);
@@ -100,9 +99,7 @@ public class FileReader {
     public Vector2D getSandPitY(){
         return sandPitY;
     }
-    public String getHeightProfile(){
-        return heightProfile;
-    }
+
 
     public Vector2D getNextShotFromFile(){
         try {

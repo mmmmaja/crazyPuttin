@@ -9,7 +9,7 @@ import javafx.scene.transform.Rotate;
 import physics.Vector2D;
 
 /**
- * class used for holding all the objects added to the display
+ * Class used for holding all the objects added to the display
  * provides rotation and zooming-in and zooming-out when mouse is moved
  */
 public class SmartGroup extends Group {
@@ -27,8 +27,6 @@ public class SmartGroup extends Group {
     private final DoubleProperty angleY = new SimpleDoubleProperty(0);
     private final DoubleProperty angleZ = new SimpleDoubleProperty(0);
 
-    private Vector2D rotationCenter = new Vector2D((Display.FRAME_WIDTH - 200) / 2f, Display.FRAME_HEIGHT / 2f);
-
 
     /**
      * zoomIn and zoomOut on mouse scroll
@@ -37,7 +35,6 @@ public class SmartGroup extends Group {
         deltaY *= -zoomFactor;
         this.translateZProperty().set(this.getTranslateZ() + deltaY);
     }
-
 
     /**
      * add rotation when dragging the mouse

@@ -13,11 +13,11 @@ public class Target implements GameObject {
 
     public Target(Vector2D position, double radius) {
         this.position = position;
-        this.circle = new Circle(radius *2);
+        this.circle = new Circle(radius);
         this.circle.setCenterX(position.getX());
         this.circle.setCenterY(position.getY());
         this.circle.setFill(Color.BLACK);
-        this.circle.setTranslateZ(TerrainGenerator.getHeight(position)-1);
+        this.circle.setTranslateZ(TerrainGenerator.getHeight(position)+1);
     }
 
     @Override
