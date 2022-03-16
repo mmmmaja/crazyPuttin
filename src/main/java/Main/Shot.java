@@ -1,8 +1,11 @@
 package Main;
 
+import graphics.Display;
 import objects.Ball;
 import objects.TerrainGenerator;
 import physics.Vector2D;
+
+import java.nio.file.DirectoryStream;
 
 public class Shot implements Runnable {
 
@@ -32,7 +35,6 @@ public class Shot implements Runnable {
     }
 
     public synchronized void stop() {
-        System.out.println(ball.getPosition());
         running = false;
         try {
             this.thread.join();
@@ -56,7 +58,7 @@ public class Shot implements Runnable {
             delta+= (now - lastTime) / nanos;
             lastTime = now;
             while (delta >= 1) {
-                if (!ball.isMoving()  ) {
+                if (!ball.isMoving() && !ball.willMove() ) {
                     stop();
                 }
                 System.out.println(ball.getPosition());

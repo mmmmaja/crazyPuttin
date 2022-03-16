@@ -6,9 +6,6 @@ import physics.Vector;
 import physics.Vector2D;
 
 
-/**
- * TODO make it not static: problem getSlope methods
- */
 public class TerrainGenerator {
 
     private static final double STEP_SIZE = 0.0001;
@@ -20,16 +17,6 @@ public class TerrainGenerator {
     }
 
     public static double getHeight( Vector2D position) {
-//        expression.setVariable("x" , position.getX());
-//        expression.setVariable("y" , position.getY());
-
-//        return  1/100.0 * x * x + 1/100.0 * y*y;
-//        return Math.sin(x/6 + y/10) + Math.cos(Math.exp(y/100 + x/1000) + 0.8);
-//        return Math.pow(1.05, x)+ Math.pow(1.08, y);
-//        if(x > 100 && y > 100) {
-//            return   Math.pow(x, 2) + Math.pow(y, 2);
-//        }else
-//            return 0;
         return fileReader.calculator( position.getX() , position.getY()) ;
     }
 
@@ -37,7 +24,7 @@ public class TerrainGenerator {
     public static double getSlopeX( Vector2D currentPosition){
         double x = currentPosition.getX() ;
         double y = currentPosition.getY() ;
-        return ( getHeight( new Vector2D( x + STEP_SIZE , y ) ) - getHeight(new Vector2D( x - STEP_SIZE , y ) ) ) / ( 2*STEP_SIZE) ;
+        return -1* ( getHeight( new Vector2D( x + STEP_SIZE , y ) ) - getHeight(new Vector2D( x - STEP_SIZE , y ) ) ) / ( 2*STEP_SIZE) ;
     }
 
     public static double getSlopeY( Vector2D currentPosition){

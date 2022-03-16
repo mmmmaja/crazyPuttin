@@ -41,8 +41,8 @@ public class Display extends Application {
     private SmartGroup group;
 
     private GridPane gridPane;
-    private Text text;
-    private int shotCounter = 0;
+    public Text text;
+    public int shotCounter = 0;
 
 
     @Override
@@ -99,11 +99,12 @@ public class Display extends Application {
     /**
      * update x and y position of the ball and counter of the shoots
      */
-    private void updatePanel() {
-        this.text.setText(" X-position:  " + Math.round(universe.getBall().getPositionX())  +
-                " \n Y-position:  " + Math.round(universe.getBall().getPositionY()) +
+    public void updatePanel() {
+        text.setText(" X-position:  " + String.format("%.2f" , universe.getBall().getPositionX())  +
+                " \n Y-position:  " + String.format("%.2f" ,universe.getBall().getPositionY()) +
                 " \n Number of shots: "+ this.shotCounter+"\n");
     }
+
 
     /**
      * adds the panel with the buttons at the right-hand side
@@ -177,25 +178,27 @@ public class Display extends Application {
         gridPane.add(new HBox(30, button), 0, 12);
 
         button.setOnMouseClicked(mouseEvent -> {
-            Vector2D velocity;
-
-            if (!Objects.equals(xvel.getText(), "") && !Objects.equals(yvel.getText(), ""))
-            {
-                int xV = Integer.parseInt(xvel.getText());
-                int yV = Integer.parseInt(yvel.getText());
-                velocity = new Vector2D(xV, yV);
-            }
-            else {
-                velocity = universe.getFileReader().getNextShotFromFile();
-            }
-            // TODO what if we run out of shots???
-            if (velocity != null) {
-                new Shot(universe, velocity);
-                this.shotCounter++;
-                updatePanel();
-            }
+            triggerMovement(xvel, yvel);
         });
     }
 
 
+    private void triggerMovement(TextField xvel, TextField yvel) {
+        Vector2D velocity;
+
+        if (!Objects.equals(xvel.getText(), "") && !Objects.equals(yvel.getText(), ""))
+        {
+            int xV = Integer.parseInt(xvel.getText());
+            int yV = Integer.parseInt(yvel.getText());
+            velocity = new Vector2D(xV, yV);
+        }
+        else {
+            velocity = universe.getFileReader().getNextShotFromFile();
+        }
+        if (velocity != null) {
+            new Shot(universe, velocity);
+            this.shotCounter++;
+            updatePanel();
+        }
+    }
 }
