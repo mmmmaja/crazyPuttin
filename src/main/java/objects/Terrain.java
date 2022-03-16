@@ -1,5 +1,6 @@
 package objects;
 
+import Main.Universe;
 import graphics.Display;
 import javafx.scene.shape.TriangleMesh;
 import physics.Vector2D;
@@ -30,12 +31,12 @@ public class Terrain extends TerrainGenerator {
 
 
    private void addPoints() {
-        for (int i = 0; i < TERRAIN_HEIGHT; i+= STEP) {
-            for (int j = 0; j < TERRAIN_WIDTH; j+= STEP) {
+        for (double i = 0; i < TERRAIN_HEIGHT; i+= STEP) {
+            for (double j = 0; j < TERRAIN_WIDTH; j+= STEP) {
                 float height = (float) getHeight(new Vector2D(i, j));
-                this.sandPitMesh.getPoints().addAll(i - Display.translateX, j - Display.translateY, height);
-                this.waterMesh.getPoints().addAll(i - Display.translateX, j - Display.translateY, height);
-                this.grassMesh.getPoints().addAll(i - Display.translateX, j - Display.translateY, height);
+                this.sandPitMesh.getPoints().addAll((float) ((i - Display.translateXMesh)), (float) ((j - Display.translateYMesh)), height);
+                this.waterMesh.getPoints().addAll((float) ((i - Display.translateXMesh)), (float) ((j - Display.translateYMesh)), height);
+                this.grassMesh.getPoints().addAll((float) ((i - Display.translateXMesh)), (float) ((j - Display.translateYMesh)), height);
             }
         }
    }
@@ -49,9 +50,9 @@ public class Terrain extends TerrainGenerator {
         for (int i = 0; i < TERRAIN_HEIGHT / STEP - 2; i++) {
             for (int j = 0; j < TERRAIN_WIDTH / STEP; j++) {
 
-                int topLeft = (TERRAIN_WIDTH / STEP) * i + j;
+                int topLeft = (int) ((TERRAIN_WIDTH / STEP) * i + j);
                 int topRight = topLeft + 1;
-                int bottomLeft = topLeft + (TERRAIN_WIDTH / STEP);
+                int bottomLeft = (int) (topLeft + (TERRAIN_WIDTH / STEP));
                 int bottomRight = bottomLeft + 1;
 
 
@@ -89,7 +90,7 @@ public class Terrain extends TerrainGenerator {
     }
 
 
-    public boolean isSandPit(int i, int j) {
+    public boolean isSandPit(double i, double j) {
         if (i >= this.sandPitX.getX() && i <= this.sandPitX.getY()) {
             return j >= this.sandPitY.getX() && j <= this.sandPitY.getY();
         }

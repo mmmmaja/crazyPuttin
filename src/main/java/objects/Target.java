@@ -13,9 +13,9 @@ public class Target implements GameObject {
 
     public Target(Vector2D position, double radius) {
         this.position = position;
-        this.circle = new Circle(radius);
-        this.circle.setCenterX(position.getX() - Display.translateX);
-        this.circle.setCenterY(position.getY() - Display.translateY);
+        this.circle = new Circle(radius * Display.UNIT);
+        this.circle.setCenterX(position.getX() - Display.translateXMesh);
+        this.circle.setCenterY(position.getY() - Display.translateYMesh);
         this.circle.setFill(Color.BLACK);
         this.circle.setTranslateZ(TerrainGenerator.getHeight(position)-5);
     }

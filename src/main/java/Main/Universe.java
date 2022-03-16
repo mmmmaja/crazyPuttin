@@ -117,8 +117,8 @@ public class Universe extends PhysicEngine {
 
     public void updateBallsPosition(){
         Vector2D position = ball.getPosition();
-        ball.getSphere().setTranslateX(position.getX() - Display.translateX + ( ball.getPositionX() - ball.getPreviousPosition().getX() ) );
-        ball.getSphere().setTranslateY(position.getY() - Display.translateY + ( ball.getPositionY() - ball.getPreviousPosition().getY() ) );
+        ball.getSphere().setTranslateX(position.getX() - Display.translateXMesh + ( ball.getPositionX() - ball.getPreviousPosition().getX() ) );
+        ball.getSphere().setTranslateY(position.getY() - Display.translateYMesh + ( ball.getPositionY() - ball.getPreviousPosition().getY() ) );
         ball.getSphere().setTranslateZ(TerrainGenerator.getHeight(position) - ball.getRADIUS());
     }
 

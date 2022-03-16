@@ -11,8 +11,10 @@ public class Main {
     private static Universe universe ;
 
     public static void main(String[] args) {
+
         //FIXME SHOTS
         //TODO target detection
+
         universe = new Universe(new FileReader()  );
 
         Application.launch(Display.class);

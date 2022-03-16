@@ -4,23 +4,22 @@ import Main.Main;
 import Main.Shot;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.MeshView;
+import javafx.scene.shape.Sphere;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import Main.Universe;
-import javafx.stage.WindowEvent;
+import objects.Terrain;
 import physics.Vector2D;
 
 import java.util.Objects;
@@ -34,8 +33,10 @@ public class Display extends Application {
     public static final int FRAME_HEIGHT = 600;
 
     // translate all the objects to the middle of the frame
-    public static final int translateX = FRAME_WIDTH / 3;
-    public static final int translateY =  FRAME_HEIGHT / 3;
+    public static final int translateXMesh = FRAME_WIDTH / 3;
+    public static final int translateYMesh =  FRAME_HEIGHT / 3;
+
+    public static final int UNIT = 2;
 
     // to smartGroup all the objects are added (rotation built-in)
     private SmartGroup group;
@@ -65,9 +66,9 @@ public class Display extends Application {
         this.gridPane = new GridPane();
         addPanel();
         displayPane.getChildren().add(this.gridPane);
-        this.gridPane.setTranslateX(FRAME_WIDTH - 200);
 
         Camera camera = new PerspectiveCamera();
+        camera.setTranslateX(0);
         subScene.setCamera(camera);
 
         Pane pane3D = new Pane();

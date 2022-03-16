@@ -11,8 +11,8 @@ import physics.Vector2D;
 
 public class Ball extends PhysicEngine implements GameObject {
 
-    private double RADIUS = 5 ;
-    private final double MASS = 0.0459;
+    private double RADIUS = 0.1;
+    private static final double MASS = 0.0459;
 
     private Vector2D position ;
     private Vector2D previousPosition;
@@ -31,9 +31,9 @@ public class Ball extends PhysicEngine implements GameObject {
     }
 
     private void createSphere() {
-        this.sphere = new Sphere(RADIUS);
-        this.sphere.setTranslateX(this.position.getX() - Display.translateX);
-        this.sphere.setTranslateY(this.position.getY() - Display.translateY);
+        this.sphere = new Sphere(RADIUS * 100);
+        this.sphere.setTranslateX(this.position.getX() - Display.translateXMesh);
+        this.sphere.setTranslateY(this.position.getY() - Display.translateYMesh);
         this.sphere.setTranslateZ(TerrainGenerator.getHeight(this.position));
 //        System.out.println(TerrainGenerator.getHeight(this.position));
         // TODO add material etc.

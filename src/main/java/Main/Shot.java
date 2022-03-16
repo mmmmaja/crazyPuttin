@@ -5,7 +5,6 @@ import objects.Ball;
 import objects.TerrainGenerator;
 import physics.Vector2D;
 
-import java.nio.file.DirectoryStream;
 
 public class Shot implements Runnable {
 
