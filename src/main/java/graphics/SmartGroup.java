@@ -63,11 +63,13 @@ public class SmartGroup extends Group {
 
         scene.setOnMouseDragged(mouseEvent -> {
             // lock the X rotation, so we can see under the surface
-            if (this.anchorAngleX - (this.anchorY - mouseEvent.getSceneY()) > -68.0) {
-                if (this.anchorAngleX - (this.anchorY - mouseEvent.getSceneY()) < 60) {
-                    this.angleX.set(this.anchorAngleX - (this.anchorY - mouseEvent.getSceneY()));
-                }
-            }
+//            if (this.anchorAngleX - (this.anchorY - mouseEvent.getSceneY()) > -68.0) {
+//                if (this.anchorAngleX - (this.anchorY - mouseEvent.getSceneY()) < 60) {
+//                    this.angleX.set(this.anchorAngleX - (this.anchorY - mouseEvent.getSceneY()));
+//                }
+//            }
+            this.angleX.set(this.anchorAngleX - (this.anchorY - mouseEvent.getSceneY()));
+
             this.angleZ.set(this.anchorAngleY + this.anchorX - mouseEvent.getSceneX());
 
         });

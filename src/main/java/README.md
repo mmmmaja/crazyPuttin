@@ -32,6 +32,6 @@ In each game player tries to shoot the ball to the target entering the velocity 
 * Gijs Theeuwen
 * Keren Better
 * Yu Fei
-* Yasune ?
+* Yasune Notermans
 * Haomin Bian
 * Maja Gójska

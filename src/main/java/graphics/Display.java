@@ -4,21 +4,24 @@ import Main.Main;
 import Main.Shot;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.MeshView;
-import javafx.scene.shape.Sphere;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import Main.Universe;
+import javafx.stage.WindowEvent;
 import objects.Terrain;
 import physics.Vector2D;
 
@@ -33,10 +36,10 @@ public class Display extends Application {
     public static final int FRAME_HEIGHT = 600;
 
     // translate all the objects to the middle of the frame
-    public static final int translateXMesh = FRAME_WIDTH / 3;
-    public static final int translateYMesh =  FRAME_HEIGHT / 3;
+    public static final int translateXMesh = 0;
+    public static final int translateYMesh =  0;
 
-    public static final int UNIT = 2;
+    public static final int UNIT = 20;
 
     // to smartGroup all the objects are added (rotation built-in)
     private SmartGroup group;
@@ -44,7 +47,6 @@ public class Display extends Application {
     private GridPane gridPane;
     public Text text;
     public int shotCounter = 0;
-
 
     @Override
     public void start(Stage stage) {
@@ -58,7 +60,7 @@ public class Display extends Application {
         this.group.getChildren().add(universe.getTarget().getCircle());
 
         SubScene subScene = new SubScene(this.group, FRAME_WIDTH - 200, FRAME_HEIGHT, true, SceneAntialiasing.BALANCED);
-        subScene.setFill(Color.BLACK);
+        subScene.setFill(Color.SILVER);
 
         Pane displayPane = new Pane();
         displayPane.setPrefSize(FRAME_WIDTH, FRAME_HEIGHT);
@@ -66,9 +68,10 @@ public class Display extends Application {
         this.gridPane = new GridPane();
         addPanel();
         displayPane.getChildren().add(this.gridPane);
+        this.gridPane.setTranslateX(FRAME_WIDTH - 200);
 
         Camera camera = new PerspectiveCamera();
-        camera.setTranslateX(0);
+        camera.setNearClip(0.01);
         subScene.setCamera(camera);
 
         Pane pane3D = new Pane();
@@ -79,13 +82,25 @@ public class Display extends Application {
         Scene scene = new Scene(displayPane);
 
         // move the objects the middle
-        group.translateXProperty().set((FRAME_WIDTH - 200)/ 2.0);
-        group.translateYProperty().set(FRAME_HEIGHT / 2.0);
-        group.translateZProperty().set(-200); // move it a little closer
+        group.translateXProperty().set((FRAME_WIDTH + 450 -50)/ 3.0);
+        group.translateYProperty().set((FRAME_HEIGHT +300 -30) / 3.0);
+//        group.zoom(camera.getTranslateY() + 1000);// move it a little closer
         group.initMouseControl(scene);
 
         // zoomIn, zoomOut added on scroll event
-        stage.addEventHandler(ScrollEvent.SCROLL, event -> group.zoom(event.getDeltaY()));
+        scene.addEventHandler(ScrollEvent.SCROLL, event -> {
+            camera.setTranslateZ(camera.getTranslateZ() + event.getDeltaY());
+        });
+        scene.addEventHandler(KeyEvent.KEY_PRESSED, e -> {
+            switch (e.getCode()) {
+                case W -> camera.setTranslateY(camera.getTranslateY() + 5);
+                case S -> camera.setTranslateY(camera.getTranslateY() - 5);
+                case Q -> camera.setTranslateZ(camera.getTranslateZ() + 5);
+                case E -> camera.setTranslateZ(camera.getTranslateZ() - 5);
+                case D -> camera.setTranslateX(camera.getTranslateX() - 5);
+                case A -> camera.setTranslateX(camera.getTranslateX() + 5);
+            }
+        });
 
         // exit the application when the window is closed by the user
         stage.setOnCloseRequest(t -> {
@@ -100,12 +115,11 @@ public class Display extends Application {
     /**
      * update x and y position of the ball and counter of the shoots
      */
-    public void updatePanel() {
-        text.setText(" X-position:  " + String.format("%.2f" , universe.getBall().getPositionX())  +
-                " \n Y-position:  " + String.format("%.2f" ,universe.getBall().getPositionY()) +
+    private void updatePanel() {
+        this.text.setText(" X-position:  " + Math.round(universe.getBall().getPositionX())  +
+                " \n Y-position:  " + Math.round(universe.getBall().getPositionY()) +
                 " \n Number of shots: "+ this.shotCounter+"\n");
     }
-
 
     /**
      * adds the panel with the buttons at the right-hand side
@@ -179,27 +193,25 @@ public class Display extends Application {
         gridPane.add(new HBox(30, button), 0, 12);
 
         button.setOnMouseClicked(mouseEvent -> {
-            triggerMovement(xvel, yvel);
+            Vector2D velocity;
+
+            if (!Objects.equals(xvel.getText(), "") && !Objects.equals(yvel.getText(), ""))
+            {
+                int xV = Integer.parseInt(xvel.getText());
+                int yV = Integer.parseInt(yvel.getText());
+                velocity = new Vector2D(xV, yV);
+            }
+            else {
+                velocity = universe.getFileReader().getNextShotFromFile();
+            }
+            // TODO what if we run out of shots???
+            if (velocity != null) {
+                new Shot(universe, velocity);
+                this.shotCounter++;
+                updatePanel();
+            }
         });
     }
 
 
-    private void triggerMovement(TextField xvel, TextField yvel) {
-        Vector2D velocity;
-
-        if (!Objects.equals(xvel.getText(), "") && !Objects.equals(yvel.getText(), ""))
-        {
-            int xV = Integer.parseInt(xvel.getText());
-            int yV = Integer.parseInt(yvel.getText());
-            velocity = new Vector2D(xV, yV);
-        }
-        else {
-            velocity = universe.getFileReader().getNextShotFromFile();
-        }
-        if (velocity != null) {
-            new Shot(universe, velocity);
-            this.shotCounter++;
-            updatePanel();
-        }
-    }
 }

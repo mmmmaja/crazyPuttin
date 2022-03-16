@@ -31,12 +31,10 @@ public class Ball extends PhysicEngine implements GameObject {
     }
 
     private void createSphere() {
-        this.sphere = new Sphere(RADIUS * 100);
+        this.sphere = new Sphere(RADIUS * 2);
         this.sphere.setTranslateX(this.position.getX() - Display.translateXMesh);
         this.sphere.setTranslateY(this.position.getY() - Display.translateYMesh);
-        this.sphere.setTranslateZ(TerrainGenerator.getHeight(this.position));
-//        System.out.println(TerrainGenerator.getHeight(this.position));
-        // TODO add material etc.
+        this.sphere.setTranslateZ(TerrainGenerator.getHeight(this.position)-RADIUS*Display.UNIT);
         Material material = new PhongMaterial(Color.BLUEVIOLET);
         this.sphere.setMaterial(material);
     }

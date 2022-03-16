@@ -48,7 +48,7 @@ public class Shot implements Runnable {
 
         double delta = 0;
         long lastTime = System.nanoTime();
-        final double nanos = Math.pow(10, 9) / 60;
+        final double nanos = Math.pow(10, 9) / 120;
         // number of nanoseconds between each update: 400 times per second
 
         while (running) {
