@@ -18,6 +18,7 @@ public interface GameObject {
     public void setDimension(Vector2D dimension);
 
     public void setState( Vector2D position , Vector2D velocity);
+    public double getMass();
     public boolean isMoving();
     public boolean willMove();
     public boolean isOnSlope();

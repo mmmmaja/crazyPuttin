@@ -3,19 +3,25 @@ package physics;
 import objects.Ball;
 import objects.GameObject;
 
-public class Euler extends PhysicEngine implements Solver {
+public class Euler extends PhysicEngine {
 
 
 	public Euler(){
 
 	}
 
-	//FIXME it can return void instead of Vector2D
-
+	@Override
 	public void nextStep(GameObject gameObject ){
 
 		gameObject.setPreviousPosition(gameObject.getPosition());
-		gameObject.setState(calculateNextPosition(gameObject ) , calculateNextVelocity(gameObject ));
+//		System.out.println("next pos : " + calculateNextPosition(gameObject));
+		System.out.println("prev vel : " + calculateNextVelocity(gameObject));
+		Vector2D next_pos = calculateNextPosition(gameObject);
+
+		Vector2D next_vel = calculateNextVelocity(gameObject);
+		System.out.println("next vel : " + calculateNextVelocity(gameObject));
+
+		gameObject.setState( next_pos , next_vel );
 
 
 //		System.out.println("------pos " + ( gameObject.getPosition().getX() - gameObject.getPreviousPosition().getX() ) );
@@ -26,7 +32,7 @@ public class Euler extends PhysicEngine implements Solver {
 		//v1 = v0 + h * a0
 		Vector2D velocity = gameObject.getVelocity() ;
 		Vector2D acceleration = calculateAcceleration(gameObject) ;
-		//System.out.println("AAAAAAAAAAAAAAAAAAAAACCCCCCCCCCCCCCCCCCC " + acceleration);
+//		System.out.println("accel: " + acceleration);
 		double aX = acceleration.getX();
 		double aY = acceleration.getY();
 
@@ -42,8 +48,19 @@ public class Euler extends PhysicEngine implements Solver {
 
 		double new_X = gameObject.getPosition().getX() + getSTEP() * vX ;
 		double new_Y = gameObject.getPosition().getY() + getSTEP() * vY ;
-
 		Vector2D next_position = new Vector2D( new_X , new_Y);
 		return next_position;
+	}
+
+	@Override
+	public Vector2D multiply(Vector2D vector1, Vector2D vector2) {
+		return new Vector2D( vector1.getX() * vector2.getX() , vector1.getY() * vector2.getY());
+	}
+
+	public static void main(String[] args) {
+		Euler e = new Euler();
+		Ball ball = new Ball(new Vector2D(0,0) );
+		ball.setVelocity( new Vector2D(1,0));
+
 	}
 }

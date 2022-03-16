@@ -12,6 +12,7 @@ import physics.Vector2D;
 public class Ball extends PhysicEngine implements GameObject {
 
     private double RADIUS = 5 ;
+    private final double MASS = 0.0459;
 
     private Vector2D position ;
     private Vector2D previousPosition;
@@ -34,13 +35,13 @@ public class Ball extends PhysicEngine implements GameObject {
         this.sphere.setTranslateX(this.position.getX() - Display.translateX);
         this.sphere.setTranslateY(this.position.getY() - Display.translateY);
         this.sphere.setTranslateZ(TerrainGenerator.getHeight(this.position));
-        System.out.println(TerrainGenerator.getHeight(this.position));
+//        System.out.println(TerrainGenerator.getHeight(this.position));
         // TODO add material etc.
         Material material = new PhongMaterial(Color.BLUEVIOLET);
         this.sphere.setMaterial(material);
     }
-    public boolean isMoving(){ return velocity.getMagnitude() > 0.2; }
-    public boolean willMove(){return getMu_S() < ( Math.sqrt( Math.pow(TerrainGenerator.getSlopeX(position) , 2 ) + Math.pow( TerrainGenerator.getSlopeY( getPosition()) ,2) ) ) ;}
+    public boolean isMoving(){ return velocity.getMagnitude() > 0.01; }
+    public boolean willMove(){return TerrainGenerator.getStaticFrictionCoefficient(position) < ( Math.sqrt( Math.pow(TerrainGenerator.getSlopeX(position) , 2 ) + Math.pow( TerrainGenerator.getSlopeY( getPosition()) ,2) ) ) ;}
     public boolean isOnSlope() {return TerrainGenerator.getSlopeX(position) != 0  || TerrainGenerator.getSlopeY(position) != 0 ; }
 
     public Vector2D getPosition(){
@@ -58,9 +59,7 @@ public class Ball extends PhysicEngine implements GameObject {
 
     public Vector2D getVelocity(){return velocity;}
 
-    public void setVelocity(Vector2D velocity){
-
-        this.velocity = velocity;}
+    public void setVelocity(Vector2D velocity){this.velocity = velocity;}
 
     public double getPositionX(){return position.getX();}
     public double getPositionY(){return position.getY();}
@@ -75,11 +74,12 @@ public class Ball extends PhysicEngine implements GameObject {
     }
     public void setState( Vector2D position , Vector2D velocity){
         setPosition(position);
+        System.out.println(position);
         setVelocity(velocity);
     }
 
     public double getRADIUS() {return this.RADIUS;}
-    public double getMass(){return getMASS();    }
+    public double getMass(){return MASS;    }
     public Sphere getSphere() {return this.sphere;}
 
 }

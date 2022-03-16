@@ -31,11 +31,11 @@ public class FileReader {
 
     public FileReader() {
         try {
-            shotFile = new File("C:\\Users\\majag\\IdeaProjects\\crazyPutting\\src\\main\\java\\shot.txt");
+            shotFile = new File("C:\\Users\\bpk_e\\Desktop\\crazyPuttin2\\src\\main\\java\\shot.txt");
             if(shotFile.exists()){
                 shotReader = new Scanner(shotFile);
             }
-            inputFile = new File("C:\\Users\\majag\\IdeaProjects\\crazyPutting\\src\\main\\java\\example_inputfile.txt");
+            inputFile = new File("C:\\Users\\bpk_e\\Desktop\\crazyPuttin2\\src\\main\\java\\example_inputfile.txt");
             if(inputFile.exists()){
                 inputReader = new Scanner(inputFile);
                 while(inputReader.hasNextLine()){
@@ -136,44 +136,41 @@ public class FileReader {
         return expression;
     }
 
-
-
-    public float calculator( float x, float y)
+    public double calculator( double x, double y)
     {
         return calculator(expression, x, y);
     }
 
-    public float calculator(Expression expression, float x, float y)
+    public double calculator(Expression expression, double x, double y)
     {
         expression
                 .setVariable("x", x)
                 .setVariable("y", y);
 
-        float result = (float) expression.evaluate();
+        double result = (double) expression.evaluate();
 
-        //Assertions.assertEquals(1, result);
 
         return result;
 
     }
-
-    public static void main(String[] args) {
-        FileReader f = new FileReader();
-        System.out.println(f.x0 + ", " + f.y0);
-        System.out.println(f.xt + ", " + f.yt);
-        System.out.println(f.r);
-        System.out.println(f.muk);
-        System.out.println(f.mus);
-        System.out.println(f.heightProfile);
-        System.out.println(f.sandPitX);
-        System.out.println(f.sandPitY);
-        System.out.println(f.muks);
-        System.out.println(f.muss);
-
-
-        System.out.println(f.equation);
-        System.out.println(f.calculator(3,4));
-
-    }
+//
+//    public static void main(String[] args) {
+//        FileReader f = new FileReader();
+//        /*System.out.println(f.x0 + ", " + f.y0);
+//        System.out.println(f.xt + ", " + f.yt);
+//        System.out.println(f.r);
+//        System.out.println(f.muk);
+//        System.out.println(f.mus);
+//        System.out.println(f.heightProfile);
+//        System.out.println(f.sandPitX);
+//        System.out.println(f.sandPitY);
+//        System.out.println(f.muks);
+//        System.out.println(f.muss);
+//
+//         */
+//        System.out.println(f.equation);
+//        System.out.println(f.calculator(3,4));
+//
+//    }
 
 }

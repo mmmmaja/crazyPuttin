@@ -2,6 +2,7 @@ package objects;
 
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
+import physics.Vector;
 import physics.Vector2D;
 
 
@@ -10,26 +11,26 @@ import physics.Vector2D;
  */
 public class TerrainGenerator {
 
-    private static final double STEP_SIZE = 0.01;
-
+    private static final double STEP_SIZE = 0.0001;
+    private static final FileReader fileReader = new FileReader();
+    private static final Expression expression = fileReader.getExpression();
+    private static final Vector2D sandPitX = fileReader.getSandPitX();
+    private static final Vector2D sandPitY = fileReader.getSandPitY();
     public TerrainGenerator() {
-//        Expression expression = new ExpressionBuilder(equation)
-//                .variables("x", "y")
-//                .build()
-//                .setVariable("x", this.xt)
-//                .setVariable("y", this.yt);
-//
-//        float result = (float) expression.evaluate();
-
-        //Assertions.assertEquals(1, result);
     }
 
     public static double getHeight( Vector2D position) {
+//        expression.setVariable("x" , position.getX());
+//        expression.setVariable("y" , position.getY());
 
-        double x = position.getX();
-        double y = position.getY();
-
-        return Math.sin(x/6 + y / 6);
+//        return  1/100.0 * x * x + 1/100.0 * y*y;
+//        return Math.sin(x/6 + y/10) + Math.cos(Math.exp(y/100 + x/1000) + 0.8);
+//        return Math.pow(1.05, x)+ Math.pow(1.08, y);
+//        if(x > 100 && y > 100) {
+//            return   Math.pow(x, 2) + Math.pow(y, 2);
+//        }else
+//            return 0;
+        return fileReader.calculator( position.getX() , position.getY()) ;
     }
 
 
@@ -44,10 +45,25 @@ public class TerrainGenerator {
         double y = currentPosition.getY() ;
         return ( getHeight( new Vector2D( x , y + STEP_SIZE ) ) - getHeight(  new Vector2D( x , y - STEP_SIZE ) ) ) / ( 2*STEP_SIZE) ;
     }
-
-    public double getStepSize(){
-        return STEP_SIZE;
+    public static boolean isSand(double i, double j){
+        if (i >= sandPitX.getX() && i <= sandPitX.getY()) {
+            return j >= sandPitY.getX() && j <= sandPitY.getY();
+        }
+        return false;
     }
+    public static double getKineticFrictionCoefficient(Vector2D position){
+        if( isSand( position.getX() , position.getY() ) ){
+            return fileReader.getSandPitKineticFriction();
+        }
+        return fileReader.getKineticFriction();
+    }
+    public static double getStaticFrictionCoefficient(Vector2D position){
+        if( isSand( position.getX() , position.getY() ) ){
+            return fileReader.getSandPitStaticFriction();
+        }
+        return fileReader.getStaticFriction();
+    }
+
 
 
 }
