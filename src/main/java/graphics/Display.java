@@ -189,10 +189,13 @@ public class Display extends Application {
                 velocity = universe.getFileReader().getNextShotFromFile();
             }
             // TODO what if we run out of shots???
-            if (velocity != null) {
+            if (velocity != null && !universe.getInMotion()) {
+                //System.out.println("shot! "+velocity.getY()+", "+velocity.getY());
+                universe.setInMotion(true);
                 new Shot(universe, velocity);
                 this.shotCounter++;
                 updatePanel();
+                universe.setInMotion(false);
             }
         });
     }

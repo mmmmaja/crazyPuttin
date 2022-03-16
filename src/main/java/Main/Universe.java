@@ -24,6 +24,7 @@ public class Universe extends Euler {
     private Terrain terrain;
     private Target target;
     private MeshView[] meshViews;
+    private boolean inMotion = false;
 
     public Universe(FileReader fileReader) {
         this.fileReader = fileReader;
@@ -36,6 +37,15 @@ public class Universe extends Euler {
         Vector2D initialPosition = this.fileReader.getInitialPosition();
         this.ball = new Ball(new Vector2D(initialPosition.getX(), initialPosition.getY()));
     }
+
+    public void setInMotion(boolean inMotion) {
+        this.inMotion = inMotion;
+    }
+
+    public boolean getInMotion() {
+        return this.inMotion;
+    }
+
 
 
     /**

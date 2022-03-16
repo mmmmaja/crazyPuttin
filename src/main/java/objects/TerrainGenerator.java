@@ -9,11 +9,9 @@ public class TerrainGenerator {
 
     private static final double STEP_SIZE = 0.01;
     private static FileReader fileReader;
-    private static Expression expression;
 
     public TerrainGenerator(FileReader fileReader) {
         TerrainGenerator.fileReader = fileReader;
-        TerrainGenerator.expression = fileReader.getExpression();
     }
 
     public static double getHeight( Vector2D position) {
@@ -24,7 +22,7 @@ public class TerrainGenerator {
         return Math.sin(x/6 + y / 6);
 
         // FIXME troubles with evaluating the expression
-       // return fileReader.calculator(expression, (float) x, (float) y);
+//        return fileReader.calculator((float) x, (float) y);
     }
 
 

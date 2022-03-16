@@ -4,6 +4,7 @@ import physics.PhysicEngine;
 import physics.Vector2D;
 import Main.Universe;
 
+import java.nio.file.Paths;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 import java.io.*;
@@ -29,11 +30,18 @@ public class FileReader {
 
     public FileReader() {
         try {
-            // TODO fix pathname (should work on every computer!)
-            File shotFile = new File("C:\\Users\\majag\\IdeaProjects\\crazyPutting\\src\\main\\java\\shot.txt");
+//            Replace File file = new File("explicit path"); with Path path1 = (Paths.get("shot.txt")).toAbsolutePath();
+//            File shotFile = new File(path1.toString());
+//            File shotFile = new File("C:\\Users\\majag\\IdeaProjects\\crazyPutting\\src\\main\\java\\shot.txt");
+            File shotFile = new File((Paths.get("shot.txt")).toAbsolutePath().toString());
 
-            if (shotFile.exists()) {
-                shotReader = new Scanner(shotFile);
+            try {
+                if (shotFile.exists()) {
+                    shotReader = new Scanner(shotFile);
+                }
+            }
+            catch (NullPointerException e) {
+                System.out.println("error in reading the shot file!");
             }
 
             File inputFile = new File("C:\\Users\\majag\\IdeaProjects\\crazyPutting\\src\\main\\java\\example_inputfile.txt");
