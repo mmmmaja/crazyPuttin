@@ -6,6 +6,7 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.transform.Rotate;
+import physics.Vector2D;
 
 /**
  * class used for holding all the objects added to the display
@@ -25,6 +26,8 @@ public class SmartGroup extends Group {
     private final DoubleProperty angleX = new SimpleDoubleProperty(-50);
     private final DoubleProperty angleY = new SimpleDoubleProperty(0);
     private final DoubleProperty angleZ = new SimpleDoubleProperty(0);
+
+    private Vector2D rotationCenter = new Vector2D((Display.FRAME_WIDTH - 200) / 2f, Display.FRAME_HEIGHT / 2f);
 
 
     /**
@@ -47,7 +50,7 @@ public class SmartGroup extends Group {
         this.getTransforms().addAll(
                 rotateX = new Rotate(0, Rotate.X_AXIS),
                 rotateY = new Rotate(0, Rotate.Y_AXIS),
-                rotateZ = new Rotate(0, Rotate.Z_AXIS)
+                rotateZ = new Rotate(0, 15, 15)
         );
         rotateX.angleProperty().bind(angleX);
         rotateY.angleProperty().bind(angleY);
@@ -63,13 +66,11 @@ public class SmartGroup extends Group {
 
         scene.setOnMouseDragged(mouseEvent -> {
             // lock the X rotation, so we can see under the surface
-//            if (this.anchorAngleX - (this.anchorY - mouseEvent.getSceneY()) > -68.0) {
-//                if (this.anchorAngleX - (this.anchorY - mouseEvent.getSceneY()) < 60) {
-//                    this.angleX.set(this.anchorAngleX - (this.anchorY - mouseEvent.getSceneY()));
-//                }
-//            }
-            this.angleX.set(this.anchorAngleX - (this.anchorY - mouseEvent.getSceneY()));
-
+            if (this.anchorAngleX - (this.anchorY - mouseEvent.getSceneY()) > -68.0) {
+                if (this.anchorAngleX - (this.anchorY - mouseEvent.getSceneY()) < 5) {
+                    this.angleX.set(this.anchorAngleX - (this.anchorY - mouseEvent.getSceneY()));
+                }
+            }
             this.angleZ.set(this.anchorAngleY + this.anchorX - mouseEvent.getSceneX());
 
         });

@@ -34,9 +34,9 @@ public class Terrain extends TerrainGenerator {
         for (double i = 0; i < TERRAIN_HEIGHT; i+= STEP) {
             for (double j = 0; j < TERRAIN_WIDTH; j+= STEP) {
                 float height = (float) -getHeight(new Vector2D(i, j));
-                this.sandPitMesh.getPoints().addAll((float) ((i - Display.translateXMesh)), (float) ((j - Display.translateYMesh)), height);
-                this.waterMesh.getPoints().addAll((float) ((i - Display.translateXMesh)), (float) ((j - Display.translateYMesh)), height);
-                this.grassMesh.getPoints().addAll((float) ((i - Display.translateXMesh)), (float) ((j - Display.translateYMesh)), height);
+                this.sandPitMesh.getPoints().addAll((float) i, (float) j, height);
+                this.waterMesh.getPoints().addAll((float) i, (float) j, height);
+                this.grassMesh.getPoints().addAll((float) i, (float) j, height);
             }
         }
     }

@@ -35,14 +35,7 @@ public class Display extends Application {
     public static final int FRAME_WIDTH = 1100;
     public static final int FRAME_HEIGHT = 600;
 
-    // translate all the objects to the middle of the frame
-    public static final int translateXMesh = 0;
-    public static final int translateYMesh =  0;
-
     public static final int UNIT = 20;
-
-    // to smartGroup all the objects are added (rotation built-in)
-    private SmartGroup group;
 
     private GridPane gridPane;
     public Text text;
@@ -51,16 +44,17 @@ public class Display extends Application {
     @Override
     public void start(Stage stage) {
 
-        this.group = new SmartGroup();
+        // to smartGroup all the objects are added (rotation built-in)
+        SmartGroup group = new SmartGroup();
         MeshView[] meshViews = universe.getMeshViews();
         for (MeshView meshView : meshViews) {
-            this.group.getChildren().add(meshView);
+            group.getChildren().add(meshView);
         }
-        this.group.getChildren().add(universe.getBall().getSphere());
-        this.group.getChildren().add(universe.getTarget().getCircle());
+        group.getChildren().add(universe.getBall().getSphere());
+        group.getChildren().add(universe.getTarget().getCircle());
 
-        SubScene subScene = new SubScene(this.group, FRAME_WIDTH - 200, FRAME_HEIGHT, true, SceneAntialiasing.BALANCED);
-        subScene.setFill(Color.SILVER);
+        SubScene subScene = new SubScene(group, FRAME_WIDTH - 200, FRAME_HEIGHT, true, SceneAntialiasing.BALANCED);
+        subScene.setFill(Color.BLACK);
 
         Pane displayPane = new Pane();
         displayPane.setPrefSize(FRAME_WIDTH, FRAME_HEIGHT);
@@ -82,9 +76,9 @@ public class Display extends Application {
         Scene scene = new Scene(displayPane);
 
         // move the objects the middle
-        group.translateXProperty().set((FRAME_WIDTH + 450 -50)/ 3.0);
-        group.translateYProperty().set((FRAME_HEIGHT +300 -30) / 3.0);
-//        group.zoom(camera.getTranslateY() + 1000);// move it a little closer
+        group.translateXProperty().set((FRAME_WIDTH + 190)/ 3.0); // plus right
+        group.translateYProperty().set((FRAME_HEIGHT + 250) / 3.0);  // plus down
+        group.zoom(camera.getTranslateY() + 870); // TODO
         group.initMouseControl(scene);
 
         // zoomIn, zoomOut added on scroll event
