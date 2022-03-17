@@ -59,7 +59,7 @@ public class Shot extends Display implements Runnable {
             delta+= (now - lastTime) / nanos;
             lastTime = now;
             while (delta >= 1) {
-                if ((!ball.isMoving() && !ball.willMove()) || ball.isOnTarget() ) {
+                if ((!ball.isMoving() && !ball.getWillMove()) ) {
                     stop();
                 }
                 System.out.println(ball.getPosition());
@@ -67,6 +67,11 @@ public class Shot extends Display implements Runnable {
                 universe.updateBallPosition();
                 updatePanel();
                 delta--;
+                if(ball.isOnTarget()&& ball.getVelocity().getMagnitude() < 0.5){
+                    System.out.println("Target hit");
+                    ball.setVelocity(new Vector2D(0,0));
+                    ball.setWillMove(false);
+                }
             }
         }
         updatePanel();

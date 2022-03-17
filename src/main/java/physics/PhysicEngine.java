@@ -1,6 +1,5 @@
 package physics;
 
-import objects.FileReader;
 import objects.GameObject;
 import objects.TerrainGenerator;
 
@@ -32,7 +31,7 @@ public class PhysicEngine extends Solver {
 			double aY = (- g * partial_y) - (mu_K * g * vY / gameObject.getVelocity().getMagnitude());
 			return new Vector2D(aX, aY);
 
-		} else if ( gameObject.willMove()) {
+		} else if ( gameObject.getWillMove()) {
 			System.out.println("will move");
 			double aX = mu_K * g * partial_x / partials.getMagnitude();
 			double aY = mu_K * g * partial_y / partials.getMagnitude();

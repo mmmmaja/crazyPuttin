@@ -9,7 +9,6 @@ import objects.FileReader;
 public class Main {
 
     private static Universe universe ;
-    //FIXME updatePanel
 
     //TODO Merge water-target detection
     //TODO Add Arrow

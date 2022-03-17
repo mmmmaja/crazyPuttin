@@ -210,9 +210,10 @@ public class Display extends Application {
         gridPane.add(new HBox(30, resetButton), 0, 15);
 
         resetButton.setOnMouseClicked(mouseEvent -> {
-            if (!universe.getBall().isMoving() )
+            if (!universe.getBall().isMoving() ) {
                 universe.resetBall();
-            universe.updateBallPosition();
+                universe.updateBallPosition();
+            }
         });
 
         button.setOnMouseClicked(mouseEvent -> {
@@ -221,8 +222,8 @@ public class Display extends Application {
             // if the textFields were filled read the initial velocity from them
             if (!Objects.equals(xVel.getText(), "") && !Objects.equals(yVel.getText(), ""))
             {
-                int xV = Integer.parseInt(xVel.getText());
-                int yV = Integer.parseInt(yVel.getText());
+                float xV = Float.parseFloat(xVel.getText());
+                float yV = Float.parseFloat(yVel.getText());
                 velocity = new Vector2D(xV, yV);
             }
             // read the velocity from the file shot.txt

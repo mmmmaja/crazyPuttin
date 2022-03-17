@@ -22,12 +22,13 @@ public class Ball extends PhysicEngine implements GameObject {
     private Vector2D acceleration;
     private Target target ;
     private Sphere sphere;
-
+    private boolean willMove;
 
     public Ball(Vector2D position) {
         this.position = position;
         this.previousPosition = position ;
         velocity = new Vector2D(0,0);
+        willMove = false;
         setAcceleration(velocity);
         createSphere();
     }
@@ -43,7 +44,14 @@ public class Ball extends PhysicEngine implements GameObject {
         System.out.println(TerrainGenerator.getHeight(position));
     }
     public boolean isMoving(){ return velocity.getMagnitude() > 0.02; }
-    public boolean willMove(){return TerrainGenerator.getStaticFrictionCoefficient(position) < ( Math.sqrt( Math.pow(TerrainGenerator.getSlopeX(position) , 2 ) + Math.pow( TerrainGenerator.getSlopeY( getPosition()) ,2) ) ) ;}
+    public boolean getWillMove(){
+        willMove = TerrainGenerator.getStaticFrictionCoefficient(position) < (Math.sqrt(Math.pow(TerrainGenerator.getSlopeX(position), 2) + Math.pow(TerrainGenerator.getSlopeY(getPosition()), 2)));
+        System.out.println("will Move?? " + willMove);
+        return willMove;
+    }
+    public void setWillMove(boolean willMove){
+        this.willMove = willMove;
+    }
     public boolean isOnSlope() {return TerrainGenerator.getSlopeX(position) != 0  || TerrainGenerator.getSlopeY(position) != 0 ; }
     public boolean isOnTarget(){
         double xdiff = target.getPosition().getX()-position.getX();

@@ -50,8 +50,7 @@ public class Euler extends PhysicEngine {
 
 		double new_X = gameObject.getPosition().getX() + getSTEP() * vX ;
 		double new_Y = gameObject.getPosition().getY() + getSTEP() * vY ;
-		Vector2D next_position = new Vector2D( new_X , new_Y);
-		return next_position;
+		return new Vector2D( new_X , new_Y);
 	}
 
 	@Override
