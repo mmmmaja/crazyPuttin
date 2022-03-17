@@ -60,7 +60,7 @@ public class Terrain extends TerrainGenerator {
 
                 }
                 // add texture and faces to sandPit mesh
-                else if (isSandPit(i - (TERRAIN_HEIGHT  / STEP)  , j - (TERRAIN_HEIGHT  / STEP)  ) ) {
+                else if (isSandPit((i * STEP - (TERRAIN_HEIGHT)) , (j * STEP - (TERRAIN_HEIGHT)) ) ) {
                     this.sandPitMesh.getFaces().addAll(topLeft, 0, topRight, 1, bottomLeft, 2);
                     this.sandPitMesh.getFaces().addAll(bottomLeft, 0, topRight, 1, bottomRight, 2);
                 }
