@@ -1,6 +1,6 @@
 package physics;
 
-public class Vector3D implements Vector{
+public class Vector3D implements Vector {
 
 	private double x;
 	private double y;
@@ -13,13 +13,12 @@ public class Vector3D implements Vector{
 		this.z = z;
 	}
 
-
 	public double getZ(){
-		return this.z ;
+		return this.z;
 	}
 
 	public void setZ(double z){
-		this.z = z ;
+		this.z = z;
 	}
 
 	@Override

@@ -1,10 +1,11 @@
 package objects;
 
-import Main.Universe;
-import graphics.Display;
 import javafx.scene.shape.TriangleMesh;
 import physics.Vector2D;
 
+/**
+ * class responsible for creating the Triangular meshes that will be representation of the terrain in the display
+ */
 public class Terrain extends TerrainGenerator {
     private final TriangleMesh grassMesh;
     private final TriangleMesh waterMesh;
@@ -14,6 +15,7 @@ public class Terrain extends TerrainGenerator {
 
     private static final int TERRAIN_WIDTH = 50;
     private static final int TERRAIN_HEIGHT = 50;
+    // the size of each polygon in the mesh
     private static final double STEP = 0.25;
 
 
@@ -27,11 +29,13 @@ public class Terrain extends TerrainGenerator {
         addFaces();
     }
 
-
+    /**
+     * Adds all the points from which the polygons of the three meshes will be created
+     */
     private void addPoints() {
         for (double i = -TERRAIN_HEIGHT; i < TERRAIN_HEIGHT; i+= STEP) {
             for (double j = -TERRAIN_WIDTH; j < TERRAIN_WIDTH; j+= STEP) {
-                float height = (float) -getHeight(new Vector2D(i, j));
+                float height = - (float)getHeight(new Vector2D(i, j));
                 this.sandPitMesh.getPoints().addAll((float) i, (float) j, height);
                 this.waterMesh.getPoints().addAll((float) i, (float) j, height);
                 this.grassMesh.getPoints().addAll((float) i, (float) j, height);
@@ -39,8 +43,11 @@ public class Terrain extends TerrainGenerator {
         }
     }
 
-
+    /**
+     * creates the faces (triangles) of the meshes and maps the texture into the exact points
+     */
     private void addFaces() {
+        // add the indexes of the indicated textures
         this.sandPitMesh.getTexCoords().addAll(0, 0, 0, 1, 1, 0, 1, 1);
         this.waterMesh.getTexCoords().addAll(0, 0, 0, 1, 1, 0, 1, 1);
         this.grassMesh.getTexCoords().addAll(0, 0, 0, 1, 1, 0, 1, 1);
@@ -48,6 +55,7 @@ public class Terrain extends TerrainGenerator {
         for (int i = 0; i < TERRAIN_HEIGHT * 2 / STEP - 2 ; i++) {
             for (int j = 0; j < TERRAIN_WIDTH * 2 / STEP - 1 ; j++) {
 
+                // indexes of the points in the Array of points
                 int topLeft = (int) ((TERRAIN_WIDTH * 2  / STEP) * i + j);
                 int topRight = topLeft + 1;
                 int bottomLeft = (int) (topLeft + (TERRAIN_WIDTH * 2 / STEP));
@@ -57,7 +65,6 @@ public class Terrain extends TerrainGenerator {
                 if (TerrainGenerator.getHeight(new Vector2D( i * STEP - 50, j * STEP -50 )) < 0) {
                     this.waterMesh.getFaces().addAll(topLeft, 0, topRight, 1, bottomLeft, 2);
                     this.waterMesh.getFaces().addAll(bottomLeft, 0, topRight, 1, bottomRight, 2);
-
                 }
                 // add texture and faces to sandPit mesh
                 else if (isSandPit((i * STEP - (TERRAIN_HEIGHT)) , (j * STEP - (TERRAIN_HEIGHT)) ) ) {
@@ -87,12 +94,15 @@ public class Terrain extends TerrainGenerator {
         return this.sandPitMesh;
     }
 
-
+    /**
+     * @param i x index of the checked point
+     * @param j y index of the checked point
+     * @return true if point at the given index is a sandPit
+     */
     public boolean isSandPit(double i, double j) {
         if (i >= this.sandPitX.getX() && i <= this.sandPitX.getY()) {
             return j >= this.sandPitY.getX() && j <= this.sandPitY.getY();
         }
         return false;
     }
-
 }

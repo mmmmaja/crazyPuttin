@@ -15,6 +15,8 @@ import physics.Vector2D;
 public class SmartGroup extends Group {
 
     private static final double zoomFactor = 1.2;
+
+    // indicates whether scene can be rotated: rotation is disabled when arrow is drowned on canvas
     private boolean arrowOn = false;
 
     // starting point for x and y
@@ -36,6 +38,7 @@ public class SmartGroup extends Group {
         deltaY *= -zoomFactor;
         this.translateZProperty().set(this.getTranslateZ() + deltaY);
     }
+
 
     /**
      * add rotation when dragging the mouse
@@ -72,8 +75,6 @@ public class SmartGroup extends Group {
                         this.angleX.set(this.anchorAngleX - (this.anchorY - mouseEvent.getSceneY()));
                     }
                 }
-//            this.angleX.set(this.anchorAngleX - (this.anchorY - mouseEvent.getSceneY()));
-
                 this.angleZ.set(this.anchorAngleY + this.anchorX - mouseEvent.getSceneX());
 
             }

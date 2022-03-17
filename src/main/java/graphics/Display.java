@@ -52,17 +52,20 @@ public class Display extends Application {
 
         // to smartGroup all the objects are added (rotation built-in)
         group = new SmartGroup();
+
+        // add the lighting to the scene: ambient light and point light
         AmbientLight ambient = new AmbientLight();
-        PointLight point = new PointLight   ();
+        PointLight point = new PointLight();
         ambient.setColor(Color.rgb(191, 191, 191,0.6));
         point.setColor(Color.rgb(255, 255, 255,0.1));
-
         point.setLayoutX(1000);
         point.setLayoutY(1000);
-
         point.setTranslateZ(-1100);
+
         // add water, sandPit and grass meshes to the display
         MeshView[] meshViews = universe.getMeshViews();
+
+        // load the pictures that will be applied as a textures for the objects
         Image grass_im = new Image("file:src/main/java/grass.jpg" ,5,5,false,false);
         Image water_im = new Image("file:src/main/java/water.jpg" ,5,5,false,false);
         Image sand_im = new Image(  "file:src/main/java/sand.jpg" ,5,5,false,false);
@@ -77,10 +80,13 @@ public class Display extends Application {
         water.setDiffuseMap(water_im);
         sand.setDiffuseMap(sand_im);
         flag.setDiffuseMap(flag_im);
+
         universe.getFlag().getBox().setMaterial(flag);
         meshViews[0].setMaterial(grass);
         meshViews[1].setMaterial(water);
         meshViews[2].setMaterial(sand);
+
+        // add all the objects to the SmartGroup
         for (MeshView meshView : meshViews) {
             group.getChildren().add(meshView);
         }
@@ -90,13 +96,14 @@ public class Display extends Application {
         group.getChildren().add(universe.getPole().getCylinder());
         group.getChildren().add(universe.getFlag().getBox());
 
-        //Arrow visualisation Canvas
+        // create Canvas for arrow visualisation
         this.canvas = new Canvas(150,120);
-        // For drawing on the canvas
+        // enable drawing on the canvas
         GraphicsContext graphicsContext = canvas.getGraphicsContext2D();
         clearCanvas(this.canvas, graphicsContext);
 
-        canvas.setOnMousePressed( e -> mouseClicked(e,canvas,graphicsContext));
+        // whenever the canvas is pressed draw an arrow to the pointer's direction
+        canvas.setOnMousePressed(e -> mouseClicked(e, canvas, graphicsContext));
 
         // this subScene holds terrain display (left part of the frame)
         SubScene subScene = new SubScene(group, FRAME_WIDTH - 200, FRAME_HEIGHT, true, null);
@@ -112,6 +119,7 @@ public class Display extends Application {
         this.gridPane.setTranslateX(FRAME_WIDTH - 200);
 
         Camera camera = new PerspectiveCamera();
+        // enable zooming in really close without the disappearance of the objects
         camera.setNearClip(0.0001);
         subScene.setCamera(camera);
 
@@ -122,8 +130,8 @@ public class Display extends Application {
         Scene scene = new Scene(displayPane);
 
         // move the all the objects the middle of the frame
-        group.translateXProperty().set((FRAME_WIDTH + 190 + 60) / 3.0); // plus right
-        group.translateYProperty().set((FRAME_HEIGHT + 250 + 55) / 3.0);  // plus down
+        group.translateXProperty().set((FRAME_WIDTH + 250) / 3.0);
+        group.translateYProperty().set((FRAME_HEIGHT + 305) / 3.0);
         group.zoom(camera.getTranslateY() + 900); // zoomIn
         group.initMouseControl(scene);
         scene.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> gridPane.requestFocus());
@@ -154,7 +162,8 @@ public class Display extends Application {
 
 
     /**
-     * updates x and y position of the ball and counter of the shoots each time the ball is shot in the panel
+     * updates x and y position of the ball
+     * update counter of the shoots and point counter
      * @param x position x of the ball
      * @param y position y of the ball
      */
@@ -224,8 +233,9 @@ public class Display extends Application {
         Button resetButton = new Button("Reset ball");
         gridPane.add(new HBox(30, resetButton), 0, position + 6);
 
+        // each time resetButton is clicked ball is set back to the initial position
         resetButton.setOnMouseClicked(mouseEvent -> {
-            if (!universe.getBall().isMoving() ) {
+            if (!universe.getBall().isMoving()) {
                 universe.resetBall();
                 universe.updateBallPosition();
                 updatePanel(universe.getBall().getPosition().getX(),universe.getBall().getPosition().getY());
@@ -248,16 +258,18 @@ public class Display extends Application {
         Vector2D velocity;
         if (!universe.getBall().isMoving()) {
 
-            // if the textFields were filled read the initial velocity from them
+            // if the textFields were filled, then read the initial velocity from them
             if (!Objects.equals(xVel.getText(), "") && !Objects.equals(yVel.getText(), "")) {
                 float xV = Float.parseFloat(xVel.getText());
                 float yV = Float.parseFloat(yVel.getText());
                 velocity = new Vector2D(xV, yV);
             }
+
             // read the velocity from the file shot.txt
             else {
                 velocity = universe.getFileReader().getNextShotFromFile();
             }
+
             // no more shots left in the file shot.txt
             if (velocity != null) {
                 new Shot(universe, velocity);
@@ -266,7 +278,10 @@ public class Display extends Application {
         }
     }
 
-
+    /**
+     * triggered when the arrow was drawn on canvas
+     * @param velocity initial velocity of the ball
+     */
     private void shootBall(Vector2D velocity) {
         if (!universe.getBall().isMoving()) {
             new Shot(universe, velocity);
@@ -275,16 +290,30 @@ public class Display extends Application {
     }
 
 
-    public void clearCanvas(Canvas canvas, GraphicsContext graphicsContext) {
+    /**
+     * clear canvas each time the arrow changes the position so that there's no multiple arrows on the canvas
+     * @param canvas box where arrow is drowned
+     * @param g graphic component enabling drawing on the canvas
+     */
+    public void clearCanvas(Canvas canvas, GraphicsContext g) {
 
-        graphicsContext.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-        graphicsContext.setStroke(Color.WHITE);
-        graphicsContext.setLineWidth(5.0);
-        graphicsContext.strokeRect(0, 0, canvas.getWidth(), canvas.getHeight());
-        graphicsContext.setLineWidth(2.0);
+        g.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+        g.setStroke(Color.WHITE);
+        g.setLineWidth(5.0);
+        g.strokeRect(0, 0, canvas.getWidth(), canvas.getHeight());
+        g.setLineWidth(2.0);
     }
 
-    public void drawArrow(double startX, double startY, double endX, double endY, Canvas canvas, GraphicsContext g) {
+
+    /**
+     * draws the arrow when the canvas was pressed
+     * @param startX starting x position
+     * @param startY starting y position
+     * @param endX ending x position
+     * @param endY ending y position
+     * @param g graphic component enabling drawing on the canvas
+     */
+    public void drawArrow(double startX, double startY, double endX, double endY, GraphicsContext g) {
 
         //drawing arrow body
         g.strokeLine(startX, startY, endX, endY);
@@ -302,17 +331,17 @@ public class Display extends Application {
      * @param g graphics
      */
     public void mouseClicked(MouseEvent mouseEvent, Canvas canvas, GraphicsContext g) {
+
         this.group.setArrowOn(true);
         double clickedX = mouseEvent.getX();
         double clickedY = mouseEvent.getY();
 
         canvas.setOnMouseDragged(MouseDragged -> {
-            clearCanvas(canvas,g);
-            drawArrow(clickedX,clickedY, MouseDragged.getX(), MouseDragged.getY(), canvas, canvas.getGraphicsContext2D());
+            clearCanvas(canvas, g);
+            drawArrow(clickedX, clickedY, MouseDragged.getX(), MouseDragged.getY(), canvas.getGraphicsContext2D());
         });
 
-        canvas.setOnMouseReleased(MouseReleased ->
-        {
+        canvas.setOnMouseReleased(MouseReleased -> {
             this.group.setArrowOn(false);
             double vX = MouseReleased.getX()-clickedX;
             double vY = MouseReleased.getY()-clickedY;

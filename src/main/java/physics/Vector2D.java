@@ -2,12 +2,14 @@ package physics;
 
 import java.util.Objects;
 
-public class Vector2D implements Vector{
+public class Vector2D implements Vector {
 
     private double x;
     private double y;
 
-    public Vector2D(){}
+    public Vector2D() {
+    }
+
     public Vector2D(double x, double y) {
         this.x = x;
         this.y = y;
@@ -33,12 +35,15 @@ public class Vector2D implements Vector{
     public double getMagnitude(){
         return Math.sqrt( Math.pow(x,2)  + Math.pow(y,2));
     }
+
     public Vector2D getUnitVector(){
         return new Vector2D( x / getMagnitude() , y / getMagnitude() );
     }
+
     public Vector2D reverseUnitVector() {
         return new Vector2D( -1 * x / getMagnitude(), -1 * y / getMagnitude() );
     }
+
     public void reverseVector(){
         setX(-x);
         setY(-y);

@@ -1,15 +1,17 @@
 package objects;
 
-import javafx.scene.paint.Color;
-import javafx.scene.paint.PhongMaterial;
+
 import javafx.scene.shape.Box;
-import javafx.scene.transform.Rotate;
 import physics.Vector2D;
 
-public class Flag implements GameObject{
+/**
+ * Class that holds the objects needed to render 3D flag
+ */
+public class Flag implements GameObject {
+
     private Vector2D position;
     private Vector2D dimension;
-    private Box flag;
+    private final Box flag;
 
     public Flag(Vector2D position){
         this.position = position;
@@ -24,16 +26,24 @@ public class Flag implements GameObject{
         this.flag.setTranslateX(this.position.getX()-flag.getWidth()/2);
         this.flag.setTranslateY(this.position.getY());
         this.flag.setTranslateZ(-TerrainGenerator.getHeight(position)-2  );
-//        this.flag.setRotationAxis(Rotate.X_AXIS);
-//        this.flag.setRotate(90);
     }
+
+    /**
+     * @return Box object that will be added to the Display
+     */
+    public Box getBox() {
+        return this.flag;
+    }
+
     @Override
     public void setPosition(Vector2D position) {
         this.position = position;
     }
 
     @Override
-    public Vector2D getVelocity() { return new Vector2D(0,0); }
+    public Vector2D getVelocity() {
+        return new Vector2D(0,0);
+    }
 
     @Override
     public void setVelocity(Vector2D velocity) {}
@@ -46,6 +56,7 @@ public class Flag implements GameObject{
     @Override
     public void setPreviousPosition(Vector2D previousPosition) {}
 
+    @Override
     public Vector2D getPosition(){
         return position;
     }
@@ -77,19 +88,15 @@ public class Flag implements GameObject{
     }
 
     @Override
-    public boolean getWillMove() { return false; }
+    public boolean getWillMove() {
+        return false;
+    }
 
     @Override
-    public void setWillMove(boolean willMove) {
-
-    }
+    public void setWillMove(boolean willMove) {}
 
     @Override
     public boolean isOnSlope() {
         return false;
-    }
-
-    public Box getBox() {
-        return this.flag;
     }
 }

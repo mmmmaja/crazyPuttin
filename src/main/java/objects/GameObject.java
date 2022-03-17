@@ -2,6 +2,9 @@ package objects;
 
 import physics.Vector2D;
 
+/**
+ * Interface that will be applied to all the objects appearing in the game
+ */
 public interface GameObject {
 
     Vector2D getPosition();
@@ -22,5 +25,4 @@ public interface GameObject {
     boolean getWillMove();
     void setWillMove(boolean willMove);
     boolean isOnSlope();
-
 }

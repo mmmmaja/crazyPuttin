@@ -1,33 +1,28 @@
 package physics;
 
-import objects.Ball;
 import objects.GameObject;
 import objects.TerrainGenerator;
+
 
 public class Euler extends PhysicEngine {
 
 
-	public Euler(){
-
-	}
-
 	@Override
-	public void nextStep(GameObject gameObject ){
+	public void nextStep(GameObject gameObject) {
 
-		Vector2D next_pos = calculateNextPosition(gameObject);
-		Vector2D next_vel = calculateNextVelocity(gameObject);
+		Vector2D nextPosition = calculateNextPosition(gameObject);
+		Vector2D nextVelocity = calculateNextVelocity(gameObject);
 
-		if (TerrainGenerator.getHeight(next_pos)>=0){
+		if (TerrainGenerator.getHeight(nextPosition) >= 0) {
 			gameObject.setPreviousPosition(gameObject.getPosition());
-			gameObject.setState(next_pos,next_vel);
+			gameObject.setState(nextPosition,nextVelocity);
 		}
-		else{
+		else {
 			gameObject.setState(gameObject.getPreviousPosition(),new Vector2D(0,0));
 			gameObject.setWillMove(false);
 		}
-
-
 	}
+
 	public Vector2D calculateNextVelocity(GameObject gameObject ){
 		//v1 = v0 + h * a0
 		Vector2D velocity = gameObject.getVelocity() ;
@@ -44,15 +39,20 @@ public class Euler extends PhysicEngine {
 
 		return new Vector2D( new_vX , new_vY );
 	}
+
+	/**
+	 *
+	 * @param gameObject of the game; for this phase: the ball
+	 * @return next position of the given object
+	 */
 	public Vector2D calculateNextPosition(GameObject gameObject){
 
 		double vX = gameObject.getVelocity().getX();
 		double vY = gameObject.getVelocity().getY();
 
-		double new_X = gameObject.getPosition().getX() + getSTEP() * vX ;
-		double new_Y = gameObject.getPosition().getY() + getSTEP() * vY ;
-		return new Vector2D( new_X , new_Y);
+		double new_X = gameObject.getPosition().getX() + getSTEP() * vX;
+		double new_Y = gameObject.getPosition().getY() + getSTEP() * vY;
+		return new Vector2D(new_X, new_Y);
 	}
-
 
 }

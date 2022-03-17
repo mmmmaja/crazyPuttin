@@ -1,39 +1,43 @@
 package objects;
 
-import physics.PhysicEngine;
 import physics.Vector2D;
-import Main.Universe;
-
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 import java.io.*;
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
 
+
+/**
+ * Class that reads all the information from the InputFile and Shot file
+ */
 public class FileReader {
     private Scanner shotReader;
     private double x0, y0;
     private double xt, yt;
     private double r;
     private double muk, mus;
-    private String heightProfile;
     private Vector2D sandPitX, sandPitY;
     private double muks, muss;
     private Expression expression;
 
+
     public FileReader() {
 
         try {
+            // read the file with the shots
             File shotFile = new File("src\\main\\java\\shot.txt");
-            if(shotFile.exists()){
+            if (shotFile.exists()) {
                 shotReader = new Scanner(shotFile);
             }
 
+            // read the file with the terrain information
             File inputFile = new File("src\\main\\java\\inputFile.txt");
+            if (inputFile.exists()) {
 
-            if(inputFile.exists()){
                 Scanner inputReader = new Scanner(inputFile);
                 while(inputReader.hasNextLine()){
+
                     String[] next = inputReader.nextLine().split("=");
                     for (int i = 0; i < next.length; i++) {
                         next[i] = next[i].strip();
@@ -47,7 +51,6 @@ public class FileReader {
                         case "muk" -> muk = Double.parseDouble(next[1]);
                         case "mus" -> mus = Double.parseDouble(next[1]);
                         case "heightProfile" -> {
-                            heightProfile = next[1];
                             String equation = next[1].replaceAll("Math.", "");
                             expression = new ExpressionBuilder(equation)
                                     .variables("x", "y")
@@ -64,43 +67,58 @@ public class FileReader {
                         case "muks" -> muks = Double.parseDouble(next[1]);
                         case "muss" -> muss = Double.parseDouble(next[1]);
                     }
-
                 }
             }
-
         }
         catch (Exception ignored){}
     }
 
+    /**
+     * @return the initial position of the ball
+     */
     public Vector2D getInitialPosition() {
-        return new Vector2D(x0,y0);
+        return new Vector2D(x0, y0);
     }
+
+    /**
+     * @return the position of the target
+     */
     public Vector2D getTargetPosition() {
         return new Vector2D(xt,yt);
     }
+
     public double getTargetRadius() {
         return r;
     }
+
     public double getKineticFriction(){
         return muk;
     }
+
     public double getStaticFriction(){
         return mus;
     }
+
     public double getSandPitKineticFriction(){
         return muks;
     }
+
     public double getSandPitStaticFriction(){
         return muss;
     }
+
     public Vector2D getSandPitX(){
         return sandPitX;
     }
+
     public Vector2D getSandPitY(){
         return sandPitY;
     }
 
-
+    /**
+     * reads new line from the Shot file that consist of information about ball velocity
+     * @return vector being the initial velocity of the ball
+     */
     public Vector2D getNextShotFromFile(){
         try {
             String next = shotReader.nextLine();
@@ -113,23 +131,27 @@ public class FileReader {
         }
     }
 
-    public Expression getExpression()
-    {
-        return expression;
-    }
-
-    public double calculator( double x, double y)
-    {
+    /**
+     * @param x position of the checked point on the terrain
+     * @param y position of the checked point on the terrain
+     * @return height of the terrain at the indicated point based on the function read from the file
+     */
+    public double calculator(double x, double y) {
         return calculator(expression, x, y);
     }
 
-    public double calculator(Expression expression, double x, double y)
-    {
+    /**
+     * @param expression function for the terrain read from the inputFile
+     * @param x position of the checked point on the terrain
+     * @param y position of the checked point on the terrain
+     * @return height of the terrain at the indicated point based on the function read from the file
+     */
+    public double calculator(Expression expression, double x, double y) {
         expression
                 .setVariable("x", x)
                 .setVariable("y", y);
 
-        return (double) expression.evaluate();
-
+        return expression.evaluate();
     }
+
 }

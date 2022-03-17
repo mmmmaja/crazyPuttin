@@ -6,11 +6,14 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.transform.Rotate;
 
+/**
+ * Class that holds the objects needed to render the pole for the 3D flag
+ */
 public class Pole implements GameObject{
 
     private Vector2D position;
     private Vector2D dimension;
-    private Cylinder pole;
+    private final Cylinder pole;
 
     public Pole(Vector2D position){
         this.position = position;
@@ -26,16 +29,25 @@ public class Pole implements GameObject{
         this.pole.setTranslateZ( -TerrainGenerator.getHeight(position) - pole.getHeight()/2 );
         this.pole.setRotationAxis(Rotate.X_AXIS);
         this.pole.setRotate(90);
-        PhongMaterial pole_phong = new PhongMaterial(Color.WHITE);
-        this.pole.setMaterial(pole_phong);
+        this.pole.setMaterial(new PhongMaterial(Color.WHITE));
     }
+
+    /**
+     * @return Cylinder object that will be added to the Display
+     */
+    public Cylinder getCylinder() {
+        return this.pole;
+    }
+
     @Override
     public void setPosition(Vector2D position) {
         this.position = position;
     }
 
     @Override
-    public Vector2D getVelocity() { return new Vector2D(0,0); }
+    public Vector2D getVelocity() {
+        return new Vector2D(0,0);
+    }
 
     @Override
     public void setVelocity(Vector2D velocity) {}
@@ -58,9 +70,7 @@ public class Pole implements GameObject{
     }
 
     @Override
-    public void setState(Vector2D position, Vector2D velocity) {
-
-    }
+    public void setState(Vector2D position, Vector2D velocity) {}
 
     @Override
     public double getMass() {
@@ -79,19 +89,15 @@ public class Pole implements GameObject{
     }
 
     @Override
-    public boolean getWillMove() { return false; }
+    public boolean getWillMove() {
+        return false;
+    }
 
     @Override
-    public void setWillMove(boolean willMove) {
-
-    }
+    public void setWillMove(boolean willMove) {}
 
     @Override
     public boolean isOnSlope() {
         return false;
-    }
-
-    public Cylinder getCylinder() {
-        return this.pole;
     }
 }

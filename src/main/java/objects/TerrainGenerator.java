@@ -2,16 +2,18 @@ package objects;
 
 import physics.Vector2D;
 
-
-public class TerrainGenerator{
+/**
+ * class holding the information about the terrain profile
+ */
+public class TerrainGenerator {
 
     private static final double STEP_SIZE = 0.0001;
     private static final FileReader fileReader = new FileReader();
     private static final Vector2D sandPitX = fileReader.getSandPitX();
     private static final Vector2D sandPitY = fileReader.getSandPitY();
 
+
     /**
-     *
      * @param position of the point to be checked
      * @return height of the terrain at the given position based on the function passed in the InputFile
      */
@@ -20,34 +22,57 @@ public class TerrainGenerator{
     }
 
 
-    public static double getSlopeX( Vector2D currentPosition){
+    /**
+     *
+     * @param currentPosition of the ball
+     * @return x value of the slope at the given position
+     */
+    public static double getSlopeX(Vector2D currentPosition){
         double x = currentPosition.getX() ;
         double y = currentPosition.getY() ;
-        return ( getHeight( new Vector2D( x + STEP_SIZE , y ) ) - getHeight(new Vector2D( x - STEP_SIZE , y ) ) ) / ( 2*STEP_SIZE) ;
+        return (getHeight(new Vector2D(x + STEP_SIZE, y)) - getHeight(new Vector2D(x - STEP_SIZE, y))) / (2 * STEP_SIZE);
     }
 
-    public static double getSlopeY( Vector2D currentPosition){
+    /**
+     * @param currentPosition of the ball
+     * @return y value of the slope at the given position
+     */
+    public static double getSlopeY(Vector2D currentPosition){
         double x = currentPosition.getX() ;
         double y = currentPosition.getY() ;
-        return ( getHeight( new Vector2D( x , y + STEP_SIZE ) ) - getHeight(  new Vector2D( x , y - STEP_SIZE ) ) ) / ( 2*STEP_SIZE) ;
+        return (getHeight( new Vector2D(x ,y + STEP_SIZE)) - getHeight(new Vector2D(x , y - STEP_SIZE))) / (2 * STEP_SIZE);
     }
 
-    public static boolean isSand(double i, double j){
+    /**
+     * @param i x index of the checked point
+     * @param j y index of the checked point
+     * @return true if point at the given index is a sandPit
+     */
+    public static boolean isSand(double i, double j) {
         if (i >= sandPitX.getX() && i <= sandPitX.getY()) {
             return j >= sandPitY.getX() && j <= sandPitY.getY();
         }
         return false;
     }
 
+    /**
+     *
+     * @param position of the ball
+     * @return kinetic friction coefficient at the given position
+     */
     public static double getKineticFrictionCoefficient(Vector2D position){
-        if( isSand( position.getX() , position.getY() ) ){
+        if (isSand(position.getX(), position.getY())) {
             return fileReader.getSandPitKineticFriction();
         }
         return fileReader.getKineticFriction();
     }
 
+    /**
+     * @param position of the ball
+     * @return static friction coefficient at the given position
+     */
     public static double getStaticFrictionCoefficient(Vector2D position){
-        if( isSand( position.getX() , position.getY() ) ){
+        if (isSand(position.getX(), position.getY())) {
             return fileReader.getSandPitStaticFriction();
         }
         return fileReader.getStaticFriction();

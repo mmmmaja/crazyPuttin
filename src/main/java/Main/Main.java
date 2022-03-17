@@ -10,8 +10,6 @@ public class Main {
 
     private static Universe universe ;
 
-    //TODO Merge water-target detection
-    //TODO Add Arrow
     public static void main(String[] args) {
 
         universe = new Universe(new FileReader());

@@ -21,13 +21,11 @@ public class Universe {
     private Target target;
     private Pole pole;
     private Flag flag;
-    private final double MAX_SPEED = 5.d;
     private MeshView[] meshViews;
     private Solver solver;
-    private PhongMaterial grassMaterial ;
 
 
-    public Universe(FileReader fileReader ) {
+    public Universe(FileReader fileReader) {
         this.fileReader = fileReader;
         createBall();
         createTerrain();
@@ -35,6 +33,7 @@ public class Universe {
         createPole();
         createFlag();
     }
+
 
     /**
      * creates the ball objects using the values from the inputFile
@@ -85,24 +84,32 @@ public class Universe {
         this.meshViews = new MeshView[] {meshViewGrass, meshViewWater,meshViewSandPit};
     }
 
+
     /**
      * creates the target object getting the position from the InputFile
      */
     private void createTarget() {
         this.target = new Target(this.fileReader.getTargetPosition(), this.fileReader.getTargetRadius());
-        ball.setTarget(target);
+//        ball.setTarget(target);
     }
+
+    /**
+     * create the pole for the flag to be added to the display
+     */
     private void createPole() {
         this.pole = new Pole(this.fileReader.getTargetPosition());
     }
+
+    /**
+     * create a flag to be added to the display
+     */
     private void createFlag() {
         this.flag = new Flag(this.fileReader.getTargetPosition());
     }
 
 
-
     public Solver getSolver(){
-        if(solver == null )
+        if (solver == null )
             return new Euler();
         return this.solver;
     }
@@ -118,9 +125,11 @@ public class Universe {
     public Target getTarget() {
         return this.target;
     }
+
     public Pole getPole(){
         return this.pole;
     }
+
     public Flag getFlag(){
         return this.flag;
     }
@@ -130,18 +139,25 @@ public class Universe {
     }
 
 
+    /**
+     * compute the next position for the ball and compute the location of the sphere
+     */
     public void updateBallPosition(){
         Vector2D position = ball.getPosition();
-        ball.getSphere().setTranslateX(position.getX() + (ball.getPositionX() - ball.getPreviousPosition().getX()));
-        ball.getSphere().setTranslateY(position.getY() + (ball.getPositionY() - ball.getPreviousPosition().getY()));
-        ball.getSphere().setTranslateZ((-TerrainGenerator.getHeight(position) - 2*ball.getRADIUS()));
+        ball.getSphere().setTranslateX(position.getX() + (ball.getPosition().getX() - ball.getPreviousPosition().getX()));
+        ball.getSphere().setTranslateY(position.getY() + (ball.getPosition().getY() - ball.getPreviousPosition().getY()));
+        ball.getSphere().setTranslateZ((-TerrainGenerator.getHeight(position) - 2 * ball.getRADIUS()));
     }
 
+    /**
+     * set the ball back to the position read from inputFile
+     */
     public void resetBall(){
         ball.setPosition(fileReader.getInitialPosition());
         ball.setPreviousPosition(fileReader.getInitialPosition());
         ball.setVelocity(new Vector2D(0,0));
     }
+
 
     public FileReader getFileReader() {
         return this.fileReader;

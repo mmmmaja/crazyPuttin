@@ -7,13 +7,13 @@ import physics.Vector2D;
 
 /**
  * instance of this class is created each time the movement of the ball is triggered
- * performs an animation of the ball movement
+ * performs an animation of the ball movement in the new thread
  */
 public class Shot extends Display implements Runnable {
 
     private final Ball ball;
     private final Universe universe;
-    private boolean running = false;
+    private boolean running;
     private Thread thread;
 
 
@@ -24,24 +24,29 @@ public class Shot extends Display implements Runnable {
 
         if (velocity.getMagnitude() > 5) {
             Vector2D unit_vector = new Vector2D(velocity.getX() / velocity.getMagnitude(), velocity.getY() / velocity.getMagnitude());
-            this.ball.setVelocity( new Vector2D(unit_vector.getX() * 5, unit_vector.getY() * 5) ) ;
+            this.ball.setVelocity(new Vector2D(unit_vector.getX() * 5, unit_vector.getY() * 5)) ;
         }
         start();
     }
 
 
+    /**
+     * starts the animation and creates a new Thread object
+     */
     public synchronized void start() {
-
         running = true;
         this.thread = new Thread(this);
         this.thread.start();
     }
 
+    /**
+     * kills the thread when the ball is in the resting position
+     */
     public synchronized void stop() {
-        Display.updatePanel(ball.getPosition().getX(), ball.getPosition().getY());
         System.out.println("stop");
-        ball.setWillMove(false);
-        running = false;
+        Display.updatePanel(ball.getPosition().getX(), ball.getPosition().getY());
+        this.ball.setWillMove(false);
+        this.running = false;
         try {
             this.thread.join();
         }
@@ -53,6 +58,7 @@ public class Shot extends Display implements Runnable {
     public void run() {
         System.out.println("start!");
         ball.setWillMove(true);
+
         int SPEED = 60;
         double delta = 0;
         long lastTime = System.nanoTime();
@@ -67,20 +73,22 @@ public class Shot extends Display implements Runnable {
             while (delta >= 1) {
                 universe.getSolver().nextStep(ball);
                 universe.updateBallPosition();
+
+                // when ball is in the resting position
                 if ((!ball.isMoving() && !ball.getWillMove()) ) {
                     stop();
                 }
-                delta--;
-                System.out.println(ball.getVelocity());
 
-                if(ball.isOnTarget()&& ball.getVelocity().getMagnitude() < 0.5){
+                // target was hit
+                if(ball.isOnTarget(universe.getTarget()) && ball.getVelocity().getMagnitude() < 0.5) {
                     System.out.println("Target hit");
+                    Display.pointCounter++;
                     ball.setVelocity(new Vector2D(0,0));
                     ball.setWillMove(false);
                 }
+                delta--;
             }
         }
-
         stop();
     }
 

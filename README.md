@@ -19,12 +19,16 @@ In each game player tries to shoot the ball to the target entering the velocity 
 
 - #### Playing the game
   - once game is loaded all the values for the game scene are read from the file _inputFile.txt_.
+  
   - on the right panel we placed two boxes to enter the initial velocity of the ball.
   Feel them in with the integer values and press _Hit the ball_ button in order to trigger the ball movement.
-  In case the textBoxes were not filled initial velocity will be read from the file _shot.txt_.
-  - once the ball hits the water it is respawned at the closest position on the grass field. 
-  - You can also shoot the ball with the mouse! Click the ball and drag the mouse to trigger the movement.
+  
+  - In case the textBoxes were not filled initial velocity will be read from the file _shot.txt_.
 
+  - You can also shoot the ball with the mouse! Draw the arrow on the canvas at the right-hand side and shoot the ball when releasing the mouse. 
+
+  - once the ball hits the water it is respawned at the closest position on the grass field.
+  - click the _Reset ball_ button to bring the ball back to the initial position.
 ***
 
 ### Group 6

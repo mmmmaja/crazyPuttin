@@ -6,29 +6,33 @@ import javafx.scene.shape.Cylinder;
 import javafx.scene.transform.Rotate;
 import physics.Vector2D;
 
+
 public class Target implements GameObject {
+
     private Vector2D position;
     private Vector2D dimension;
     private Cylinder cylinder;
-    private double radius ;
+    private final double radius ;
 
     public Target(Vector2D position, double radius) {
         this.radius = radius;
         this.position = position;
         createTarget();
-
     }
+
+    /**
+     * creates the 3D cylinder that will be added to the Display
+     */
     public void createTarget(){
         this.cylinder = new Cylinder();
-        cylinder.setRadius(radius);
-        cylinder.setHeight(0.01);
+        this.cylinder.setRadius(radius);
+        this.cylinder.setHeight(0.01);
         this.cylinder.setTranslateX(this.position.getX());
         this.cylinder.setTranslateY(this.position.getY());
         this.cylinder.setTranslateZ((-TerrainGenerator.getHeight(position) - cylinder.getHeight()*2));
         this.cylinder.setRotationAxis(Rotate.X_AXIS);
         this.cylinder.setRotate(90);
-        PhongMaterial cylinder_phong = new PhongMaterial(Color.BLACK);
-        this.cylinder.setMaterial(cylinder_phong);
+        this.cylinder.setMaterial(new PhongMaterial(Color.BLACK));
     }
 
     @Override
@@ -37,7 +41,9 @@ public class Target implements GameObject {
     }
 
     @Override
-    public Vector2D getVelocity() { return new Vector2D(0,0); }
+    public Vector2D getVelocity() {
+        return new Vector2D(0,0);
+    }
 
     @Override
     public void setVelocity(Vector2D velocity) {}
@@ -60,9 +66,7 @@ public class Target implements GameObject {
     }
 
     @Override
-    public void setState(Vector2D position, Vector2D velocity) {
-
-    }
+    public void setState(Vector2D position, Vector2D velocity) {}
 
     @Override
     public double getMass() {
@@ -74,19 +78,18 @@ public class Target implements GameObject {
         return this.dimension;
     }
 
-
     @Override
     public boolean isMoving() {
         return false;
     }
 
     @Override
-    public boolean getWillMove() { return false; }
+    public boolean getWillMove() {
+        return false;
+    }
 
     @Override
-    public void setWillMove(boolean willMove) {
-
-    }
+    public void setWillMove(boolean willMove) {}
 
     @Override
     public boolean isOnSlope() {

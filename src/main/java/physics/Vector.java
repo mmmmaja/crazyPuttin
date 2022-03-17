@@ -1,8 +1,8 @@
 package physics;
 
 public interface Vector {
-	public double getX();
 
+	public double getX();
 
 	public double getY();
 
@@ -17,6 +17,5 @@ public interface Vector {
 	public Vector reverseUnitVector();
 
 	public void reverseVector();
-
 
 }
