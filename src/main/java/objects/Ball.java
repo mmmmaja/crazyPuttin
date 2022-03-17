@@ -43,7 +43,7 @@ public class Ball extends PhysicEngine implements GameObject {
         System.out.println(TerrainGenerator.getHeight(position));
     }
 
-    public boolean isMoving(){ return velocity.getMagnitude() > 0.02; }
+    public boolean isMoving(){ return velocity.getMagnitude() > 0.01;}
     public boolean willMove(){return TerrainGenerator.getStaticFrictionCoefficient(position) < ( Math.sqrt( Math.pow(TerrainGenerator.getSlopeX(position) , 2 ) + Math.pow( TerrainGenerator.getSlopeY( getPosition()) ,2) ) ) ;}
     public boolean isOnSlope() {return TerrainGenerator.getSlopeX(position) != 0  || TerrainGenerator.getSlopeY(position) != 0 ; }
     public boolean isOnTarget(){

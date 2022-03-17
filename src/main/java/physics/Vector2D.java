@@ -44,17 +44,6 @@ public class Vector2D implements Vector{
         setY(-y);
     }
 
-
-    public static Vector sum(Vector v1, Vector v2, Vector v3) {
-        return new Vector2D( v1.getX() + v2.getX() + v3.getX() , v1.getY() + v2.getY() + v3.getY() );
-    }
-
-
-    public static Vector sum(Vector v1, Vector v2) {
-        return new Vector2D( v1.getX() + v2.getX()  , v1.getY() + v2.getY()  );
-
-    }
-
     @Override
     public String toString() {
         return "Vector2D{" +

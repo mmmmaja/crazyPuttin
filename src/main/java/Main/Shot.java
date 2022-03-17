@@ -16,6 +16,7 @@ public class Shot extends Display implements Runnable {
     private boolean running = false;
     private Thread thread;
 
+
     public Shot(Universe universe, Vector2D velocity) {
         this.universe = universe;
         this.ball = universe.getBall();

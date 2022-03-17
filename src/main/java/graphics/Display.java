@@ -180,7 +180,7 @@ public class Display extends Application {
         Font font = new Font("Verdana", 14);
         Font bigFont = new Font("Verdana", 20);
 
-        Text title = new Text("Golf Game \n- group 6");
+        Text title = new Text("Crazy putting");
         title.setFill(Color.WHITE);
         title.setFont(bigFont);
         gridPane.add(new HBox(30, title), 0, 1);
@@ -221,7 +221,6 @@ public class Display extends Application {
 
         Button button = new Button("Hit the ball");
         gridPane.add(new HBox(30, button), 0, position + 5);
-
         Button resetButton = new Button("Reset ball");
         gridPane.add(new HBox(30, resetButton), 0, position + 6);
 

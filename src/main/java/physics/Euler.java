@@ -54,10 +54,5 @@ public class Euler extends PhysicEngine {
 		return next_position;
 	}
 
-	@Override
-	public Vector2D multiply(Vector2D vector1, Vector2D vector2) {
-		return new Vector2D( vector1.getX() * vector2.getX() , vector1.getY() * vector2.getY());
-	}
-
 
 }
