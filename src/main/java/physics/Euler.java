@@ -22,7 +22,8 @@ public class Euler extends PhysicEngine {
 			gameObject.setState(next_pos,next_vel);
 		}
 		else{
-			gameObject.setState(gameObject.getPosition(),new Vector2D(0,0));
+			gameObject.setState(gameObject.getPreviousPosition(),new Vector2D(0,0));
+			gameObject.setWillMove(false);
 		}
 
 

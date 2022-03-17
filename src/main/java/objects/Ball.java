@@ -38,10 +38,12 @@ public class Ball extends PhysicEngine implements GameObject {
         this.sphere.setTranslateZ((-TerrainGenerator.getHeight(position) - 2*RADIUS));
         Material material = new PhongMaterial(Color.WHITESMOKE);
         this.sphere.setMaterial(material);
-        System.out.println(TerrainGenerator.getHeight(position));
     }
-    public boolean isMoving(){ return velocity.getMagnitude() > 0.005; }
+    public boolean isMoving(){ return velocity.getMagnitude() > 0.2; }
     public boolean getWillMove(){
+        if(!willMove){
+            return false ;
+        }
         willMove = TerrainGenerator.getStaticFrictionCoefficient(position) < (Math.sqrt(Math.pow(TerrainGenerator.getSlopeX(position), 2) + Math.pow(TerrainGenerator.getSlopeY(getPosition()), 2) ));
         return willMove;
     }

@@ -38,6 +38,9 @@ public class Shot extends Display implements Runnable {
     }
 
     public synchronized void stop() {
+        Display.updatePanel(ball.getPosition().getX(), ball.getPosition().getY());
+        System.out.println("stop");
+        ball.setWillMove(false);
         running = false;
         try {
             this.thread.join();
@@ -48,6 +51,8 @@ public class Shot extends Display implements Runnable {
 
     @Override
     public void run() {
+        System.out.println("start!");
+        ball.setWillMove(true);
         int SPEED = 60;
         double delta = 0;
         long lastTime = System.nanoTime();
@@ -60,14 +65,14 @@ public class Shot extends Display implements Runnable {
             delta+= (now - lastTime) / nanos;
             lastTime = now;
             while (delta >= 1) {
+                universe.getSolver().nextStep(ball);
+                universe.updateBallPosition();
                 if ((!ball.isMoving() && !ball.getWillMove()) ) {
                     stop();
                 }
-                System.out.println(ball.getPosition());
-                universe.getSolver().nextStep(ball);
-                universe.updateBallPosition();
-                updatePanel();
                 delta--;
+                System.out.println(ball.getVelocity());
+
                 if(ball.isOnTarget()&& ball.getVelocity().getMagnitude() < 0.5){
                     System.out.println("Target hit");
                     ball.setVelocity(new Vector2D(0,0));
@@ -75,7 +80,7 @@ public class Shot extends Display implements Runnable {
                 }
             }
         }
-        updatePanel();
+
         stop();
     }
 

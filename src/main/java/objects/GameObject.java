@@ -20,6 +20,7 @@ public interface GameObject {
     double getMass();
     boolean isMoving();
     boolean getWillMove();
+    void setWillMove(boolean willMove);
     boolean isOnSlope();
 
 }

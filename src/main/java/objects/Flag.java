@@ -80,6 +80,11 @@ public class Flag implements GameObject{
     public boolean getWillMove() { return false; }
 
     @Override
+    public void setWillMove(boolean willMove) {
+
+    }
+
+    @Override
     public boolean isOnSlope() {
         return false;
     }

@@ -8,7 +8,7 @@ public class PhysicEngine extends Solver {
 	private final double MAX_SPEED = 5 ;
 	private final double g =  9.81;
 
-	private final double STEP = 0.00001;
+	private final double STEP = 0.008;
 
 	public PhysicEngine(){}
 
@@ -28,8 +28,8 @@ public class PhysicEngine extends Solver {
 			return new Vector2D(aX, aY);
 
 		} else if ( gameObject.getWillMove()) {
-			double aX = - mu_K * g * partial_x / partials.getMagnitude();
-			double aY = - mu_K * g * partial_y / partials.getMagnitude();
+			double aX = mu_K * g * partial_x / partials.getMagnitude();
+			double aY = mu_K * g * partial_y / partials.getMagnitude();
 
 			return new Vector2D(aX, aY);
 		} else {
