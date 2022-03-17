@@ -47,8 +47,8 @@ public class Terrain extends TerrainGenerator {
         this.waterMesh.getTexCoords().addAll(0, 0, 0, 1, 1, 0, 1, 1);
         this.grassMesh.getTexCoords().addAll(0, 0, 0, 1, 1, 0, 1, 1);
 
-        for (int i = 0; i < TERRAIN_HEIGHT * 2 / STEP - 2; i++) {
-            for (int j = 0; j < TERRAIN_WIDTH * 2 / STEP - 1; j++) {
+        for (int i = 0; i < TERRAIN_HEIGHT * 2 / STEP -2 ; i++) {
+            for (int j = 0; j < TERRAIN_WIDTH * 2 / STEP-1 ; j++) {
 
                 int topLeft = (int) ((TERRAIN_WIDTH * 2  / STEP) * i + j);
                 int topRight = topLeft + 1;
@@ -57,13 +57,14 @@ public class Terrain extends TerrainGenerator {
 
 
                 // add texture and faces to water mesh
-                if (TerrainGenerator.getHeight(new Vector2D( i* STEP  , j*STEP )) < 0) {
+
+                if (TerrainGenerator.getHeight(new Vector2D( i+ (TERRAIN_HEIGHT / 2.d / STEP)  , j+(TERRAIN_HEIGHT / 2.d /STEP))) < 0) {
                     this.waterMesh.getFaces().addAll(topLeft, 0, topRight, 1, bottomLeft, 2);
                     this.waterMesh.getFaces().addAll(bottomLeft, 0, topRight, 1, bottomRight, 2);
 
                 }else
                 // add texture and faces to sandPit mesh
-                if (isSandPit((i-TERRAIN_WIDTH/ STEP)  , (j-TERRAIN_HEIGHT/ STEP) )  ) {
+                if (isSandPit(i- (TERRAIN_HEIGHT * 2 / STEP)  , j-(TERRAIN_HEIGHT*2 /STEP)  ) ) {
                     this.sandPitMesh.getFaces().addAll(topLeft, 0, topRight, 1, bottomLeft, 2);
                     this.sandPitMesh.getFaces().addAll(bottomLeft, 0, topRight, 1, bottomRight, 2);
                 }

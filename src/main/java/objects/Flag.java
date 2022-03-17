@@ -2,35 +2,31 @@ package objects;
 
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
-import javafx.scene.shape.Cylinder;
+import javafx.scene.shape.Box;
 import javafx.scene.transform.Rotate;
 import physics.Vector2D;
 
-public class Target implements GameObject {
+public class Flag implements GameObject{
     private Vector2D position;
     private Vector2D dimension;
-    private Cylinder cylinder;
-    private double radius ;
+    private Box flag;
 
-    public Target(Vector2D position, double radius) {
-        this.radius = radius;
+    public Flag(Vector2D position){
         this.position = position;
-        createTarget();
+        this.flag = new Box();
+        createFlag();
+    };
 
+    public void createFlag(){
+        flag.setHeight(0.05);
+        flag.setWidth(1);
+        flag.setDepth(0.5);
+        this.flag.setTranslateX(this.position.getX()-flag.getWidth()/2);
+        this.flag.setTranslateY(this.position.getY());
+        this.flag.setTranslateZ(-TerrainGenerator.getHeight(position)-2  );
+//        this.flag.setRotationAxis(Rotate.X_AXIS);
+//        this.flag.setRotate(90);
     }
-    public void createTarget(){
-        this.cylinder = new Cylinder();
-        cylinder.setRadius(radius);
-        cylinder.setHeight(0.01);
-        this.cylinder.setTranslateX(this.position.getX());
-        this.cylinder.setTranslateY(this.position.getY());
-        this.cylinder.setTranslateZ((-TerrainGenerator.getHeight(position) - cylinder.getHeight()*2));
-        this.cylinder.setRotationAxis(Rotate.X_AXIS);
-        this.cylinder.setRotate(90);
-        PhongMaterial cylinder_phong = new PhongMaterial(Color.BLACK);
-        this.cylinder.setMaterial(cylinder_phong);
-    }
-
     @Override
     public void setPosition(Vector2D position) {
         this.position = position;
@@ -88,7 +84,7 @@ public class Target implements GameObject {
         return false;
     }
 
-    public Cylinder getCylinder() {
-        return this.cylinder;
+    public Box getBox() {
+        return this.flag;
     }
 }

@@ -1,7 +1,5 @@
 package Main;
 
-import javafx.scene.image.Image;
-import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.CullFace;
@@ -9,7 +7,6 @@ import javafx.scene.shape.DrawMode;
 import javafx.scene.shape.MeshView;
 import objects.*;
 import physics.Euler;
-import physics.PhysicEngine;
 import physics.Solver;
 import physics.Vector2D;
 
@@ -21,8 +18,10 @@ public class Universe {
 
     private final FileReader fileReader;
     private Ball ball;
-    private Terrain terrain;
     private Target target;
+    private Pole pole;
+    private Terrain terrain;
+    private Flag flag;
     private final double MAX_SPEED = 5.d;
     private MeshView[] meshViews;
     private Solver solver;
@@ -34,6 +33,8 @@ public class Universe {
         createBall();
         createTerrain();
         createTarget();
+        createPole();
+        createFlag();
     }
 
     /**
@@ -43,6 +44,7 @@ public class Universe {
         Vector2D initialPosition = this.fileReader.getInitialPosition();
         this.ball = new Ball(new Vector2D(initialPosition.getX(), initialPosition.getY()) );
     }
+
 
     /**
      * creates 3 meshes: grass, water, sandPits based on the function from the inputFile
@@ -90,6 +92,13 @@ public class Universe {
     private void createTarget() {
         this.target = new Target(this.fileReader.getTargetPosition(), this.fileReader.getTargetRadius());
     }
+    private void createPole() {
+        this.pole = new Pole(this.fileReader.getTargetPosition());
+    }
+    private void createFlag() {
+        this.flag = new Flag(this.fileReader.getTargetPosition());
+    }
+
 
 
     public Solver getSolver(){
@@ -108,6 +117,12 @@ public class Universe {
 
     public Target getTarget() {
         return this.target;
+    }
+    public Pole getPole(){
+        return this.pole;
+    }
+    public Flag getFlag(){
+        return this.flag;
     }
 
     public MeshView[] getMeshViews() {

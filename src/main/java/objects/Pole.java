@@ -1,36 +1,34 @@
 package objects;
 
+import javafx.scene.shape.Cylinder;
+import physics.Vector2D;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
-import javafx.scene.shape.Cylinder;
 import javafx.scene.transform.Rotate;
-import physics.Vector2D;
 
-public class Target implements GameObject {
+public class Pole implements GameObject{
+
     private Vector2D position;
     private Vector2D dimension;
-    private Cylinder cylinder;
-    private double radius ;
+    private Cylinder pole;
 
-    public Target(Vector2D position, double radius) {
-        this.radius = radius;
+    public Pole(Vector2D position){
         this.position = position;
-        createTarget();
+        this.pole = new Cylinder();
+        createFlag();
+    };
 
+    public void createFlag(){
+        pole.setRadius(0.02);
+        pole.setHeight(2);
+        this.pole.setTranslateX(this.position.getX());
+        this.pole.setTranslateY(this.position.getY());
+        this.pole.setTranslateZ( -TerrainGenerator.getHeight(position) - pole.getHeight()/2 );
+        this.pole.setRotationAxis(Rotate.X_AXIS);
+        this.pole.setRotate(90);
+        PhongMaterial pole_phong = new PhongMaterial(Color.WHITE);
+        this.pole.setMaterial(pole_phong);
     }
-    public void createTarget(){
-        this.cylinder = new Cylinder();
-        cylinder.setRadius(radius);
-        cylinder.setHeight(0.01);
-        this.cylinder.setTranslateX(this.position.getX());
-        this.cylinder.setTranslateY(this.position.getY());
-        this.cylinder.setTranslateZ((-TerrainGenerator.getHeight(position) - cylinder.getHeight()*2));
-        this.cylinder.setRotationAxis(Rotate.X_AXIS);
-        this.cylinder.setRotate(90);
-        PhongMaterial cylinder_phong = new PhongMaterial(Color.BLACK);
-        this.cylinder.setMaterial(cylinder_phong);
-    }
-
     @Override
     public void setPosition(Vector2D position) {
         this.position = position;
@@ -89,6 +87,6 @@ public class Target implements GameObject {
     }
 
     public Cylinder getCylinder() {
-        return this.cylinder;
+        return this.pole;
     }
 }
