@@ -15,6 +15,7 @@ import physics.Vector2D;
 public class SmartGroup extends Group {
 
     private static final double zoomFactor = 1.2;
+    private boolean arrowOn = false;
 
     // starting point for x and y
     private double anchorX, anchorY;
@@ -54,24 +55,34 @@ public class SmartGroup extends Group {
         rotateZ.angleProperty().bind(angleZ);
 
         scene.setOnMousePressed(mouseEvent -> {
-            this.anchorX = mouseEvent.getSceneX();
-            this.anchorY = mouseEvent.getSceneY();
+            if (!this.arrowOn) {
+                this.anchorX = mouseEvent.getSceneX();
+                this.anchorY = mouseEvent.getSceneY();
 
-            this.anchorAngleX = angleX.get();
-            this.anchorAngleY = angleZ.get();
+                this.anchorAngleX = angleX.get();
+                this.anchorAngleY = angleZ.get();
+            }
         });
 
         scene.setOnMouseDragged(mouseEvent -> {
-            // lock the X rotation, so we can see under the surface
-            if (this.anchorAngleX - (this.anchorY - mouseEvent.getSceneY()) > -68.0) {
-                if (this.anchorAngleX - (this.anchorY - mouseEvent.getSceneY()) < 5) {
-                    this.angleX.set(this.anchorAngleX - (this.anchorY - mouseEvent.getSceneY()));
+            if (!this.arrowOn) {
+                // lock the X rotation, so we can see under the surface
+                if (this.anchorAngleX - (this.anchorY - mouseEvent.getSceneY()) > -68.0) {
+                    if (this.anchorAngleX - (this.anchorY - mouseEvent.getSceneY()) < 5) {
+                        this.angleX.set(this.anchorAngleX - (this.anchorY - mouseEvent.getSceneY()));
+                    }
                 }
-            }
 //            this.angleX.set(this.anchorAngleX - (this.anchorY - mouseEvent.getSceneY()));
 
-            this.angleZ.set(this.anchorAngleY + this.anchorX - mouseEvent.getSceneX());
+                this.angleZ.set(this.anchorAngleY + this.anchorX - mouseEvent.getSceneX());
+
+            }
 
         });
     }
+
+    public void setArrowOn(boolean arrowOn) {
+        this.arrowOn = arrowOn;
+    }
+
 }

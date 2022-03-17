@@ -6,6 +6,8 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.*;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -18,6 +20,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.MeshView;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
@@ -36,6 +39,8 @@ public class Display extends Application {
     public static final int FRAME_HEIGHT = 600;
 
     private GridPane gridPane;
+    private Canvas canvas;
+
     public static Text textPosition;
     public static int shotCounter = 0;
     public static int pointCounter = 0;
@@ -44,6 +49,7 @@ public class Display extends Application {
 
     @Override
     public void start(Stage stage) {
+
         // to smartGroup all the objects are added (rotation built-in)
         group = new SmartGroup();
         AmbientLight ambient = new AmbientLight();
@@ -83,6 +89,15 @@ public class Display extends Application {
         group.getChildren().add(universe.getTarget().getCylinder());
         group.getChildren().add(universe.getPole().getCylinder());
         group.getChildren().add(universe.getFlag().getBox());
+
+        //Arrow visualisation Canvas
+        this.canvas = new Canvas(150,120);
+        // For drawing on the canvas
+        GraphicsContext graphicsContext = canvas.getGraphicsContext2D();
+        clearCanvas(this.canvas, graphicsContext);
+
+        canvas.setOnMousePressed( e -> mouseClicked(e,canvas,graphicsContext));
+
         // this subScene holds terrain display (left part of the frame)
         SubScene subScene = new SubScene(group, FRAME_WIDTH - 200, FRAME_HEIGHT, true, null);
         subScene.setFill(Color.web("#3d3d3d"));
@@ -139,9 +154,11 @@ public class Display extends Application {
 
 
     /**
-     * updates x and y position of the ball and counter of the shoots each time the ball is shot
+     * updates x and y position of the ball and counter of the shoots each time the ball is shot in the panel
+     * @param x position x of the ball
+     * @param y position y of the ball
      */
-    public static void updatePanelPosition(double x, double y) {
+    public static void updatePanel(double x, double y) {
         textPosition.setText("Number of shots: " + shotCounter +
                 "\n\nNumber of points: " + pointCounter +
                 "\n\n\nX-position:  " + String.format("%.2f", x)  +
@@ -166,52 +183,47 @@ public class Display extends Application {
         Text title = new Text("Golf Game \n- group 6");
         title.setFill(Color.WHITE);
         title.setFont(bigFont);
-        gridPane.add(new HBox(30, title), 0, 0);
-
-        Text gap1 = new Text("");
-        gridPane.add(new HBox(30, gap1), 0, 1);
+        gridPane.add(new HBox(30, title), 0, 1);
 
         textPosition = new Text("Number of shots: " + shotCounter +
-                "\n\nNumber of points: " + pointCounter +
-                "\n\n\nX-position:  " + String.format("%.2f", universe.getBall().getPosition().getX())  +
+                "\nNumber of points: " + pointCounter +
+                "\n\nX-position:  " + String.format("%.2f", universe.getBall().getPosition().getX())  +
                 "\nY-position:  " + String.format("%.2f", universe.getBall().getPosition().getY()));
         textPosition.setFill(Color.WHITE);
         textPosition.setFont(font);
 
-        gridPane.add(new HBox(30, textPosition), 0, 2);
+        gridPane.add(new HBox(30, textPosition), 0, 3);
 
-        Text gap2 = new Text("");
-        gridPane.add(new HBox(30, gap2), 0, 3);
-
-        Text gap3 = new Text("");
-        gridPane.add(new HBox(30, gap3), 0, 6);
+        this.gridPane.add(this.canvas, 0, 5);
 
         Text readFromTextField = new Text("Type in\ninitial velocity:");
         readFromTextField.setFill(Color.WHITE);
         readFromTextField.setFont(font);
-        gridPane.add(new HBox(30, readFromTextField), 0, 6);
+        int position = 7;
+
+        gridPane.add(new HBox(30, readFromTextField), 0, position);
 
         Text x = new Text("Velocity in x-direction:");
         x.setFill(Color.WHITE);
         x.setFont(font);
-        gridPane.add(new HBox(30, x), 0, 7);
+        gridPane.add(new HBox(30, x), 0, position + 1);
 
         TextField xVel = new TextField();
-        gridPane.add(new HBox(30, xVel), 0, 8);
+        gridPane.add(new HBox(30, xVel), 0, position + 2);
 
         Text y = new Text("Velocity in y-direction:");
         y.setFill(Color.WHITE);
         y.setFont(font);
-        gridPane.add(new HBox(30, y), 0, 10);
+        gridPane.add(new HBox(30, y), 0, position + 3);
 
         TextField yVel = new TextField();
-        gridPane.add(new HBox(30, yVel), 0, 11);
+        gridPane.add(new HBox(30, yVel), 0, position + 4);
 
         Button button = new Button("Hit the ball");
-        gridPane.add(new HBox(30, button), 0, 13);
+        gridPane.add(new HBox(30, button), 0, position + 5);
 
         Button resetButton = new Button("Reset ball");
-        gridPane.add(new HBox(30, resetButton), 0, 15);
+        gridPane.add(new HBox(30, resetButton), 0, position + 6);
 
         resetButton.setOnMouseClicked(mouseEvent -> {
             if (!universe.getBall().isMoving() )
@@ -225,6 +237,12 @@ public class Display extends Application {
     }
 
 
+    /**
+     * triggered when the button is pressed
+     * initializes the movement of the ball from the Shot class
+     * @param xVel textField with initial x velocity
+     * @param yVel textField with initial y velocity
+     */
     private void shootBall(TextField xVel, TextField yVel) {
         Vector2D velocity;
         if (!universe.getBall().isMoving()) {
@@ -248,4 +266,60 @@ public class Display extends Application {
     }
 
 
+    private void shootBall(Vector2D velocity) {
+        if (!universe.getBall().isMoving()) {
+            new Shot(universe, velocity);
+            shotCounter++;
+        }
+    }
+
+
+    public void clearCanvas(Canvas canvas, GraphicsContext graphicsContext) {
+
+        graphicsContext.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+        graphicsContext.setStroke(Color.WHITE);
+        graphicsContext.setLineWidth(5.0);
+        graphicsContext.strokeRect(0, 0, canvas.getWidth(), canvas.getHeight());
+        graphicsContext.setLineWidth(2.0);
+    }
+
+    public void drawArrow(double startX, double startY, double endX, double endY, Canvas canvas, GraphicsContext g) {
+
+        //drawing arrow body
+        g.strokeLine(startX, startY, endX, endY);
+
+        //drawing arrow head
+        g.strokeLine(endX, endY, endX-5, endY+5);
+        g.strokeLine(endX, endY, endX-5, endY-5);
+    }
+
+
+    /**
+     * drawing an arrow if the current position of the ball has been clicked
+     * @param mouseEvent mouse clicked on the canvas
+     * @param canvas plane where the arrow will be drawn
+     * @param g graphics
+     */
+    public void mouseClicked(MouseEvent mouseEvent, Canvas canvas, GraphicsContext g) {
+        this.group.setArrowOn(true);
+        double clickedX = mouseEvent.getX();
+        double clickedY = mouseEvent.getY();
+
+        canvas.setOnMouseDragged(MouseDragged -> {
+            clearCanvas(canvas,g);
+            drawArrow(clickedX,clickedY, MouseDragged.getX(), MouseDragged.getY(), canvas, canvas.getGraphicsContext2D());
+        });
+
+        canvas.setOnMouseReleased(MouseReleased ->
+        {
+            this.group.setArrowOn(false);
+            double vX = MouseReleased.getX()-clickedX;
+            double vY = MouseReleased.getY()-clickedY;
+
+            Vector2D velocity = new Vector2D(vX,vY);
+            clearCanvas(canvas,g);
+            shootBall(velocity);
+        });
+
+    }
 }

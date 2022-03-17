@@ -60,7 +60,7 @@ public class Shot extends Display implements Runnable {
             lastTime = now;
             while (delta >= 1) {
                 if (!ball.isMoving() && !ball.willMove() ) {
-                    Display.updatePanelPosition(ball.getPosition().getX(), ball.getPosition().getY());
+                    Display.updatePanel(ball.getPosition().getX(), ball.getPosition().getY());
                     stop();
                 }
                 universe.getSolver().nextStep(ball);
