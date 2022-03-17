@@ -59,17 +59,15 @@ public class Shot extends Display implements Runnable {
             delta+= (now - lastTime) / nanos;
             lastTime = now;
             while (delta >= 1) {
-                if ((!ball.isMoving() && !ball.willMove()) || ball.isOnTarget() ) {
+                if (!ball.isMoving() && !ball.willMove() ) {
+                    Display.updatePanelPosition(ball.getPosition().getX(), ball.getPosition().getY());
                     stop();
                 }
-                System.out.println(ball.getPosition());
                 universe.getSolver().nextStep(ball);
                 universe.updateBallPosition();
-                updatePanel();
                 delta--;
             }
         }
-        updatePanel();
         stop();
     }
 

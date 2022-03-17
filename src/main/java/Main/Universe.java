@@ -20,7 +20,6 @@ public class Universe {
     private Ball ball;
     private Target target;
     private Pole pole;
-    private Terrain terrain;
     private Flag flag;
     private final double MAX_SPEED = 5.d;
     private MeshView[] meshViews;
@@ -50,14 +49,14 @@ public class Universe {
      * creates 3 meshes: grass, water, sandPits based on the function from the inputFile
      */
     private void createTerrain() {
-        this.terrain = new Terrain(fileReader);
+        Terrain terrain = new Terrain(fileReader);
 
         MeshView meshViewGrass = new MeshView();
-        meshViewGrass.setMesh(this.terrain.getGrassMesh());
+        meshViewGrass.setMesh(terrain.getGrassMesh());
         MeshView meshViewSandPit = new MeshView();
-        meshViewSandPit.setMesh(this.terrain.getSandPitMesh());
+        meshViewSandPit.setMesh(terrain.getSandPitMesh());
         MeshView meshViewWater = new MeshView();
-        meshViewWater.setMesh(this.terrain.getWaterMesh());
+        meshViewWater.setMesh(terrain.getWaterMesh());
 
         // adding grass material
         PhongMaterial grassMaterial = new PhongMaterial();
@@ -137,6 +136,7 @@ public class Universe {
         ball.getSphere().setTranslateY(position.getY() + (ball.getPositionY() - ball.getPreviousPosition().getY()));
         ball.getSphere().setTranslateZ((-TerrainGenerator.getHeight(position) - 2*ball.getRADIUS()));
     }
+
     public void resetBall(){
         ball.setPosition(fileReader.getInitialPosition());
         ball.setPreviousPosition(fileReader.getInitialPosition());

@@ -6,7 +6,6 @@ import javafx.scene.shape.TriangleMesh;
 import physics.Vector2D;
 
 public class Terrain extends TerrainGenerator {
-    private final FileReader fileReader ;
     private final TriangleMesh grassMesh;
     private final TriangleMesh waterMesh;
     private final TriangleMesh sandPitMesh;
@@ -19,7 +18,6 @@ public class Terrain extends TerrainGenerator {
 
 
     public Terrain(FileReader fileReader) {
-        this.fileReader = fileReader;
         this.sandPitX = fileReader.getSandPitX();
         this.sandPitY = fileReader.getSandPitY();
         this.grassMesh   = new TriangleMesh();
@@ -55,19 +53,18 @@ public class Terrain extends TerrainGenerator {
                 int bottomLeft = (int) (topLeft + (TERRAIN_WIDTH * 2 / STEP));
                 int bottomRight = bottomLeft + 1;
 
-
                 // add texture and faces to water mesh
-
-                if (TerrainGenerator.getHeight(new Vector2D( i+ (TERRAIN_HEIGHT / 2.d / STEP)  , j+(TERRAIN_HEIGHT / 2.d /STEP))) < 0) {
+                if (TerrainGenerator.getHeight(new Vector2D( i * STEP - 50, j * STEP -50 )) < 0) {
                     this.waterMesh.getFaces().addAll(topLeft, 0, topRight, 1, bottomLeft, 2);
                     this.waterMesh.getFaces().addAll(bottomLeft, 0, topRight, 1, bottomRight, 2);
 
-                }else
+                }
                 // add texture and faces to sandPit mesh
-                if (isSandPit(i - (TERRAIN_HEIGHT  / STEP)  , j - (TERRAIN_HEIGHT  / STEP)  ) ) {
+                else if (isSandPit(i - (TERRAIN_HEIGHT  / STEP)  , j - (TERRAIN_HEIGHT  / STEP)  ) ) {
                     this.sandPitMesh.getFaces().addAll(topLeft, 0, topRight, 1, bottomLeft, 2);
                     this.sandPitMesh.getFaces().addAll(bottomLeft, 0, topRight, 1, bottomRight, 2);
                 }
+                // add texture and faces to grass mesh
                 else {
                     this.grassMesh.getFaces().addAll(topLeft, 0, topRight, 1, bottomLeft, 2);
                     this.grassMesh.getFaces().addAll(bottomLeft, 0, topRight, 1, bottomRight, 2);

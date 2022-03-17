@@ -27,19 +27,19 @@ public class PhysicEngine extends Solver {
 
 		Vector2D partials = new Vector2D(partial_x, partial_y);
 		if (gameObject.isMoving()) {
-			System.out.println("moving");
+//			System.out.println("moving");
 			double aX = (- g * partial_x) - (mu_K * g * vX / gameObject.getVelocity().getMagnitude());
 			double aY = (- g * partial_y) - (mu_K * g * vY / gameObject.getVelocity().getMagnitude());
 			return new Vector2D(aX, aY);
 
 		} else if ( gameObject.willMove()) {
-			System.out.println("will move");
+//			System.out.println("will move");
 			double aX = mu_K * g * partial_x / partials.getMagnitude();
 			double aY = mu_K * g * partial_y / partials.getMagnitude();
 
 			return new Vector2D(aX, aY);
 		} else {
-			System.out.println("stable");
+//			System.out.println("stable");
 			return new Vector2D(0, 0);
 
 		}

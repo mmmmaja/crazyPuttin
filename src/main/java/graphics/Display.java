@@ -36,8 +36,9 @@ public class Display extends Application {
     public static final int FRAME_HEIGHT = 600;
 
     private GridPane gridPane;
-    public Text text = new Text("");
-    public int shotCounter = 0;
+    public static Text textPosition;
+    public static int shotCounter = 0;
+    public static int pointCounter = 0;
 
     SmartGroup group ;
 
@@ -137,15 +138,16 @@ public class Display extends Application {
     }
 
 
-
     /**
      * updates x and y position of the ball and counter of the shoots each time the ball is shot
      */
-    public void updatePanel() {
-        this.text.setText(" X-position:  " + String.format("%.2f" , universe.getBall().getPositionX() )  +
-                " \n Y-position:  " + String.format("%.2f" , universe.getBall().getPositionY()) +
-                " \n Number of shots: "+ this.shotCounter+"\n\n");
+    public static void updatePanelPosition(double x, double y) {
+        textPosition.setText("Number of shots: " + shotCounter +
+                "\n\nNumber of points: " + pointCounter +
+                "\n\n\nX-position:  " + String.format("%.2f", x)  +
+                "\nY-position:  " + String.format("%.2f", y));
     }
+
 
     /**
      * adds the panel with the buttons to the frame
@@ -169,12 +171,14 @@ public class Display extends Application {
         Text gap1 = new Text("");
         gridPane.add(new HBox(30, gap1), 0, 1);
 
-        this.text= new Text(" X-position:  " + String.format("%.2f" , universe.getBall().getPositionX() )  +
-                " \n Y-position:  " + String.format("%.2f" , universe.getBall().getPositionY()) +
-                " \n Number of shots: "+ this.shotCounter+"\n\n");
-        this.text.setFill(Color.WHITE);
-        this.text.setFont(font);
-        gridPane.add(new HBox(30, text), 0, 2);
+        textPosition = new Text("Number of shots: " + shotCounter +
+                "\n\nNumber of points: " + pointCounter +
+                "\n\n\nX-position:  " + String.format("%.2f", universe.getBall().getPosition().getX())  +
+                "\nY-position:  " + String.format("%.2f", universe.getBall().getPosition().getY()));
+        textPosition.setFill(Color.WHITE);
+        textPosition.setFont(font);
+
+        gridPane.add(new HBox(30, textPosition), 0, 2);
 
         Text gap2 = new Text("");
         gridPane.add(new HBox(30, gap2), 0, 3);
@@ -216,11 +220,17 @@ public class Display extends Application {
         });
 
         button.setOnMouseClicked(mouseEvent -> {
-            Vector2D velocity;
+            shootBall(xVel, yVel);
+        });
+    }
+
+
+    private void shootBall(TextField xVel, TextField yVel) {
+        Vector2D velocity;
+        if (!universe.getBall().isMoving()) {
 
             // if the textFields were filled read the initial velocity from them
-            if (!Objects.equals(xVel.getText(), "") && !Objects.equals(yVel.getText(), ""))
-            {
+            if (!Objects.equals(xVel.getText(), "") && !Objects.equals(yVel.getText(), "")) {
                 int xV = Integer.parseInt(xVel.getText());
                 int yV = Integer.parseInt(yVel.getText());
                 velocity = new Vector2D(xV, yV);
@@ -232,10 +242,9 @@ public class Display extends Application {
             // no more shots left in the file shot.txt
             if (velocity != null) {
                 new Shot(universe, velocity);
-                this.shotCounter++;
+                shotCounter++;
             }
-                updatePanel();
-        });
+        }
     }
 
 
