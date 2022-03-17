@@ -4,25 +4,26 @@ import Main.Main;
 import Main.Shot;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
-import javafx.scene.input.KeyCode;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.MeshView;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.scene.transform.Rotate;
+import javafx.scene.transform.Transform;
 import javafx.stage.Stage;
 import Main.Universe;
-import javafx.stage.WindowEvent;
-import objects.Terrain;
 import physics.Vector2D;
 
 import java.util.Objects;
@@ -30,22 +31,44 @@ import java.util.Objects;
 
 public class Display extends Application {
 
-    public static Universe universe = Main.getUniverse();
+    public Universe universe = Main.getUniverse();
 
     public static final int FRAME_WIDTH = 1100;
     public static final int FRAME_HEIGHT = 600;
 
     private GridPane gridPane;
-    public Text text;
+    public Text text = new Text("");
     public int shotCounter = 0;
+    private Rotate rotateX;
+    private Rotate rotateZ;
+    private Transform transformZ = new Rotate();
+    private Transform transformX = new Rotate();
+    private double xAngle = 0;
+    private double yAngle = 0;
+    private double zAngle = 0;
+    SmartGroup group ;
 
     @Override
     public void start(Stage stage) {
-
         // to smartGroup all the objects are added (rotation built-in)
-        SmartGroup group = new SmartGroup();
+        group = new SmartGroup();
         // add water, sandPit and grass meshes to the display
         MeshView[] meshViews = universe.getMeshViews();
+        Image grass_im = new Image("file:src/main/java/grass.jpg" ,5,5,false,false);
+        Image water_im = new Image("file:src/main/java/water.jpg" ,5,5,false,false);
+        Image sand_im = new Image(  "file:src/main/java/sand.jpg" ,5,5,false,false);
+
+        PhongMaterial grass = new PhongMaterial();
+        PhongMaterial water = new PhongMaterial();
+        PhongMaterial sand = new PhongMaterial();
+
+        grass.setDiffuseMap(grass_im);
+        water.setDiffuseMap(water_im);
+        sand.setDiffuseMap(sand_im);
+
+        meshViews[0].setMaterial(grass);
+        meshViews[1].setMaterial(water);
+        meshViews[2].setMaterial(sand);
         for (MeshView meshView : meshViews) {
             group.getChildren().add(meshView);
         }
@@ -54,7 +77,7 @@ public class Display extends Application {
 
         // this subScene holds terrain display (left part of the frame)
         SubScene subScene = new SubScene(group, FRAME_WIDTH - 200, FRAME_HEIGHT, true, SceneAntialiasing.BALANCED);
-        subScene.setFill(Color.BLACK);
+        subScene.setFill(Color.SILVER);
 
         Pane displayPane = new Pane();
         displayPane.setPrefSize(FRAME_WIDTH, FRAME_HEIGHT);
@@ -76,24 +99,27 @@ public class Display extends Application {
         Scene scene = new Scene(displayPane);
 
         // move the all the objects the middle of the frame
-        group.translateXProperty().set((FRAME_WIDTH + 190) / 3.0); // plus right
-        group.translateYProperty().set((FRAME_HEIGHT + 250) / 3.0);  // plus down
-        group.zoom(camera.getTranslateY() + 870); // zoomIn
+        group.translateXProperty().set((FRAME_WIDTH + 190 + 60) / 3.0); // plus right
+        group.translateYProperty().set((FRAME_HEIGHT + 250 + 55) / 3.0);  // plus down
+        group.zoom(camera.getTranslateY() + 900); // zoomIn
         group.initMouseControl(scene);
+        scene.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {gridPane.requestFocus();});
+
 
         // zoomIn, zoomOut added on scroll event
         scene.addEventHandler(ScrollEvent.SCROLL, event -> {
-            camera.setTranslateZ(camera.getTranslateZ() + event.getDeltaY());
+            camera.setTranslateZ(camera.getTranslateZ() + event.getDeltaY()/5);
         });
+
         // add movement of the camera when keys are pressed
         scene.addEventHandler(KeyEvent.KEY_PRESSED, e -> {
             switch (e.getCode()) {
-                case W -> camera.setTranslateY(camera.getTranslateY() + 5);
-                case S -> camera.setTranslateY(camera.getTranslateY() - 5);
-                case Q -> camera.setTranslateZ(camera.getTranslateZ() + 5);
-                case E -> camera.setTranslateZ(camera.getTranslateZ() - 5);
-                case D -> camera.setTranslateX(camera.getTranslateX() - 5);
-                case A -> camera.setTranslateX(camera.getTranslateX() + 5);
+                case W -> camera.setTranslateY(camera.getTranslateY() + 1);
+                case S -> camera.setTranslateY(camera.getTranslateY() - 1);
+                case Q -> camera.setTranslateZ(camera.getTranslateZ() + 1);
+                case E -> camera.setTranslateZ(camera.getTranslateZ() - 1);
+                case D -> camera.setTranslateX(camera.getTranslateX() - 1);
+                case A -> camera.setTranslateX(camera.getTranslateX() + 1);
             }
         });
 
@@ -107,19 +133,21 @@ public class Display extends Application {
         stage.show();
     }
 
+
+
     /**
      * updates x and y position of the ball and counter of the shoots each time the ball is shot
      */
-    private void updatePanel() {
-        this.text.setText(" X-position:  " + Math.round(universe.getBall().getPositionX())  +
-                " \n Y-position:  " + Math.round(universe.getBall().getPositionY()) +
-                " \n Number of shots: "+ this.shotCounter+"\n");
+    public void updatePanel() {
+        this.text.setText(" X-position:  " + String.format("%.2f" , universe.getBall().getPositionX() )  +
+                " \n Y-position:  " + String.format("%.2f" , universe.getBall().getPositionY()) +
+                " \n Number of shots: "+ this.shotCounter+"\n\n");
     }
 
     /**
      * adds the panel with the buttons to the frame
      */
-    private void addPanel() {
+    public void addPanel() {
         this.gridPane.setPrefSize(200, FRAME_HEIGHT);
         this.gridPane.setStyle("-fx-background-color: darkgrey");
         this.gridPane.setTranslateX(FRAME_WIDTH-200);
@@ -138,9 +166,9 @@ public class Display extends Application {
         Text gap1 = new Text("");
         gridPane.add(new HBox(30, gap1), 0, 1);
 
-        this.text = new Text(" X-position:  " + Math.round(universe.getBall().getPositionX())  +
-                " \n\n Y-position:  " + Math.round(universe.getBall().getPositionY()) +
-                " \n\n Number of shots: "+ this.shotCounter + "\n\n");
+        this.text= new Text(" X-position:  " + String.format("%.2f" , universe.getBall().getPositionX() )  +
+                " \n Y-position:  " + String.format("%.2f" , universe.getBall().getPositionY()) +
+                " \n Number of shots: "+ this.shotCounter+"\n\n");
         this.text.setFill(Color.WHITE);
         this.text.setFont(font);
         gridPane.add(new HBox(30, text), 0, 2);
@@ -193,8 +221,8 @@ public class Display extends Application {
             if (velocity != null) {
                 new Shot(universe, velocity);
                 this.shotCounter++;
-                updatePanel();
             }
+                updatePanel();
         });
     }
 

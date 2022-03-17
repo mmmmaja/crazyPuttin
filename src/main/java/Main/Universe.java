@@ -1,5 +1,7 @@
 package Main;
 
+import javafx.scene.image.Image;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.CullFace;
@@ -15,7 +17,7 @@ import physics.Vector2D;
 /**
  * Class holding all the objects used in the game and the physics engine
  */
-public class Universe extends PhysicEngine {
+public class Universe {
 
     private final FileReader fileReader;
     private Ball ball;
@@ -24,9 +26,10 @@ public class Universe extends PhysicEngine {
     private final double MAX_SPEED = 5.d;
     private MeshView[] meshViews;
     private Solver solver;
+    private PhongMaterial grassMaterial ;
 
 
-    public Universe(FileReader fileReader) {
+    public Universe(FileReader fileReader ) {
         this.fileReader = fileReader;
         createBall();
         createTerrain();
@@ -56,15 +59,15 @@ public class Universe extends PhysicEngine {
 
         // adding grass material
         PhongMaterial grassMaterial = new PhongMaterial();
-        grassMaterial.setDiffuseColor(Color.FORESTGREEN);
+        grassMaterial.setDiffuseColor(Color.PURPLE);
 
         // adding water material
         PhongMaterial waterMaterial = new PhongMaterial();
-        waterMaterial.setDiffuseColor(Color.ROYALBLUE);
+        waterMaterial.setDiffuseColor(Color.web("#2389da"));
 
         // adding sandPit material
         PhongMaterial sandPitMaterial = new PhongMaterial();
-        sandPitMaterial.setDiffuseColor(Color.YELLOW);
+        sandPitMaterial.setDiffuseColor(Color.SANDYBROWN);
 
         meshViewGrass.setMaterial(grassMaterial);
         meshViewGrass.setCullFace(CullFace.NONE);
@@ -115,7 +118,7 @@ public class Universe extends PhysicEngine {
         Vector2D position = ball.getPosition();
         ball.getSphere().setTranslateX(position.getX() + (ball.getPositionX() - ball.getPreviousPosition().getX()));
         ball.getSphere().setTranslateY(position.getY() + (ball.getPositionY() - ball.getPreviousPosition().getY()));
-        ball.getSphere().setTranslateZ(TerrainGenerator.getHeight(position) - ball.getRADIUS());
+        ball.getSphere().setTranslateZ((-TerrainGenerator.getHeight(position) - 2*ball.getRADIUS()));
     }
 
     public FileReader getFileReader() {

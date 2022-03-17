@@ -16,7 +16,7 @@ public interface Vector {
 
 	public Vector reverseUnitVector();
 
-	public Vector reverseVector();
+	public void reverseVector();
 
 
 }

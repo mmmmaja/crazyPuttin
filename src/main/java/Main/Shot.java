@@ -1,5 +1,6 @@
 package Main;
 
+import graphics.Display;
 import objects.Ball;
 import physics.Vector2D;
 
@@ -8,7 +9,7 @@ import physics.Vector2D;
  * instance of this class is created each time the movement of the ball is triggered
  * performs an animation of the ball movement
  */
-public class Shot implements Runnable {
+public class Shot extends Display implements Runnable {
 
     private final Ball ball;
     private final Universe universe;
@@ -20,15 +21,16 @@ public class Shot implements Runnable {
         this.ball = universe.getBall();
         this.ball.setVelocity(velocity);
 
-        if (velocity.getMagnitude() > universe.getMAX_SPEED()) {
+        if (velocity.getMagnitude() > 5) {
             Vector2D unit_vector = new Vector2D(velocity.getX() / velocity.getMagnitude(), velocity.getY() / velocity.getMagnitude());
-            this.ball.setVelocity( new Vector2D(unit_vector.getX() * universe.getMAX_SPEED(), unit_vector.getY() * universe.getMAX_SPEED()) ) ;
+            this.ball.setVelocity( new Vector2D(unit_vector.getX() * 5, unit_vector.getY() * 5) ) ;
         }
         start();
     }
 
 
     public synchronized void start() {
+
         running = true;
         this.thread = new Thread(this);
         this.thread.start();
@@ -63,9 +65,11 @@ public class Shot implements Runnable {
                 System.out.println(ball.getPosition());
                 universe.getSolver().nextStep(ball);
                 universe.updateBallPosition();
+                updatePanel();
                 delta--;
             }
         }
+        updatePanel();
         stop();
     }
 

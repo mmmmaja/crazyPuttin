@@ -59,8 +59,10 @@ public class Vector3D implements Vector{
 	}
 
 	@Override
-	public Vector reverseVector() {
-		return new Vector3D( -1 * x , -1 * y , -1 * z);
+	public void reverseVector() {
+		setX(-x);
+		setY(-y);
+		setZ(-z);
 	}
 
 }

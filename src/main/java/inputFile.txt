@@ -1,11 +1,11 @@
-x0 = 7
-y0 = 7
+x0 = 0
+y0 = 0
 xt = 10
 yt = 10
 r = 0.1
 muk = 0.1
 mus = 0.2
-heightProfile = 1
+heightProfile = cos(x)
 sandPitX = 5<x<8
 sandPitY = 1<y<10
 muks = 0.25

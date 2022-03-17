@@ -1,5 +1,7 @@
 package physics;
 
+import java.util.Objects;
+
 public class Vector2D implements Vector{
 
     private double x;
@@ -37,8 +39,9 @@ public class Vector2D implements Vector{
     public Vector2D reverseUnitVector() {
         return new Vector2D( -1 * x / getMagnitude(), -1 * y / getMagnitude() );
     }
-    public Vector2D reverseVector(){
-        return new Vector2D(-1 * x, -1 * y);
+    public void reverseVector(){
+        setX(-x);
+        setY(-y);
     }
 
 
@@ -58,5 +61,18 @@ public class Vector2D implements Vector{
                 "x=" + x +
                 ", y=" + y +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Vector2D vector2D = (Vector2D) o;
+        return Double.compare(vector2D.x, x) == 0 && Double.compare(vector2D.y, y) == 0;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(x, y);
     }
 }

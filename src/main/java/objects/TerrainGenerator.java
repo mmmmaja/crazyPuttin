@@ -3,7 +3,7 @@ package objects;
 import physics.Vector2D;
 
 
-public class TerrainGenerator {
+public class TerrainGenerator{
 
     private static final double STEP_SIZE = 0.0001;
     private static final FileReader fileReader = new FileReader();
@@ -23,7 +23,7 @@ public class TerrainGenerator {
     public static double getSlopeX( Vector2D currentPosition){
         double x = currentPosition.getX() ;
         double y = currentPosition.getY() ;
-        return -( getHeight( new Vector2D( x + STEP_SIZE , y ) ) - getHeight(new Vector2D( x - STEP_SIZE , y ) ) ) / ( 2*STEP_SIZE) ;
+        return ( getHeight( new Vector2D( x + STEP_SIZE , y ) ) - getHeight(new Vector2D( x - STEP_SIZE , y ) ) ) / ( 2*STEP_SIZE) ;
     }
 
     public static double getSlopeY( Vector2D currentPosition){
@@ -40,14 +40,14 @@ public class TerrainGenerator {
     }
 
     public static double getKineticFrictionCoefficient(Vector2D position){
-        if (isSand( position.getX() , position.getY() ) ){
+        if( isSand( position.getX() , position.getY() ) ){
             return fileReader.getSandPitKineticFriction();
         }
         return fileReader.getKineticFriction();
     }
 
     public static double getStaticFrictionCoefficient(Vector2D position){
-        if(isSand( position.getX() , position.getY() ) ){
+        if( isSand( position.getX() , position.getY() ) ){
             return fileReader.getSandPitStaticFriction();
         }
         return fileReader.getStaticFriction();

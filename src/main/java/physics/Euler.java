@@ -15,11 +15,11 @@ public class Euler extends PhysicEngine {
 
 		gameObject.setPreviousPosition(gameObject.getPosition());
 //		System.out.println("next pos : " + calculateNextPosition(gameObject));
-		System.out.println("prev vel : " + calculateNextVelocity(gameObject));
+//		System.out.println("prev vel : " + calculateNextVelocity(gameObject));
 		Vector2D next_pos = calculateNextPosition(gameObject);
 
 		Vector2D next_vel = calculateNextVelocity(gameObject);
-		System.out.println("next vel : " + calculateNextVelocity(gameObject));
+//		System.out.println("next vel : " + calculateNextVelocity(gameObject));
 
 		gameObject.setState( next_pos , next_vel );
 
@@ -32,6 +32,9 @@ public class Euler extends PhysicEngine {
 		//v1 = v0 + h * a0
 		Vector2D velocity = gameObject.getVelocity() ;
 		Vector2D acceleration = calculateAcceleration(gameObject) ;
+		if(gameObject.isMoving() && velocity.getUnitVector().equals(acceleration.getUnitVector())){
+			acceleration.reverseVector();
+		}
 //		System.out.println("accel: " + acceleration);
 		double aX = acceleration.getX();
 		double aY = acceleration.getY();
@@ -57,10 +60,15 @@ public class Euler extends PhysicEngine {
 		return new Vector2D( vector1.getX() * vector2.getX() , vector1.getY() * vector2.getY());
 	}
 
-	public static void main(String[] args) {
-		Euler e = new Euler();
-		Ball ball = new Ball(new Vector2D(0,0) );
-		ball.setVelocity( new Vector2D(1,0));
-
-	}
+//	public static void main(String[] args) {
+//		Vector2D v = new Vector2D(1,1);
+//		Vector2D a = new Vector2D( 2 ,2 );
+//		System.out.println(v.getUnitVector());
+//		System.out.println(a.getUnitVector());
+//		System.out.println(v.getUnitVector().equals(a.getUnitVector()));
+//		if(v.getUnitVector().equals(a.getUnitVector())){
+//			a.reverseVector();
+//		}
+//		System.out.println(a);
+//	}
 }

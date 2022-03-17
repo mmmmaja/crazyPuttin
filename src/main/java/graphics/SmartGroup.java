@@ -23,9 +23,9 @@ public class SmartGroup extends Group {
     private double anchorAngleX, anchorAngleY;
 
     // update these after dragging the mouse
-    private final DoubleProperty angleX = new SimpleDoubleProperty(-50);
+    private final DoubleProperty angleX = new SimpleDoubleProperty(-68);
     private final DoubleProperty angleY = new SimpleDoubleProperty(0);
-    private final DoubleProperty angleZ = new SimpleDoubleProperty(0);
+    private final DoubleProperty angleZ = new SimpleDoubleProperty(-20);
 
 
     /**
@@ -47,7 +47,7 @@ public class SmartGroup extends Group {
         this.getTransforms().addAll(
                 rotateX = new Rotate(0, Rotate.X_AXIS),
                 rotateY = new Rotate(0, Rotate.Y_AXIS),
-                rotateZ = new Rotate(0, 15, 15)
+                rotateZ = new Rotate(0, Rotate.Z_AXIS)
         );
         rotateX.angleProperty().bind(angleX);
         rotateY.angleProperty().bind(angleY);
@@ -68,6 +68,8 @@ public class SmartGroup extends Group {
                     this.angleX.set(this.anchorAngleX - (this.anchorY - mouseEvent.getSceneY()));
                 }
             }
+//            this.angleX.set(this.anchorAngleX - (this.anchorY - mouseEvent.getSceneY()));
+
             this.angleZ.set(this.anchorAngleY + this.anchorX - mouseEvent.getSceneX());
 
         });

@@ -9,10 +9,12 @@ import objects.FileReader;
 public class Main {
 
     private static Universe universe ;
+    //FIXME updatePanel
+    //TODO Merge water-target detection
 
     public static void main(String[] args) {
 
-        universe = new Universe(new FileReader()  );
+        universe = new Universe(new FileReader());
         Application.launch(Display.class);
 
     }
