@@ -1,14 +1,11 @@
 package objects;
 
-import graphics.Display;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Material;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Sphere;
 import physics.PhysicEngine;
 import physics.Vector2D;
-
-import java.io.File;
 
 
 public class Ball extends PhysicEngine implements GameObject {
@@ -22,12 +19,13 @@ public class Ball extends PhysicEngine implements GameObject {
     private Vector2D acceleration;
     private Target target ;
     private Sphere sphere;
-
+    private boolean willMove;
 
     public Ball(Vector2D position) {
         this.position = position;
         this.previousPosition = position ;
         velocity = new Vector2D(0,0);
+        willMove = false;
         setAcceleration(velocity);
         createSphere();
     }
@@ -42,9 +40,14 @@ public class Ball extends PhysicEngine implements GameObject {
         this.sphere.setMaterial(material);
         System.out.println(TerrainGenerator.getHeight(position));
     }
-
-    public boolean isMoving(){ return velocity.getMagnitude() > 0.01;}
-    public boolean willMove(){return TerrainGenerator.getStaticFrictionCoefficient(position) < ( Math.sqrt( Math.pow(TerrainGenerator.getSlopeX(position) , 2 ) + Math.pow( TerrainGenerator.getSlopeY( getPosition()) ,2) ) ) ;}
+    public boolean isMoving(){ return velocity.getMagnitude() > 0.005; }
+    public boolean getWillMove(){
+        willMove = TerrainGenerator.getStaticFrictionCoefficient(position) < (Math.sqrt(Math.pow(TerrainGenerator.getSlopeX(position), 2) + Math.pow(TerrainGenerator.getSlopeY(getPosition()), 2) ));
+        return willMove;
+    }
+    public void setWillMove(boolean willMove){
+        this.willMove = willMove;
+    }
     public boolean isOnSlope() {return TerrainGenerator.getSlopeX(position) != 0  || TerrainGenerator.getSlopeY(position) != 0 ; }
     public boolean isOnTarget(){
         double xdiff = target.getPosition().getX()-position.getX();
@@ -52,7 +55,6 @@ public class Ball extends PhysicEngine implements GameObject {
         Vector2D diff = new Vector2D(xdiff,ydiff);
         return diff.getMagnitude() < target.getCylinder().getRadius();
     }
-    public Target getTarget(){ return this.target ; }
     public void setTarget(Target target){this.target = target;}
 
     public Vector2D getPosition(){

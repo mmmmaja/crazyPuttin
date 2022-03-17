@@ -140,6 +140,7 @@ public class Universe {
     public void resetBall(){
         ball.setPosition(fileReader.getInitialPosition());
         ball.setPreviousPosition(fileReader.getInitialPosition());
+        ball.setVelocity(new Vector2D(0,0));
     }
 
     public FileReader getFileReader() {

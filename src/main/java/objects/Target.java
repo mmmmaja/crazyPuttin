@@ -81,7 +81,7 @@ public class Target implements GameObject {
     }
 
     @Override
-    public boolean willMove() { return false; }
+    public boolean getWillMove() { return false; }
 
     @Override
     public boolean isOnSlope() {
