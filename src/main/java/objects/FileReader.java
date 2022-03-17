@@ -105,7 +105,7 @@ public class FileReader {
         try {
             String next = shotReader.nextLine();
             String[] shot = next.split(",");
-            return new Vector2D(Double.parseDouble(shot[0]), Double.parseDouble(shot[1]));
+            return new Vector2D(Float.parseFloat(shot[0]), Float.parseFloat(shot[1]));
         }
         catch (NoSuchElementException e) {
             System.out.println("no more shots to be read!");

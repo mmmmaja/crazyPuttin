@@ -8,17 +8,19 @@ import javafx.scene.shape.Sphere;
 import physics.PhysicEngine;
 import physics.Vector2D;
 
+import java.io.File;
+
 
 public class Ball extends PhysicEngine implements GameObject {
 
-    private double RADIUS = 0.1;
+    private double RADIUS = 0.05;
     private static final double MASS = 0.0459;
 
     private Vector2D position ;
     private Vector2D previousPosition;
     private Vector2D velocity ;
     private Vector2D acceleration;
-
+    private Target target ;
     private Sphere sphere;
 
 
@@ -43,6 +45,14 @@ public class Ball extends PhysicEngine implements GameObject {
     public boolean isMoving(){ return velocity.getMagnitude() > 0.02; }
     public boolean willMove(){return TerrainGenerator.getStaticFrictionCoefficient(position) < ( Math.sqrt( Math.pow(TerrainGenerator.getSlopeX(position) , 2 ) + Math.pow( TerrainGenerator.getSlopeY( getPosition()) ,2) ) ) ;}
     public boolean isOnSlope() {return TerrainGenerator.getSlopeX(position) != 0  || TerrainGenerator.getSlopeY(position) != 0 ; }
+    public boolean isOnTarget(){
+        double xdiff = target.getPosition().getX()-position.getX();
+        double ydiff = target.getPosition().getY()-position.getY();
+        Vector2D diff = new Vector2D(xdiff,ydiff);
+        return diff.getMagnitude() < target.getCylinder().getRadius();
+    }
+    public Target getTarget(){ return this.target ; }
+    public void setTarget(Target target){this.target = target;}
 
     public Vector2D getPosition(){
         return position;

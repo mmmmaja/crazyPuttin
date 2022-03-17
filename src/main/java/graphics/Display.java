@@ -45,6 +45,15 @@ public class Display extends Application {
     public void start(Stage stage) {
         // to smartGroup all the objects are added (rotation built-in)
         group = new SmartGroup();
+        AmbientLight ambient = new AmbientLight();
+        PointLight point = new PointLight   ();
+        ambient.setColor(Color.rgb(191, 191, 191,0.6));
+        point.setColor(Color.rgb(255, 255, 255,0.1));
+
+        point.setLayoutX(1000);
+        point.setLayoutY(1000);
+
+        point.setTranslateZ(-1100);
         // add water, sandPit and grass meshes to the display
         MeshView[] meshViews = universe.getMeshViews();
         Image grass_im = new Image("file:src/main/java/grass.jpg" ,5,5,false,false);
@@ -68,13 +77,14 @@ public class Display extends Application {
         for (MeshView meshView : meshViews) {
             group.getChildren().add(meshView);
         }
+        group.getChildren().addAll(point,ambient);
         group.getChildren().add(universe.getBall().getSphere());
         group.getChildren().add(universe.getTarget().getCylinder());
         group.getChildren().add(universe.getPole().getCylinder());
         group.getChildren().add(universe.getFlag().getBox());
         // this subScene holds terrain display (left part of the frame)
         SubScene subScene = new SubScene(group, FRAME_WIDTH - 200, FRAME_HEIGHT, true, null);
-        subScene.setFill(Color.SILVER);
+        subScene.setFill(Color.web("#3d3d3d"));
 
         Pane displayPane = new Pane();
         displayPane.setPrefSize(FRAME_WIDTH, FRAME_HEIGHT);
@@ -86,7 +96,7 @@ public class Display extends Application {
         this.gridPane.setTranslateX(FRAME_WIDTH - 200);
 
         Camera camera = new PerspectiveCamera();
-        camera.setNearClip(0.01);
+        camera.setNearClip(0.0001);
         subScene.setCamera(camera);
 
         Pane pane3D = new Pane();
@@ -196,6 +206,15 @@ public class Display extends Application {
         Button button = new Button("Hit the ball");
         gridPane.add(new HBox(30, button), 0, 13);
 
+        Button resetButton = new Button("Reset ball");
+        gridPane.add(new HBox(30, resetButton), 0, 15);
+
+        resetButton.setOnMouseClicked(mouseEvent -> {
+            if (!universe.getBall().isMoving() )
+                universe.resetBall();
+            universe.updateBallPosition();
+        });
+
         button.setOnMouseClicked(mouseEvent -> {
             Vector2D velocity;
 
@@ -218,5 +237,6 @@ public class Display extends Application {
                 updatePanel();
         });
     }
+
 
 }

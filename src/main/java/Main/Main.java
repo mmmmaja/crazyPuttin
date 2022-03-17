@@ -10,7 +10,6 @@ public class Main {
 
     private static Universe universe ;
     //FIXME updatePanel
-    //FIXME Terrain Wacky Mesh Separation
 
     //TODO Merge water-target detection
     //TODO Add Arrow

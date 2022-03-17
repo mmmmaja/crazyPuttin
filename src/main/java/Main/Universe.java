@@ -91,6 +91,7 @@ public class Universe {
      */
     private void createTarget() {
         this.target = new Target(this.fileReader.getTargetPosition(), this.fileReader.getTargetRadius());
+        ball.setTarget(target);
     }
     private void createPole() {
         this.pole = new Pole(this.fileReader.getTargetPosition());
@@ -129,11 +130,16 @@ public class Universe {
         return this.meshViews;
     }
 
+
     public void updateBallPosition(){
         Vector2D position = ball.getPosition();
         ball.getSphere().setTranslateX(position.getX() + (ball.getPositionX() - ball.getPreviousPosition().getX()));
         ball.getSphere().setTranslateY(position.getY() + (ball.getPositionY() - ball.getPreviousPosition().getY()));
         ball.getSphere().setTranslateZ((-TerrainGenerator.getHeight(position) - 2*ball.getRADIUS()));
+    }
+    public void resetBall(){
+        ball.setPosition(fileReader.getInitialPosition());
+        ball.setPreviousPosition(fileReader.getInitialPosition());
     }
 
     public FileReader getFileReader() {

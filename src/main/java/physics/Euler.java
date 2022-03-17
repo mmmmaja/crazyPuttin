@@ -2,6 +2,7 @@ package physics;
 
 import objects.Ball;
 import objects.GameObject;
+import objects.TerrainGenerator;
 
 public class Euler extends PhysicEngine {
 
@@ -13,19 +14,17 @@ public class Euler extends PhysicEngine {
 	@Override
 	public void nextStep(GameObject gameObject ){
 
-		gameObject.setPreviousPosition(gameObject.getPosition());
-//		System.out.println("next pos : " + calculateNextPosition(gameObject));
-//		System.out.println("prev vel : " + calculateNextVelocity(gameObject));
 		Vector2D next_pos = calculateNextPosition(gameObject);
-
 		Vector2D next_vel = calculateNextVelocity(gameObject);
-//		System.out.println("next vel : " + calculateNextVelocity(gameObject));
 
-		gameObject.setState( next_pos , next_vel );
+		if (TerrainGenerator.getHeight(next_pos)>=0){
+			gameObject.setPreviousPosition(gameObject.getPosition());
+			gameObject.setState(next_pos,next_vel);
+		}
+		else{
+			gameObject.setState(gameObject.getPosition(),new Vector2D(0,0));
+		}
 
-
-//		System.out.println("------pos " + ( gameObject.getPosition().getX() - gameObject.getPreviousPosition().getX() ) );
-//		System.out.println("vel " + gameObject.getVelocity());
 
 	}
 	public Vector2D calculateNextVelocity(GameObject gameObject ){
@@ -35,7 +34,7 @@ public class Euler extends PhysicEngine {
 		if(gameObject.isMoving() && velocity.getUnitVector().equals(acceleration.getUnitVector())){
 			acceleration.reverseVector();
 		}
-//		System.out.println("accel: " + acceleration);
+
 		double aX = acceleration.getX();
 		double aY = acceleration.getY();
 
@@ -60,15 +59,5 @@ public class Euler extends PhysicEngine {
 		return new Vector2D( vector1.getX() * vector2.getX() , vector1.getY() * vector2.getY());
 	}
 
-//	public static void main(String[] args) {
-//		Vector2D v = new Vector2D(1,1);
-//		Vector2D a = new Vector2D( 2 ,2 );
-//		System.out.println(v.getUnitVector());
-//		System.out.println(a.getUnitVector());
-//		System.out.println(v.getUnitVector().equals(a.getUnitVector()));
-//		if(v.getUnitVector().equals(a.getUnitVector())){
-//			a.reverseVector();
-//		}
-//		System.out.println(a);
-//	}
+
 }
