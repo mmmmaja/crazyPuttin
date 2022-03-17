@@ -5,13 +5,10 @@ import objects.TerrainGenerator;
 
 public class PhysicEngine extends Solver {
 
-
-	//TODO terrain might be changed.
-	//Terrain terrain = new Terrain();
 	private final double MAX_SPEED = 5 ;
 	private final double g =  9.81;
 
-	private final double STEP = 0.016; // 1/60
+	private final double STEP = 0.00001;
 
 	public PhysicEngine(){}
 
@@ -26,19 +23,18 @@ public class PhysicEngine extends Solver {
 
 		Vector2D partials = new Vector2D(partial_x, partial_y);
 		if (gameObject.isMoving()) {
-			System.out.println("moving");
-			double aX = (- g * partial_x) - (mu_K * g * vX / gameObject.getVelocity().getMagnitude());
-			double aY = (- g * partial_y) - (mu_K * g * vY / gameObject.getVelocity().getMagnitude());
+			double aX = - g * partial_x - mu_K * g * vX / gameObject.getVelocity().getMagnitude();
+			double aY = - g * partial_y - mu_K * g * vY / gameObject.getVelocity().getMagnitude();
 			return new Vector2D(aX, aY);
 
 		} else if ( gameObject.getWillMove()) {
-			System.out.println("will move");
-			double aX = mu_K * g * partial_x / partials.getMagnitude();
-			double aY = mu_K * g * partial_y / partials.getMagnitude();
+			double aX = - mu_K * g * partial_x / partials.getMagnitude();
+			double aY = - mu_K * g * partial_y / partials.getMagnitude();
 
 			return new Vector2D(aX, aY);
 		} else {
 			System.out.println("stable");
+			System.out.println(gameObject.getPosition());
 			return new Vector2D(0, 0);
 
 		}

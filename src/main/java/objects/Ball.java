@@ -1,14 +1,11 @@
 package objects;
 
-import graphics.Display;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Material;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Sphere;
 import physics.PhysicEngine;
 import physics.Vector2D;
-
-import java.io.File;
 
 
 public class Ball extends PhysicEngine implements GameObject {
@@ -43,10 +40,9 @@ public class Ball extends PhysicEngine implements GameObject {
         this.sphere.setMaterial(material);
         System.out.println(TerrainGenerator.getHeight(position));
     }
-    public boolean isMoving(){ return velocity.getMagnitude() > 0.02; }
+    public boolean isMoving(){ return velocity.getMagnitude() > 0.005; }
     public boolean getWillMove(){
-        willMove = TerrainGenerator.getStaticFrictionCoefficient(position) < (Math.sqrt(Math.pow(TerrainGenerator.getSlopeX(position), 2) + Math.pow(TerrainGenerator.getSlopeY(getPosition()), 2)));
-        System.out.println("will Move?? " + willMove);
+        willMove = TerrainGenerator.getStaticFrictionCoefficient(position) < (Math.sqrt(Math.pow(TerrainGenerator.getSlopeX(position), 2) + Math.pow(TerrainGenerator.getSlopeY(getPosition()), 2) ));
         return willMove;
     }
     public void setWillMove(boolean willMove){
@@ -59,7 +55,6 @@ public class Ball extends PhysicEngine implements GameObject {
         Vector2D diff = new Vector2D(xdiff,ydiff);
         return diff.getMagnitude() < target.getCylinder().getRadius();
     }
-    public Target getTarget(){ return this.target ; }
     public void setTarget(Target target){this.target = target;}
 
     public Vector2D getPosition(){
