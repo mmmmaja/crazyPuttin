@@ -162,4 +162,8 @@ public class Ball extends PhysicEngine implements GameObject {
     public double getMass() {
         return MASS;
     }
+
+    public Ball copyOf() {
+        return new Ball(this.position);
+    }
 }

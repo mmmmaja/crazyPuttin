@@ -2,6 +2,7 @@ package graphics;
 
 import Main.Main;
 import Main.Shot;
+import bot.RandomBot;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.geometry.Pos;
@@ -20,7 +21,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.MeshView;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
@@ -31,6 +31,9 @@ import physics.Vector2D;
 import java.util.Objects;
 
 
+/**
+ * TODO add button for the bot
+ */
 public class Display extends Application {
 
     public Universe universe = Main.getUniverse();
@@ -201,14 +204,14 @@ public class Display extends Application {
         textPosition.setFill(Color.WHITE);
         textPosition.setFont(font);
 
-        gridPane.add(new HBox(30, textPosition), 0, 3);
+        gridPane.add(new HBox(30, textPosition), 0, 2);
 
-        this.gridPane.add(this.canvas, 0, 5);
+        this.gridPane.add(this.canvas, 0, 3);
 
         Text readFromTextField = new Text("Type in\ninitial velocity:");
         readFromTextField.setFill(Color.WHITE);
         readFromTextField.setFont(font);
-        int position = 7;
+        int position = 4;
 
         gridPane.add(new HBox(30, readFromTextField), 0, position);
 
@@ -232,6 +235,8 @@ public class Display extends Application {
         gridPane.add(new HBox(30, button), 0, position + 5);
         Button resetButton = new Button("Reset ball");
         gridPane.add(new HBox(30, resetButton), 0, position + 6);
+        Button majaBotButton = new Button("maja's Bot");
+        gridPane.add(new HBox(30, majaBotButton), 0, position + 7);
 
         // each time resetButton is clicked ball is set back to the initial position
         resetButton.setOnMouseClicked(mouseEvent -> {
@@ -244,6 +249,12 @@ public class Display extends Application {
 
         button.setOnMouseClicked(mouseEvent -> {
             shootBall(xVel, yVel);
+        });
+
+        majaBotButton.setOnMouseClicked(mouseEvent -> {
+            Vector2D velocity = new RandomBot(this.universe).getBestVelocity();
+            new Shot(universe, velocity);
+            shotCounter++;
         });
     }
 

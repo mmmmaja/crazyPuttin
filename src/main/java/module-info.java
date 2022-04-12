@@ -11,4 +11,6 @@ module com.example.crazyputtin {
     exports graphics;
     exports Main;
     opens Main to javafx.fxml;
+    exports bot;
+    opens bot to javafx.fxml;
 }

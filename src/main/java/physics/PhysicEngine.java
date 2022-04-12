@@ -27,8 +27,8 @@ public class PhysicEngine extends Solver {
 
 		}
 		else if ( gameObject.getWillMove()) {
-			double aX = mu_K * g * partialX / partials.getMagnitude();
-			double aY = mu_K * g * partialY / partials.getMagnitude();
+			double aX = -mu_K * g * partialX / partials.getMagnitude();
+			double aY =- mu_K * g * partialY / partials.getMagnitude();
 
 			return new Vector2D(aX, aY);
 		}

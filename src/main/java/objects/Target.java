@@ -5,6 +5,7 @@ import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Cylinder;
 import javafx.scene.transform.Rotate;
 import physics.Vector2D;
+import physics.Vector3D;
 
 
 public class Target implements GameObject {
@@ -96,7 +97,16 @@ public class Target implements GameObject {
         return false;
     }
 
+
     public Cylinder getCylinder() {
         return this.cylinder;
     }
+
+    public double getEuclideanDistance(Vector2D vector2D) {
+        return Math.sqrt(
+                Math.pow(this.position.getX() - vector2D.getX(), 2) +
+                Math.pow(this.position.getY() - vector2D.getY(), 2)
+        );
+    }
+
 }
