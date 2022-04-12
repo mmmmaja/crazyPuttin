@@ -34,7 +34,7 @@ public class PhysicEngine extends Solver {
 		}
 		else {
 			System.out.println("stable");
-			System.out.println(gameObject.getPosition());
+			//System.out.println(gameObject.getPosition());
 			return new Vector2D(0, 0);
 
 		}

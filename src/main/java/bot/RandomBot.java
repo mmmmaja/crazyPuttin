@@ -20,6 +20,9 @@ public class RandomBot {
     }
 
     private void startRandomTests() {
+        double initialDistance = universe.getTarget().getEuclideanDistance3D(universe.getBall().getPosition());
+        System.out.println("initial distance: " + initialDistance);
+
         // number of tries to shoot a ball
         int testNumber = 1000;
 
@@ -28,13 +31,15 @@ public class RandomBot {
 
         for (int i = 0; i < testNumber; i++) {
 
-            // FIXME adjust nextInt
-            // (maybe oo find the distance between the target and the ball and the difference in height)
+            int sign1 = (random.nextDouble() < 0.5) ? 1 : -1;
+            int sign2 = (random.nextDouble() < 0.5) ? 1 : -1;
+
             Vector2D initialVelocity = new Vector2D(
-                    random.nextDouble() * random.nextInt(20),
-                    random.nextDouble() * random.nextInt(20)
+                    random.nextDouble() * random.nextInt(10) * sign1,
+                    random.nextDouble() * random.nextInt(10) * sign2
             );
-            // the smaller result the better
+            System.out.println(initialVelocity);
+
             double result = new TestShot(this.universe, initialVelocity).getTestResult();
             if (result < this.bestResult) {
                 this.bestResult = result;

@@ -42,12 +42,12 @@ public class TestShot {
 
             // ball is in the resting position: target was not hit
             if ((!ball.isMoving() && !ball.getWillMove()) ) {
-                this.result = universe.getTarget().getEuclideanDistance(ball.getPosition());
+                this.result = universe.getTarget().getEuclideanDistance3D(ball.getPosition());
                 return;
             }
 
             // target was hit
-            if (ball.isOnTarget(universe.getTarget()) && ball.getVelocity().getMagnitude() < 0.5) {
+            if (ball.isOnTarget(universe.getTarget()) ) {
                 ball.setVelocity(new Vector2D(0,0));
                 ball.setWillMove(false);
                 this.result = 0;

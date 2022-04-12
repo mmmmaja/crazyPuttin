@@ -109,4 +109,12 @@ public class Target implements GameObject {
         );
     }
 
+    public double getEuclideanDistance3D(Vector2D vector2D) {
+        return Math.sqrt(
+                Math.pow(this.position.getX() - vector2D.getX(), 2) +
+                        Math.pow(this.position.getY() - vector2D.getY(), 2) +
+                        Math.pow(TerrainGenerator.getHeight(this.position) - TerrainGenerator.getHeight(vector2D), 2)
+        );
+    }
+
 }

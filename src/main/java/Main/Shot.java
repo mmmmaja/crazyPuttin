@@ -80,7 +80,7 @@ public class Shot extends Display implements Runnable {
                 }
 
                 // target was hit
-                if(ball.isOnTarget(universe.getTarget()) && ball.getVelocity().getMagnitude() < 0.5) {
+                if(ball.isOnTarget(universe.getTarget())) {
                     System.out.println("Target hit");
                     Display.pointCounter++;
                     ball.setVelocity(new Vector2D(0,0));

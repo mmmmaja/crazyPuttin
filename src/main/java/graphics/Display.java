@@ -235,8 +235,8 @@ public class Display extends Application {
         gridPane.add(new HBox(30, button), 0, position + 5);
         Button resetButton = new Button("Reset ball");
         gridPane.add(new HBox(30, resetButton), 0, position + 6);
-        Button majaBotButton = new Button("maja's Bot");
-        gridPane.add(new HBox(30, majaBotButton), 0, position + 7);
+        Button randomBotButton = new Button("random Bot");
+        gridPane.add(new HBox(30, randomBotButton), 0, position + 7);
 
         // each time resetButton is clicked ball is set back to the initial position
         resetButton.setOnMouseClicked(mouseEvent -> {
@@ -251,7 +251,7 @@ public class Display extends Application {
             shootBall(xVel, yVel);
         });
 
-        majaBotButton.setOnMouseClicked(mouseEvent -> {
+        randomBotButton.setOnMouseClicked(mouseEvent -> {
             Vector2D velocity = new RandomBot(this.universe).getBestVelocity();
             new Shot(universe, velocity);
             shotCounter++;
