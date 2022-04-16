@@ -4,11 +4,11 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Material;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Sphere;
-import physics.PhysicEngine;
+import physics.PhysicsEngine;
 import physics.Vector2D;
 
 
-public class Ball extends PhysicEngine implements GameObject {
+public class Ball extends PhysicsEngine implements GameObject {
 
     private double RADIUS = 0.05;
     private static final double MASS = 0.0459;
@@ -75,7 +75,7 @@ public class Ball extends PhysicEngine implements GameObject {
      */
     @Override
     public boolean isMoving() {
-        return velocity.getMagnitude() > 0.2;
+        return velocity.getMagnitude() > getSTOP();
     }
 
     /**

@@ -46,6 +46,7 @@ public class RandomBot {
                     random.nextDouble() * random.nextInt(10) * sign1,
                     random.nextDouble() * random.nextInt(10) * sign2
             );
+            //System.out.println(initialVelocity);
             // distance between the ball and the target in 3D (takes height into consideration)
             double result = new TestShot(this.universe, initialVelocity).getTestResult(Heuristics.finalPosition);
             if (result < this.bestResult) {

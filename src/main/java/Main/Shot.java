@@ -2,6 +2,7 @@ package Main;
 
 import graphics.Display;
 import objects.Ball;
+import objects.TerrainGenerator;
 import physics.Vector2D;
 
 
@@ -23,7 +24,7 @@ public class Shot extends Display implements Runnable {
         this.ball.setVelocity(velocity);
 
         if (velocity.getMagnitude() > 5) {
-            Vector2D unit_vector = new Vector2D(velocity.getX() / velocity.getMagnitude(), velocity.getY() / velocity.getMagnitude());
+            Vector2D unit_vector = velocity.getUnitVector();
             this.ball.setVelocity(new Vector2D(unit_vector.getX() * 5, unit_vector.getY() * 5)) ;
         }
         start();
@@ -46,6 +47,8 @@ public class Shot extends Display implements Runnable {
         System.out.println("stop");
         Display.updatePanel(ball.getPosition().getX(), ball.getPosition().getY());
         this.ball.setWillMove(false);
+        System.out.println("final position "+this.ball.getPosition());
+        System.out.println("final height "+ TerrainGenerator.getHeight(this.ball.getPosition()));
         this.running = false;
         try {
             this.thread.join();

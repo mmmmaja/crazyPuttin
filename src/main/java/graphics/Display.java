@@ -6,11 +6,13 @@ import bot.HillClimbingBot;
 import bot.RandomBot;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
 import javafx.geometry.Pos;
 import javafx.scene.*;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
@@ -30,7 +32,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import Main.Universe;
 import objects.Tree;
-import physics.Vector2D;
+import physics.*;
 
 import java.util.Objects;
 
@@ -129,6 +131,7 @@ public class Display extends Application {
                 case A -> camera.setTranslateX(camera.getTranslateX() - 1);
             }
         });
+
 
         // exit the application when the window is closed by the user
         stage.setOnCloseRequest(t -> {
@@ -240,9 +243,9 @@ public class Display extends Application {
      */
     public static void updatePanel(double x, double y) {
         textPosition.setText("Number of shots: " + shotCounter +
-                "\n\nNumber of points: " + pointCounter +
-                "\n\n\nX-position:  " + String.format("%.2f", x)  +
-                "\nY-position:  " + String.format("%.2f", y));
+                "\nNumber of points: " + pointCounter +
+                "\n\nX-position:  " + String.format("%.5f", x)  +
+                "\nY-position:  " + String.format("%.5f", y));
     }
 
 
@@ -313,9 +316,19 @@ public class Display extends Application {
             }
         });
 
+        String[] list = {"RK4" , "RK2" , "Euler","Heuns3"};
+        ComboBox<String> comboBox = new ComboBox(FXCollections.observableArrayList(list));
+        comboBox.setValue("RK4");
+        gridPane.add(new HBox(30, comboBox), 0, position + 10);
         button.setOnMouseClicked(mouseEvent -> {
+            if(comboBox.getValue().equals("RK4")) universe.setSolver( new RK4());
+            if(comboBox.getValue().equals("RK2")) universe.setSolver( new RK2());
+            if(comboBox.getValue().equals("Euler")) universe.setSolver( new Euler());
+            if(comboBox.getValue().equals("Heuns3")) universe.setSolver( new Heuns3());
             shootBall(xVel, yVel);
         });
+
+
         addBotButtons(position);
     }
 
