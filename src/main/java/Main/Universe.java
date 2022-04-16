@@ -10,6 +10,8 @@ import physics.Euler;
 import physics.Solver;
 import physics.Vector2D;
 
+import java.util.ArrayList;
+
 
 /**
  * Class holding all the objects used in the game and the physics engine
@@ -23,6 +25,7 @@ public class Universe {
     private Flag flag;
     private MeshView[] meshViews;
     private Solver solver;
+    private ArrayList<Tree> trees;
 
 
     public Universe(FileReader fileReader) {
@@ -32,6 +35,7 @@ public class Universe {
         createTarget();
         createPole();
         createFlag();
+        createTrees();
     }
 
 
@@ -90,7 +94,6 @@ public class Universe {
      */
     private void createTarget() {
         this.target = new Target(this.fileReader.getTargetPosition(), this.fileReader.getTargetRadius());
-//        ball.setTarget(target);
     }
 
     /**
@@ -107,10 +110,24 @@ public class Universe {
         this.flag = new Flag(this.fileReader.getTargetPosition());
     }
 
+    /**
+     * create an ArrayList of trees that are the obstacles on the course
+     */
+    private void createTrees() {
+        this.trees = new ArrayList<>();
+        Tree tree1 = new Tree(3.7, 0.1, new Vector2D(10, 10));
+        Tree tree2 = new Tree(4.1, 0.1, new Vector2D(-10, 5));
+        Tree tree3 = new Tree(4.5, 0.1, new Vector2D(-25, -40));
+        this.trees.add(tree1);
+        this.trees.add(tree2);
+        this.trees.add(tree3);
+    }
+
 
     public Solver getSolver(){
-        if (solver == null )
+        if (solver == null) {
             return new Euler();
+        }
         return this.solver;
     }
 
@@ -161,5 +178,9 @@ public class Universe {
 
     public FileReader getFileReader() {
         return this.fileReader;
+    }
+
+    public ArrayList<Tree> getTrees() {
+        return this.trees;
     }
 }

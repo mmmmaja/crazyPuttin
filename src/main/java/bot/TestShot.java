@@ -8,13 +8,17 @@ import physics.Vector2D;
 /**
  * this is the class that performs the testShots for the initial velocity
  * once the shot is done we can extract the fitness function,
- * which is the distance between the target and the ball (its copy)
+ * which is the distance between the target and the ball
+ *
+ * can include two heuristics to estimate the result of the testShot
  */
 public class TestShot {
 
     private final Ball ball;
     private final Universe universe;
-    private double result = Integer.MAX_VALUE;
+
+    private double resultFinalPosition = Integer.MAX_VALUE;
+    private double resultAllPositions = Integer.MAX_VALUE;
 
 
     public TestShot(Universe universe, Vector2D velocity) {
@@ -38,11 +42,16 @@ public class TestShot {
     private void start() {
 
         while (true) {
+
             universe.getSolver().nextStep(ball);
+            double distance = universe.getTarget().getEuclideanDistance3D(ball.getPosition());
+            if (distance < this.resultAllPositions) {
+                this.resultAllPositions = distance;
+            }
 
             // ball is in the resting position: target was not hit
             if ((!ball.isMoving() && !ball.getWillMove()) ) {
-                this.result = universe.getTarget().getEuclideanDistance3D(ball.getPosition());
+                this.resultFinalPosition = distance;
                 return;
             }
 
@@ -50,18 +59,27 @@ public class TestShot {
             if (ball.isOnTarget(universe.getTarget()) ) {
                 ball.setVelocity(new Vector2D(0,0));
                 ball.setWillMove(false);
-                this.result = 0;
+                this.resultFinalPosition = this.resultAllPositions = 0;
                 return;
             }
         }
     }
+
+
 
     /**
      *
      * @return 0 if the target was hit
      * in general the distance between the ball and the target
      */
-    public double getTestResult() {
-        return this.result;
+    public double getTestResult(Heuristics heuristics) {
+        if (heuristics.equals(Heuristics.finalPosition)) {
+            return this.resultFinalPosition;
+        }
+        if (heuristics.equals(Heuristics.allPositions)) {
+            return this.resultAllPositions;
+        }
+        return Integer.MAX_VALUE;
     }
+
 }

@@ -2,6 +2,7 @@ package graphics;
 
 import Main.Main;
 import Main.Shot;
+import bot.HillClimbingBot;
 import bot.RandomBot;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -20,12 +21,15 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
+import javafx.scene.shape.Cylinder;
 import javafx.scene.shape.MeshView;
+import javafx.scene.shape.Sphere;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
 import javafx.stage.Stage;
 import Main.Universe;
+import objects.Tree;
 import physics.Vector2D;
 
 import java.util.Objects;
@@ -33,6 +37,7 @@ import java.util.Objects;
 
 /**
  * TODO add button for the bot
+ * TODO remove the canvas and enable shooting the ball on the display
  */
 public class Display extends Application {
 
@@ -48,79 +53,51 @@ public class Display extends Application {
     public static int shotCounter = 0;
     public static int pointCounter = 0;
 
-    SmartGroup group ;
+    private SmartGroup group;
+
 
     @Override
     public void start(Stage stage) {
 
-        // to smartGroup all the objects are added (rotation built-in)
+        // all the objects are added to smartGroup (rotation built-in)
         group = new SmartGroup();
 
-        // add the lighting to the scene: ambient light and point light
-        AmbientLight ambient = new AmbientLight();
-        PointLight point = new PointLight();
-        ambient.setColor(Color.rgb(191, 191, 191,0.6));
-        point.setColor(Color.rgb(255, 255, 255,0.1));
-        point.setLayoutX(1000);
-        point.setLayoutY(1000);
-        point.setTranslateZ(-1100);
+        // add lighting to the scene
+        addLight();
 
-        // add water, sandPit and grass meshes to the display
-        MeshView[] meshViews = universe.getMeshViews();
+        // add three types of meshes from the display that represent the terrain
+        addTerrainMeshes();
 
-        // load the pictures that will be applied as a textures for the objects
-        Image grass_im = new Image("file:src/main/java/grass.jpg" ,5,5,false,false);
-        Image water_im = new Image("file:src/main/java/water.jpg" ,5,5,false,false);
-        Image sand_im = new Image(  "file:src/main/java/sand.jpg" ,5,5,false,false);
-        Image flag_im = new Image(  "file:src/main/java/flag.jpg" ,5,5,false,false);
+        // TODO add the tree to the display
+        addTrees();
 
-        PhongMaterial grass = new PhongMaterial();
-        PhongMaterial water = new PhongMaterial();
-        PhongMaterial sand = new PhongMaterial();
-        PhongMaterial flag = new PhongMaterial();
+        // add the flag to the display (pole and the material)
+        addFlag();
 
-        grass.setDiffuseMap(grass_im);
-        water.setDiffuseMap(water_im);
-        sand.setDiffuseMap(sand_im);
-        flag.setDiffuseMap(flag_im);
+        // add rest of the objects to the SmartGroup
+        this.group.getChildren().add(universe.getBall().getSphere());
+        this.group.getChildren().add(universe.getTarget().getCylinder());
 
-        universe.getFlag().getBox().setMaterial(flag);
-        meshViews[0].setMaterial(grass);
-        meshViews[1].setMaterial(water);
-        meshViews[2].setMaterial(sand);
+        // add clear canvas for arrow visualization
+        createCanvas();
 
-        // add all the objects to the SmartGroup
-        for (MeshView meshView : meshViews) {
-            group.getChildren().add(meshView);
-        }
-        group.getChildren().addAll(point,ambient);
-        group.getChildren().add(universe.getBall().getSphere());
-        group.getChildren().add(universe.getTarget().getCylinder());
-        group.getChildren().add(universe.getPole().getCylinder());
-        group.getChildren().add(universe.getFlag().getBox());
-
-        // create Canvas for arrow visualisation
-        this.canvas = new Canvas(150,120);
-        // enable drawing on the canvas
-        GraphicsContext graphicsContext = canvas.getGraphicsContext2D();
-        clearCanvas(this.canvas, graphicsContext);
-
-        // whenever the canvas is pressed draw an arrow to the pointer's direction
-        canvas.setOnMousePressed(e -> mouseClicked(e, canvas, graphicsContext));
-
-        // this subScene holds terrain display (left part of the frame)
-        SubScene subScene = new SubScene(group, FRAME_WIDTH - 200, FRAME_HEIGHT, true, null);
-        subScene.setFill(Color.web("#3d3d3d"));
-
+        // displayPane hold all other panes of the frame
         Pane displayPane = new Pane();
         displayPane.setPrefSize(FRAME_WIDTH, FRAME_HEIGHT);
 
+        // adds the subScene that holds terrain display (left part of the frame)
+        SubScene subScene = new SubScene(group, FRAME_WIDTH - 200, FRAME_HEIGHT, true, null);
+        subScene.setFill(Color.web("#3d3d3d"));
+
         // gridPane contains buttons and information about the state of the game (right part of the frame)
         this.gridPane = new GridPane();
-        addPanel();
-        displayPane.getChildren().add(this.gridPane);
         this.gridPane.setTranslateX(FRAME_WIDTH - 200);
+        displayPane.getChildren().add(this.gridPane);
 
+        // adds panel at the right-hand side with the buttons to the frame
+        addPanel();
+
+        // add the camera to the scene
         Camera camera = new PerspectiveCamera();
         // enable zooming in really close without the disappearance of the objects
         camera.setNearClip(0.0001);
@@ -133,10 +110,10 @@ public class Display extends Application {
         Scene scene = new Scene(displayPane);
 
         // move the all the objects the middle of the frame
-        group.translateXProperty().set((FRAME_WIDTH + 250) / 3.0);
-        group.translateYProperty().set((FRAME_HEIGHT + 305) / 3.0);
-        group.zoom(camera.getTranslateY() + 900); // zoomIn
-        group.initMouseControl(scene);
+        this.group.translateXProperty().set((FRAME_WIDTH + 250) / 3.0);
+        this.group.translateYProperty().set((FRAME_HEIGHT + 305) / 3.0);
+        this.group.zoom(camera.getTranslateY() + 900); // zoomIn
+        this.group.initMouseControl(scene);
         scene.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> gridPane.requestFocus());
 
 
@@ -165,6 +142,97 @@ public class Display extends Application {
 
 
     /**
+     * create Canvas for arrow visualisation
+     */
+    private void createCanvas() {
+        this.canvas = new Canvas(150,120);
+        // enable drawing on the canvas
+        GraphicsContext graphicsContext = canvas.getGraphicsContext2D();
+        clearCanvas(this.canvas, graphicsContext);
+
+        // whenever the canvas is pressed draw an arrow to the pointer's direction
+        canvas.setOnMousePressed(e -> mouseClicked(e, canvas, graphicsContext));
+    }
+
+
+    /**
+     * add the flag to the display
+     * (the pole: cylinder object and the material: the box)
+     */
+    private void addFlag() {
+        Image flagImage = new Image("file:src/main/java/flag.jpg" ,5,5,false,false);
+        PhongMaterial flagMaterial = new PhongMaterial();
+        flagMaterial.setDiffuseMap(flagImage);
+
+        universe.getFlag().getBox().setMaterial(flagMaterial);
+        this.group.getChildren().add(universe.getPole().getCylinder());
+        this.group.getChildren().add(universe.getFlag().getBox());
+    }
+
+
+    /**
+     * TODO
+     */
+    private void addTrees() {
+        for (Tree tree : this.universe.getTrees()) {
+
+            // add the root of the tree (the cylinder object)
+            Cylinder cylinder = tree.getCylinder();
+            Image cylinderImage = new Image("file:src/main/java/Bark Dark_3D_p.png", 0.3, 0.01, false, false);
+            PhongMaterial cylinderMaterial = new PhongMaterial();
+            cylinderMaterial.setDiffuseMap(cylinderImage);
+            cylinder.setMaterial(cylinderMaterial);
+
+            group.getChildren().add(cylinder);
+            group.getChildren().add(tree.getSphere());
+        }
+    }
+
+
+    /**
+     * add water, sandPit and grass meshes to the display
+     */
+    private void addTerrainMeshes() {
+
+        Image grassImage = new Image("file:src/main/java/grass.jpg" ,5,5,false,false);
+        Image waterImage = new Image("file:src/main/java/water.jpg" ,5,5,false,false);
+        Image sandImage = new Image("file:src/main/java/sand.jpg" ,5,5,false,false);
+
+        PhongMaterial grassMaterial = new PhongMaterial();
+        PhongMaterial waterMaterial = new PhongMaterial();
+        PhongMaterial sandMaterial = new PhongMaterial();
+
+        grassMaterial.setDiffuseMap(grassImage);
+        waterMaterial.setDiffuseMap(waterImage);
+        sandMaterial.setDiffuseMap(sandImage);
+
+        MeshView[] terrainMeshViews = universe.getMeshViews();
+        terrainMeshViews[0].setMaterial(grassMaterial);
+        terrainMeshViews[1].setMaterial(waterMaterial);
+        terrainMeshViews[2].setMaterial(sandMaterial);
+
+        for (MeshView meshView : terrainMeshViews) {
+            this.group.getChildren().add(meshView);
+        }
+    }
+
+
+    /**
+     * add the lighting to the scene: ambient light and point light
+     */
+    private void addLight() {
+        AmbientLight ambientLight = new AmbientLight();
+        PointLight pointLight = new PointLight();
+        ambientLight.setColor(Color.rgb(191, 191, 191,0.6));
+        pointLight.setColor(Color.rgb(255, 255, 255,0.1));
+        pointLight.setLayoutX(1000);
+        pointLight.setLayoutY(1000);
+        pointLight.setTranslateZ(-1100);
+        group.getChildren().addAll(pointLight, ambientLight);
+    }
+
+
+    /**
      * updates x and y position of the ball
      * update counter of the shoots and point counter
      * @param x position x of the ball
@@ -185,8 +253,8 @@ public class Display extends Application {
         this.gridPane.setPrefSize(200, FRAME_HEIGHT);
         this.gridPane.setStyle("-fx-background-color: darkgrey");
         this.gridPane.setTranslateX(FRAME_WIDTH-200);
-        this.gridPane.setHgap(10);
-        this.gridPane.setVgap(10);
+        this.gridPane.setHgap(8);
+        this.gridPane.setVgap(8);
         this.gridPane.setAlignment(Pos.CENTER);
 
         Font font = new Font("Verdana", 14);
@@ -235,8 +303,6 @@ public class Display extends Application {
         gridPane.add(new HBox(30, button), 0, position + 5);
         Button resetButton = new Button("Reset ball");
         gridPane.add(new HBox(30, resetButton), 0, position + 6);
-        Button randomBotButton = new Button("random Bot");
-        gridPane.add(new HBox(30, randomBotButton), 0, position + 7);
 
         // each time resetButton is clicked ball is set back to the initial position
         resetButton.setOnMouseClicked(mouseEvent -> {
@@ -250,9 +316,29 @@ public class Display extends Application {
         button.setOnMouseClicked(mouseEvent -> {
             shootBall(xVel, yVel);
         });
+        addBotButtons(position);
+    }
+
+
+    /**
+     * adds buttons that trigger the specific bot
+     * @param position where to place the button
+     */
+    private void addBotButtons(int position) {
+        Button randomBotButton = new Button("random Bot");
+        this.gridPane.add(new HBox(30, randomBotButton), 0, position + 7);
 
         randomBotButton.setOnMouseClicked(mouseEvent -> {
             Vector2D velocity = new RandomBot(this.universe).getBestVelocity();
+            new Shot(universe, velocity);
+            shotCounter++;
+        });
+
+        Button hillClimbingBotButton = new Button("hill climbing Bot");
+        this.gridPane.add(new HBox(30, hillClimbingBotButton), 0, position + 8);
+
+        hillClimbingBotButton.setOnMouseClicked(mouseEvent -> {
+            Vector2D velocity = new HillClimbingBot(this.universe).getBestVelocity();
             new Shot(universe, velocity);
             shotCounter++;
         });
@@ -288,6 +374,7 @@ public class Display extends Application {
             }
         }
     }
+
 
     /**
      * triggered when the arrow was drawn on canvas
