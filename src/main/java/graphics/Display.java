@@ -328,7 +328,6 @@ public class Display extends Application {
             shootBall(xVel, yVel);
         });
 
-
         addBotButtons(position);
     }
 

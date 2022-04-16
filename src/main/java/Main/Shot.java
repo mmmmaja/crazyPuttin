@@ -88,6 +88,7 @@ public class Shot extends Display implements Runnable {
                     Display.pointCounter++;
                     ball.setVelocity(new Vector2D(0,0));
                     ball.setWillMove(false);
+                    stop();
                 }
                 delta--;
             }

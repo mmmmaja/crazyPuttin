@@ -40,7 +40,6 @@ public class TestShot {
     }
 
     private void start() {
-
         while (true) {
 
             universe.getSolver().nextStep(ball);
@@ -50,17 +49,17 @@ public class TestShot {
             }
 
             // ball is in the resting position: target was not hit
-            if ((!ball.isMoving() && !ball.getWillMove()) ) {
+            if ((!ball.isMoving() && !ball.getWillMove())) {
                 this.resultFinalPosition = distance;
-                return;
+                break;
             }
 
             // target was hit
-            if (ball.isOnTarget(universe.getTarget()) ) {
-                ball.setVelocity(new Vector2D(0,0));
+            if (ball.isOnTarget(universe.getTarget())) {
+                ball.setVelocity(new Vector2D(0, 0));
                 ball.setWillMove(false);
                 this.resultFinalPosition = this.resultAllPositions = 0;
-                return;
+                break;
             }
         }
     }

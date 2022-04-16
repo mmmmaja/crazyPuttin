@@ -7,6 +7,7 @@ import javafx.scene.shape.DrawMode;
 import javafx.scene.shape.MeshView;
 import objects.*;
 import physics.Euler;
+import physics.RK4;
 import physics.Solver;
 import physics.Vector2D;
 
@@ -126,7 +127,7 @@ public class Universe {
 
     public Solver getSolver(){
         if (solver == null) {
-            return new Euler();
+            return new RK4();
         }
         return this.solver;
     }
