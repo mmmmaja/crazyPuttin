@@ -19,6 +19,9 @@ public class SmartGroup extends Group {
     // indicates whether scene can be rotated: rotation is disabled when arrow is drowned on canvas
     private boolean arrowOn = false;
 
+    // indicates whether we can draw the obstacles on the screen
+    private boolean obstaclesOn = false;
+
     // starting point for x and y
     private double anchorX, anchorY;
 
@@ -58,17 +61,19 @@ public class SmartGroup extends Group {
         rotateZ.angleProperty().bind(angleZ);
 
         scene.setOnMousePressed(mouseEvent -> {
-            if (!this.arrowOn) {
+            // rotate the scene
+            if (!this.arrowOn && !this.obstaclesOn) {
                 this.anchorX = mouseEvent.getSceneX();
                 this.anchorY = mouseEvent.getSceneY();
 
                 this.anchorAngleX = angleX.get();
                 this.anchorAngleY = angleZ.get();
             }
+
         });
 
         scene.setOnMouseDragged(mouseEvent -> {
-            if (!this.arrowOn) {
+            if (!this.arrowOn && !this.obstaclesOn) {
                 // lock the X rotation, so we can see under the surface
                 if (this.anchorAngleX - (this.anchorY - mouseEvent.getSceneY()) > -68.0) {
                     if (this.anchorAngleX - (this.anchorY - mouseEvent.getSceneY()) < 5) {
@@ -76,14 +81,22 @@ public class SmartGroup extends Group {
                     }
                 }
                 this.angleZ.set(this.anchorAngleY + this.anchorX - mouseEvent.getSceneX());
-
             }
-
         });
     }
 
     public void setArrowOn(boolean arrowOn) {
         this.arrowOn = arrowOn;
     }
+
+    public void setObstaclesOn(boolean obstaclesOn) {
+        this.obstaclesOn = obstaclesOn;
+    }
+
+    public Vector2D getSceneRotation() {
+        // I don't think we need angleY
+        return new Vector2D(this.anchorAngleX, this.anchorAngleY);
+    }
+
 
 }

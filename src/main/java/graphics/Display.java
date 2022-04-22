@@ -23,22 +23,23 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
+import javafx.scene.shape.Box;
 import javafx.scene.shape.Cylinder;
 import javafx.scene.shape.MeshView;
-import javafx.scene.shape.Sphere;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
 import javafx.stage.Stage;
 import Main.Universe;
+import objects.Obstacle;
 import objects.Tree;
 import physics.*;
 
+import java.util.ArrayList;
 import java.util.Objects;
 
 
 /**
- * TODO add button for the bot
  * TODO remove the canvas and enable shooting the ball on the display
  */
 public class Display extends Application {
@@ -96,9 +97,6 @@ public class Display extends Application {
         this.gridPane.setTranslateX(FRAME_WIDTH - 200);
         displayPane.getChildren().add(this.gridPane);
 
-        // adds panel at the right-hand side with the buttons to the frame
-        addPanel();
-
         // add the camera to the scene
         Camera camera = new PerspectiveCamera();
         // enable zooming in really close without the disappearance of the objects
@@ -118,6 +116,8 @@ public class Display extends Application {
         this.group.initMouseControl(scene);
         scene.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> gridPane.requestFocus());
 
+        // adds panel at the right-hand side with the buttons to the frame
+        addPanel();
 
         // zoomIn, zoomOut added on scroll event
         scene.addEventHandler(ScrollEvent.SCROLL, event -> camera.setTranslateZ(camera.getTranslateZ() + event.getDeltaY()/5));
@@ -174,12 +174,11 @@ public class Display extends Application {
 
 
     /**
-     * TODO
+     * add the trees to the display: the root (cylinder) and the leafs (sphere)
      */
     private void addTrees() {
         for (Tree tree : this.universe.getTrees()) {
 
-            // add the root of the tree (the cylinder object)
             Cylinder cylinder = tree.getCylinder();
             Image cylinderImage = new Image("file:src/main/java/Bark Dark_3D_p.png", 0.3, 0.01, false, false);
             PhongMaterial cylinderMaterial = new PhongMaterial();
@@ -236,7 +235,7 @@ public class Display extends Application {
 
 
     /**
-     * updates x and y position of the ball
+     * updates x and y position of the ball on the panel
      * update counter of the shoots and point counter
      * @param x position x of the ball
      * @param y position y of the ball
@@ -253,11 +252,13 @@ public class Display extends Application {
      * adds the panel with the buttons to the frame
      */
     public void addPanel() {
+
+        // create the gridPane
         this.gridPane.setPrefSize(200, FRAME_HEIGHT);
         this.gridPane.setStyle("-fx-background-color: darkgrey");
         this.gridPane.setTranslateX(FRAME_WIDTH-200);
-        this.gridPane.setHgap(8);
-        this.gridPane.setVgap(8);
+        this.gridPane.setHgap(6);
+        this.gridPane.setVgap(6);
         this.gridPane.setAlignment(Pos.CENTER);
 
         Font font = new Font("Verdana", 14);
@@ -276,34 +277,47 @@ public class Display extends Application {
         textPosition.setFont(font);
 
         gridPane.add(new HBox(30, textPosition), 0, 2);
-
         this.gridPane.add(this.canvas, 0, 3);
 
-        Text readFromTextField = new Text("Type in\ninitial velocity:");
-        readFromTextField.setFill(Color.WHITE);
-        readFromTextField.setFont(font);
-        int position = 4;
 
-        gridPane.add(new HBox(30, readFromTextField), 0, position);
+        int position = 3;
 
-        Text x = new Text("Velocity in x-direction:");
-        x.setFill(Color.WHITE);
-        x.setFont(font);
-        gridPane.add(new HBox(30, x), 0, position + 1);
+//        Text readFromTextField = new Text("Type in\ninitial velocity:");
+//        readFromTextField.setFill(Color.WHITE);
+//        readFromTextField.setFont(font);
+//        gridPane.add(new HBox(30, readFromTextField), 0, position);
 
+        Text xVelocity = new Text("Velocity in x-direction:");
+        xVelocity.setFill(Color.WHITE);
+        xVelocity.setFont(font);
+        gridPane.add(new HBox(30, xVelocity), 0, position + 1);
+
+        Text yVelocity = new Text("Velocity in y-direction:");
+        yVelocity.setFill(Color.WHITE);
+        yVelocity.setFont(font);
+        gridPane.add(new HBox(30, yVelocity), 0, position + 3);
+
+        addBallShootingOptions(position);
+        addBotButtons(position);
+        addObstacleOptions();
+    }
+
+
+    /**
+     * add the buttons to shoot and reset the ball
+     * creates the comboBoxes for different solver
+     * and textiles to display the velocity of the ball
+     */
+    private void addBallShootingOptions(int position) {
+
+        // add the textFields to display the velocity of the ball
         TextField xVel = new TextField();
         gridPane.add(new HBox(30, xVel), 0, position + 2);
-
-        Text y = new Text("Velocity in y-direction:");
-        y.setFill(Color.WHITE);
-        y.setFont(font);
-        gridPane.add(new HBox(30, y), 0, position + 3);
-
         TextField yVel = new TextField();
         gridPane.add(new HBox(30, yVel), 0, position + 4);
 
-        Button button = new Button("Hit the ball");
-        gridPane.add(new HBox(30, button), 0, position + 5);
+        Button hitTheBall = new Button("Hit the ball");
+        gridPane.add(new HBox(30, hitTheBall), 0, position + 5);
         Button resetButton = new Button("Reset ball");
         gridPane.add(new HBox(30, resetButton), 0, position + 6);
 
@@ -316,44 +330,89 @@ public class Display extends Application {
             }
         });
 
-        String[] list = {"RK4" , "RK2" , "Euler","Heuns3"};
-        ComboBox<String> comboBox = new ComboBox(FXCollections.observableArrayList(list));
-        comboBox.setValue("RK4");
-        gridPane.add(new HBox(30, comboBox), 0, position + 10);
-        button.setOnMouseClicked(mouseEvent -> {
-            if(comboBox.getValue().equals("RK4")) universe.setSolver( new RK4());
-            if(comboBox.getValue().equals("RK2")) universe.setSolver( new RK2());
-            if(comboBox.getValue().equals("Euler")) universe.setSolver( new Euler());
-            if(comboBox.getValue().equals("Heuns3")) universe.setSolver( new Heuns3());
+        // add the box with the solver options
+        String[] solverList = {"RK4" , "RK2" , "Euler","Heuns3"};
+        ComboBox<String> solverComboBox = new ComboBox(FXCollections.observableArrayList(solverList));
+        solverComboBox.setValue("RK4");
+        gridPane.add(new HBox(30, solverComboBox), 0, position + 7);
+
+        hitTheBall.setOnMouseClicked(mouseEvent -> {
+            if(solverComboBox.getValue().equals("RK4")) universe.setSolver( new RK4());
+            if(solverComboBox.getValue().equals("RK2")) universe.setSolver( new RK2());
+            if(solverComboBox.getValue().equals("Euler")) universe.setSolver( new Euler());
+            if(solverComboBox.getValue().equals("Heuns3")) universe.setSolver( new Heuns3());
             shootBall(xVel, yVel);
         });
-
-        addBotButtons(position);
     }
 
 
     /**
-     * adds buttons that trigger the specific bot
-     * @param position where to place the button
+     * adds buttons that trigger the specific bot based on the comboBox
      */
     private void addBotButtons(int position) {
-        Button randomBotButton = new Button("random Bot");
-        this.gridPane.add(new HBox(30, randomBotButton), 0, position + 7);
 
-        randomBotButton.setOnMouseClicked(mouseEvent -> {
-            Vector2D velocity = new RandomBot(this.universe).getBestVelocity();
+        Button botButton = new Button("bot");
+        gridPane.add(new HBox(30, botButton), 0, position + 8);
+
+        String[] botList = {"randomBot" , "hillClimbingBot"};
+        ComboBox<String> botComboBox = new ComboBox(FXCollections.observableArrayList(botList));
+        botComboBox.setValue("randomBot");
+        gridPane.add(new HBox(30, botComboBox), 0, position + 9);
+
+        botButton.setOnMouseClicked(mouseEvent -> {
+            Vector2D velocity = new Vector2D(0, 0);
+
+            if (botComboBox.getValue().equals("randomBot")) {
+                velocity = new RandomBot(this.universe).getBestVelocity();
+            }
+            if (botComboBox.getValue().equals("hillClimbingBot")) {
+                velocity = new HillClimbingBot(this.universe).getBestVelocity();
+            }
             new Shot(universe, velocity);
             shotCounter++;
         });
 
-        Button hillClimbingBotButton = new Button("hill climbing Bot");
-        this.gridPane.add(new HBox(30, hillClimbingBotButton), 0, position + 8);
+    }
 
-        hillClimbingBotButton.setOnMouseClicked(mouseEvent -> {
-            Vector2D velocity = new HillClimbingBot(this.universe).getBestVelocity();
-            new Shot(universe, velocity);
-            shotCounter++;
-        });
+
+    private double anchorX;
+    private double anchorY;
+
+    private void addObstacleOptions() {
+
+        ArrayList<Obstacle> obstacles = this.universe.getObstacles();
+        for (Obstacle obstacle : obstacles) {
+
+            // apply the texture for the obstacle
+            Image rockImage = new Image("file:src/main/java/rockTexture.jpg");
+            PhongMaterial phongMaterial = new PhongMaterial();
+            phongMaterial.setDiffuseMap(rockImage);
+            Box box = obstacle.getBox();
+            box.setMaterial(phongMaterial);
+
+            this.group.getChildren().add(box);
+
+            obstacle.getBox().setOnMousePressed(mouseEvent -> {
+                this.group.setObstaclesOn(true);
+                this.anchorX = mouseEvent.getSceneX();
+                this.anchorY = mouseEvent.getSceneY();
+            });
+
+            obstacle.getBox().setOnMouseDragged(mouseEvent -> {
+                double deltaX = -(this.anchorX - mouseEvent.getSceneX());
+                double deltaY = -(this.anchorY - mouseEvent.getSceneY());
+                obstacle.move(deltaX, deltaY, this.group.getSceneRotation());
+                this.anchorX += deltaX;
+                this.anchorY += deltaY;
+            });
+
+            obstacle.getBox().setOnMouseReleased(mouseEvent -> {
+                this.group.setObstaclesOn(false);
+                System.out.println(obstacle.getPosition());
+                System.out.println(this.group.getSceneRotation());
+            });
+        }
+
     }
 
 
