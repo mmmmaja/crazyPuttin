@@ -52,7 +52,7 @@ public class PhysicsEngine extends Solver {
 
 
 		if ( velocity.getMagnitude() > 0.001 ) {
-			System.out.println("1");
+
 			double aX = - g * partialX - mu_K * g * vX / velocity.getMagnitude();
 			double aY = - g * partialY - mu_K * g * vY / velocity.getMagnitude();
 			return new Vector2D(aX, aY);
@@ -60,7 +60,7 @@ public class PhysicsEngine extends Solver {
 		}
 		else
 		if ( slope > mu_S) {
-			System.out.println(2);
+
 			double aX = -mu_K * g * partialX / partials.getMagnitude();
 			double aY = -mu_K * g * partialY / partials.getMagnitude();
 

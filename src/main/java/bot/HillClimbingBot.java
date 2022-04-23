@@ -24,7 +24,7 @@ public class HillClimbingBot {
 
     private Vector2D climb() {
         // TODO step value is important, should I change it??
-        double step = 0.1;
+        double step = 0.01;
 
         Vector2D velocity = new Vector2D(0, 0);
         double result = new TestShot(this.universe, velocity).getTestResult(Heuristics.finalPosition);

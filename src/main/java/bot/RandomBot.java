@@ -23,16 +23,15 @@ public class RandomBot {
         this.universe = universe;
         this.bestVelocity = new Vector2D(0, 0);
         this.shotCounter = 0;
-        startRandomTests();
+        startRandomTests(2000);
     }
 
     /**
      * TODO include boundaries for the initialVelocity
      */
-    private void startRandomTests() {
+    public void startRandomTests(int testNumber) {
 
         // maximal number of trial shots
-        int testNumber = 2000;
         Random random = new Random();
         this.bestResult = Integer.MAX_VALUE;
 
@@ -41,12 +40,11 @@ public class RandomBot {
 
             int sign1 = (random.nextDouble() < 0.5) ? 1 : -1;
             int sign2 = (random.nextDouble() < 0.5) ? 1 : -1;
+            double randomX = random.nextDouble() * random.nextInt(5) * sign1;
+            double randomY = random.nextDouble() * Math.sqrt( 25- Math.pow(randomX,2) ) * sign2;
+//            double randomY = random.nextDouble() * random.nextInt(5) * sign2;
+            Vector2D initialVelocity = new Vector2D( randomX,randomY);
 
-            Vector2D initialVelocity = new Vector2D(
-                    random.nextDouble() * random.nextInt(10) * sign1,
-                    random.nextDouble() * random.nextInt(10) * sign2
-            );
-            //System.out.println(initialVelocity);
             // distance between the ball and the target in 3D (takes height into consideration)
             double result = new TestShot(this.universe, initialVelocity).getTestResult(Heuristics.finalPosition);
             if (result < this.bestResult) {

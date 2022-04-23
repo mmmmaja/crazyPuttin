@@ -1,11 +1,11 @@
-x0 = 6
+x0 = 0
 y0 = 0
-xt = -3
-yt = -3
+xt = 30
+yt = 30
 r = 0.2
-muk = 0.05
-mus = 0.1
-heightProfile =  2.5*(Math.sin((x-y)/7)+0.9)
+muk = 0.01
+mus = 0.3
+heightProfile =  1/8*sin(x/2)+1.8^(cos(y/2))-0.6
 sandPitX = 40<x<50
 sandPitY = 40<y<50
 muks = 0.25

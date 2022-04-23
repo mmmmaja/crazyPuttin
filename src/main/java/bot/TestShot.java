@@ -27,14 +27,8 @@ public class TestShot {
         this.ball.setVelocity(velocity);
 
         if (velocity.getMagnitude() > 5) {
-            Vector2D unit_vector = new Vector2D(
-                    velocity.getX() / velocity.getMagnitude(),
-                    velocity.getY() / velocity.getMagnitude()
-            );
-            this.ball.setVelocity(new Vector2D(
-                    unit_vector.getX() * 5,
-                    unit_vector.getY() * 5)
-            );
+            Vector2D unit_vector = velocity.getUnitVector();
+            this.ball.setVelocity(new Vector2D(unit_vector.getX() * 5, unit_vector.getY() * 5)) ;
         }
         start();
     }

@@ -2,6 +2,7 @@ package graphics;
 
 import Main.Main;
 import Main.Shot;
+import bot.Hill2;
 import bot.HillClimbingBot;
 import bot.RandomBot;
 import javafx.application.Application;
@@ -354,7 +355,7 @@ public class Display extends Application {
         Button botButton = new Button("bot");
         gridPane.add(new HBox(30, botButton), 0, position + 8);
 
-        String[] botList = {"randomBot" , "hillClimbingBot"};
+        String[] botList = {"randomBot" , "hillClimbingBot","hill2"};
         ComboBox<String> botComboBox = new ComboBox(FXCollections.observableArrayList(botList));
         botComboBox.setValue("randomBot");
         gridPane.add(new HBox(30, botComboBox), 0, position + 9);
@@ -367,6 +368,9 @@ public class Display extends Application {
             }
             if (botComboBox.getValue().equals("hillClimbingBot")) {
                 velocity = new HillClimbingBot(this.universe).getBestVelocity();
+            }
+            if (botComboBox.getValue().equals("hill2")) {
+                velocity = new Hill2(this.universe).getBestVelocity();
             }
             new Shot(universe, velocity);
             shotCounter++;
