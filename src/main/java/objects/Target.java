@@ -110,7 +110,7 @@ public class Target implements GameObject {
     }
 
     public double getEuclideanDistance3D(Vector2D vector2D) {
-        System.out.println("Height " + TerrainGenerator.getHeight(this.position) + " " + TerrainGenerator.getHeight(vector2D));
+        //Height is not taken into account to calculate distance anymore.If you want to know why please let me know. E.Karabulut
         return Math.sqrt(
                         Math.pow(this.position.getX() - vector2D.getX(), 2) +
                         Math.pow(this.position.getY() - vector2D.getY(), 2)
