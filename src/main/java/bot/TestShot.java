@@ -12,7 +12,7 @@ import physics.Vector2D;
  *
  * can include two heuristics to estimate the result of the testShot
  */
-public class TestShot {
+public class TestShot implements Comparable<TestShot>{
 
     private final Ball ball;
     private final Universe universe;
@@ -75,4 +75,8 @@ public class TestShot {
         return Integer.MAX_VALUE;
     }
 
+    @Override
+    public int compareTo(TestShot o) {
+        return (this.getTestResult(Heuristics.allPositions) < o.getTestResult(Heuristics.allPositions)) ? -1 : 1;
+    }
 }

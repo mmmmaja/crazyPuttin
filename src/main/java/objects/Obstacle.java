@@ -46,14 +46,18 @@ public class Obstacle {
      */
     public void move(double deltaX, double deltaY, Vector2D sceneRotation) {
 
-        double angle = sceneRotation.getX();
-        double moveFactor = 0.05;
+//        double angleX = sceneRotation.getX();
+        double angleY= sceneRotation.getY() / Math.PI;
+        double moveFactor = 1;
+//        System.out.println(deltaX + " " + deltaY);
+        deltaX*= -moveFactor;
+        deltaY*= -moveFactor;
 
-        deltaX*= moveFactor;
-        deltaY*= moveFactor;
+//        double deltaXPrim = Math.cos(angle * deltaX) - Math.sin(angle * deltaY);
+//        double deltaYPrim = Math.sin(angle * deltaX) + Math.cos(angle * deltaY);
+        double deltaXPrim =  (Math.cos( angleY ) * deltaX - Math.sin(angleY) * deltaY);
+        double deltaYPrim =  (Math.sin( angleY ) * deltaX + Math.cos(angleY) * deltaY);
 
-        double deltaXPrim = Math.cos(angle * deltaX) - Math.sin(angle * deltaY);
-        double deltaYPrim = Math.sin(angle * deltaX) + Math.cos(angle * deltaY);
 
 
         this.setPosition(new Vector2D(

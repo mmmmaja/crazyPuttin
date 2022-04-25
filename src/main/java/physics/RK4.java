@@ -71,10 +71,10 @@ public class RK4 extends Solver {
 
 		double t = ( 1 / (2.d * ( 9.81 + 0.1 * 10 * 9.81  ) ) ) * 10 ;
 		System.out.println(t);
-		double t_calc_Euler = Math.abs(t - 0.2588549120000041 );
-		double t_calc_rk2 = Math.abs(t - 0.2568326080000056);
-		double t_calc_heuns = Math.abs(t - 0.25417475200000594);
-		double t_calc_rk4 = Math.abs(t - 0.2541747520000052 );
+		double t_calc_Euler = Math.abs(t - 0.2553422100000067);
+		double t_calc_rk2 = Math.abs( t - 0.25509187450000936);
+		double t_calc_heuns = Math.abs( t -0.25475866150002197);
+		double t_calc_rk4 = Math.abs(   t - 0.2547587949166761 );
 
 		System.out.println( "Euler absolute error rate -> " + t_calc_Euler);
 		System.out.println( "RK2   absolute error rate -> " + t_calc_rk2 );

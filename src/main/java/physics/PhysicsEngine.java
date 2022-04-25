@@ -6,7 +6,7 @@ import objects.TerrainGenerator;
 public class PhysicsEngine extends Solver {
 
 	private static final double g = 9.81;
-	private static final double STEP = 0.032;
+	private static final double STEP = 0.004;
 	private static final double STOP = 0.005;
 
 
@@ -68,7 +68,7 @@ public class PhysicsEngine extends Solver {
 		}
 		else {
 			System.out.println("stable");
-			return new Vector2D(vX/STEP, vY/STEP);
+			return new Vector2D(-vX/STEP, -vY/STEP);
 
 		}
 	}

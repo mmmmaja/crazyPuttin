@@ -62,10 +62,10 @@ public class Shot extends Display implements Runnable {
         System.out.println("start!");
         ball.setWillMove(true);
 
-        int SPEED = 60;
+        int SPEED = 120;
         double delta = 0;
         long lastTime = System.nanoTime();
-        final double nanos = Math.pow(10, 9) / SPEED;
+        final double nanos = Math.pow(10, 9)/SPEED ;
         // number of nanoseconds between each update: SPEED times per second
 
         while (running) {

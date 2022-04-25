@@ -41,10 +41,7 @@ public class HillClimbingBot {
             this.shotCounter++;
             for (double[] stepCase : stepArray) {
 
-                Vector2D testVelocity = new Vector2D(
-                        velocity.getX() + stepCase[0],
-                        velocity.getY() + stepCase[1]
-                );
+                Vector2D testVelocity = new Vector2D(velocity.getX() + stepCase[0], velocity.getY() + stepCase[1]);
                 double testResult = new TestShot(this.universe, testVelocity).getTestResult(Heuristics.allPositions);
 
                 // target was reached: break all

@@ -8,6 +8,7 @@ import bot.RandomBot;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
+import javafx.geometry.Point3D;
 import javafx.geometry.Pos;
 import javafx.scene.*;
 import javafx.scene.canvas.Canvas;
@@ -18,6 +19,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.RotateEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -30,6 +32,7 @@ import javafx.scene.shape.MeshView;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
+import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
 import Main.Universe;
 import objects.Obstacle;
@@ -103,7 +106,7 @@ public class Display extends Application {
         // enable zooming in really close without the disappearance of the objects
         camera.setNearClip(0.0001);
         subScene.setCamera(camera);
-
+        camera.setRotationAxis(new Point3D(100,100,0));
         Pane pane3D = new Pane();
         pane3D.setPrefSize(FRAME_WIDTH - 200, FRAME_HEIGHT);
         pane3D.getChildren().add(subScene);
@@ -111,10 +114,13 @@ public class Display extends Application {
         Scene scene = new Scene(displayPane);
 
         // move the all the objects the middle of the frame
-        this.group.translateXProperty().set((FRAME_WIDTH + 250) / 3.0);
-        this.group.translateYProperty().set((FRAME_HEIGHT + 305) / 3.0);
+
+        this.group.translateXProperty().set((FRAME_WIDTH + 250 ) / 3.0 );
+        this.group.translateYProperty().set((FRAME_HEIGHT + 305 ) / 3.0 );
         this.group.zoom(camera.getTranslateY() + 900); // zoomIn
-        this.group.initMouseControl(scene);
+//        this.group.translateXProperty().set((FRAME_WIDTH + 250 ) / 3.0 - universe.getBall().getPosition().getX());
+//        this.group.translateYProperty().set((FRAME_HEIGHT + 305 ) / 3.0 - universe.getBall().getPosition().getY());
+        this.group.initMouseControl(scene , universe.getBall().getPosition() );
         scene.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> gridPane.requestFocus());
 
         // adds panel at the right-hand side with the buttons to the frame
@@ -400,14 +406,15 @@ public class Display extends Application {
                 this.group.setObstaclesOn(true);
                 this.anchorX = mouseEvent.getSceneX();
                 this.anchorY = mouseEvent.getSceneY();
+
             });
 
             obstacle.getBox().setOnMouseDragged(mouseEvent -> {
                 double deltaX = -(this.anchorX - mouseEvent.getSceneX());
                 double deltaY = -(this.anchorY - mouseEvent.getSceneY());
+                System.out.println("DELTA " + deltaX + " " + deltaY);
                 obstacle.move(deltaX, deltaY, this.group.getSceneRotation());
-                this.anchorX += deltaX;
-                this.anchorY += deltaY;
+
             });
 
             obstacle.getBox().setOnMouseReleased(mouseEvent -> {
@@ -508,8 +515,11 @@ public class Display extends Application {
         this.group.setArrowOn(true);
         double clickedX = mouseEvent.getX();
         double clickedY = mouseEvent.getY();
+        this.group.translateXProperty().set((FRAME_WIDTH + 250 ) / 3.0 - universe.getBall().getPosition().getX());
+        this.group.translateYProperty().set((FRAME_HEIGHT + 305 ) / 3.0 - universe.getBall().getPosition().getY());
 
         canvas.setOnMouseDragged(MouseDragged -> {
+
             clearCanvas(canvas, g);
             drawArrow(clickedX, clickedY, MouseDragged.getX(), MouseDragged.getY(), canvas.getGraphicsContext2D());
         });
