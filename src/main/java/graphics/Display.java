@@ -405,7 +405,7 @@ public class Display extends Application {
             obstacle.getBox().setOnMouseDragged(mouseEvent -> {
                 double deltaX = -(this.anchorX - mouseEvent.getSceneX());
                 double deltaY = -(this.anchorY - mouseEvent.getSceneY());
-                obstacle.move(deltaX, deltaY, this.group.getSceneRotation());
+                obstacle.move(deltaX, deltaY);
                 this.anchorX += deltaX;
                 this.anchorY += deltaY;
             });

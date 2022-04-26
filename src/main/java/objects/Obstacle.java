@@ -25,7 +25,7 @@ public class Obstacle {
      */
     public Obstacle(Vector2D position) {
         this.position = position;
-        this.dimension = new Vector3D(0.5, 0.5, 0.7);
+        this.dimension = new Vector3D(0.5, 0.5, 0.5);
         this.box = createBox();
     }
 
@@ -44,23 +44,18 @@ public class Obstacle {
      * move the box by the given deltaX and deltaY
      * TODO take the rotation of the scene into the consideration, how though?
      */
-    public void move(double deltaX, double deltaY, Vector2D sceneRotation) {
+    public void move(double deltaX, double deltaY) {
 
-        double angle = sceneRotation.getX();
         double moveFactor = 0.05;
 
         deltaX*= moveFactor;
         deltaY*= moveFactor;
 
-        double deltaXPrim = Math.cos(angle * deltaX) - Math.sin(angle * deltaY);
-        double deltaYPrim = Math.sin(angle * deltaX) + Math.cos(angle * deltaY);
-
-
         this.setPosition(new Vector2D(
                 this.position.getX() + deltaX,
                 this.position.getY() + deltaY));
-        this.box.setTranslateX(deltaXPrim + this.position.getX());
-        this.box.setTranslateY(deltaYPrim + this.position.getY());
+        this.box.setTranslateX(deltaX + this.position.getX());
+        this.box.setTranslateY(deltaY + this.position.getY());
 
         box.setTranslateZ(-(TerrainGenerator.getHeight(this.position) + dimension.getZ() / 2));
     }
@@ -97,5 +92,7 @@ public class Obstacle {
     public void setPosition(Vector2D position) {
         this.position = position;
     }
+
+    public Vector3D getDimension() { return this.dimension; }
 
 }
