@@ -44,31 +44,42 @@ public class Obstacle {
      * move the box by the given deltaX and deltaY
      * TODO take the rotation of the scene into the consideration, how though?
      */
-    public void move(double deltaX, double deltaY, Vector2D sceneRotation) {
+    public void move(double deltaX, double deltaY) {
 
-//        double angleX = sceneRotation.getX();
-        double angleY= sceneRotation.getY() / Math.PI;
-        double moveFactor = 1;
-//        System.out.println(deltaX + " " + deltaY);
-        deltaX*= -moveFactor;
-        deltaY*= -moveFactor;
+        double moveFactor = 0.05;
 
-//        double deltaXPrim = Math.cos(angle * deltaX) - Math.sin(angle * deltaY);
-//        double deltaYPrim = Math.sin(angle * deltaX) + Math.cos(angle * deltaY);
-        double deltaXPrim =  (Math.cos( angleY ) * deltaX - Math.sin(angleY) * deltaY);
-        double deltaYPrim =  (Math.sin( angleY ) * deltaX + Math.cos(angleY) * deltaY);
-
-
+        deltaX*= moveFactor;
+        deltaY*= moveFactor;
 
         this.setPosition(new Vector2D(
                 this.position.getX() + deltaX,
                 this.position.getY() + deltaY));
-        this.box.setTranslateX(deltaXPrim + this.position.getX());
-        this.box.setTranslateY(deltaYPrim + this.position.getY());
+        this.box.setTranslateX(deltaX + this.position.getX());
+        this.box.setTranslateY(deltaY + this.position.getY());
 
         box.setTranslateZ(-(TerrainGenerator.getHeight(this.position) + dimension.getZ() / 2));
     }
 
+
+    public void move(double deltaX, double deltaY, Vector2D sceneRotation) {
+        double moveFactor = 0.05;
+
+        System.out.println("\nfirst: "+deltaX+" "+deltaY);
+        deltaX*= moveFactor;
+        deltaY*= moveFactor;
+
+        Vector2D delta = new Vector2D(deltaX, deltaY);
+        delta.rotate(sceneRotation.getY());
+        System.out.println("second: "+delta);
+
+        this.setPosition(new Vector2D(
+                this.position.getX() + delta.getX(),
+                this.position.getY() + delta.getY()));
+        this.box.setTranslateX(deltaX + this.position.getX());
+        this.box.setTranslateY(deltaY + this.position.getY());
+
+        box.setTranslateZ(-(TerrainGenerator.getHeight(this.position) + dimension.getZ() / 2));
+    }
 
 
     /**

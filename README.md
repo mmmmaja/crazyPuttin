@@ -1,4 +1,4 @@
-![GitHub Dark](src/main/java/image.png)
+![GitHub Dark](src/main/java/resources/image.png)
 
 ## Crazy putting
 

@@ -74,4 +74,25 @@ public class Vector2D implements Vector {
     public Vector2D times(double c){
         return new Vector2D( x * c , y * c);
     }
+
+    public void rotate(double angle) {
+        double x2 = Math.cos(angle * x) - Math.sin(angle * y);
+        double y2 = Math.sin(angle * x) + Math.cos(angle * y);
+    }
+
+    public void rotateAroundOrigin(double angle, Vector2D origin) {
+        double sin = Math.sin(angle);
+        double cos = Math.cos(angle);
+
+        // translate point back to origin:
+        this.x -= origin.getX();
+        this.y -= origin.getY();
+
+        // rotate point
+        double x2 = origin.getX() * cos - origin.getY() * sin;
+        double y2 = origin.getX() * sin - origin.getY() * cos;
+
+        this.x = x2;
+        this.y = y2;
+    }
 }

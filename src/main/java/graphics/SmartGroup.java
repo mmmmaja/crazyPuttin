@@ -46,16 +46,11 @@ public class SmartGroup extends Group {
     /**
      * add rotation when dragging the mouse
      */
-    public void initMouseControl(Scene scene ,Vector2D position) {
+    public void initMouseControl(Scene scene) {
         Rotate rotateX;
         Rotate rotateY;
         Rotate rotateZ;
 
-//        this.getTransforms().addAll(
-//                rotateX = new Rotate(0,position.getX(), position.getY(),0, Rotate.X_AXIS),
-//                rotateY = new Rotate(0,position.getX(), position.getY(),0, Rotate.Y_AXIS),
-//                rotateZ = new Rotate(0,position.getX(), position.getY(),0, Rotate.Z_AXIS)
-//        );
         this.getTransforms().addAll(
                 rotateX = new Rotate(0,0,0,0, Rotate.X_AXIS),
                 rotateY = new Rotate(0,0,0,0, Rotate.Y_AXIS),
@@ -100,8 +95,7 @@ public class SmartGroup extends Group {
     }
 
     public Vector2D getSceneRotation() {
-        // I don't think we need angleY
-        return new Vector2D(this.anchorAngleX, this.anchorAngleY);
+        return new Vector2D(this.angleX.get(), this.angleZ.get());
     }
 
 

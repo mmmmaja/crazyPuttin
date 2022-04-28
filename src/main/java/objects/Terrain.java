@@ -7,14 +7,15 @@ import physics.Vector2D;
  * class responsible for creating the Triangular meshes that will be representation of the terrain in the display
  */
 public class Terrain extends TerrainGenerator {
+
     private final TriangleMesh grassMesh;
     private final TriangleMesh waterMesh;
     private final TriangleMesh sandPitMesh;
     private final Vector2D sandPitX;
     private final Vector2D sandPitY;
 
-    private static final int TERRAIN_WIDTH = 50;
-    private static final int TERRAIN_HEIGHT = 50;
+    public static final int TERRAIN_WIDTH = 50;
+    public static final int TERRAIN_HEIGHT = 50;
     // the size of each polygon in the mesh
     private static final double STEP = 0.25;
 
