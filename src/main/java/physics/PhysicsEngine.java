@@ -6,7 +6,7 @@ import objects.TerrainGenerator;
 public class PhysicsEngine extends Solver {
 
 	private static final double g = 9.81;
-	private static final double STEP = 0.004;
+	private static final double STEP = 0.01;
 	private static final double STOP = 0.005;
 
 

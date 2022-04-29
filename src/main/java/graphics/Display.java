@@ -6,8 +6,6 @@ import bot.HillClimbingBot;
 import bot.RandomBot;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.geometry.Pos;
 import javafx.scene.*;
@@ -36,18 +34,14 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import Main.Universe;
 import objects.Obstacle;
-import objects.SplineDragger;
+import objects.Spline;
 import objects.Tree;
 import physics.*;
 
-import java.util.ArrayList;
 import java.util.Objects;
+import java.util.Random;
 
 
-/**
- * TODO remove the canvas and enable shooting the ball on the display
- * TODO how to translate the click of the mouse to the actual location of the point at the 3D terrain??? (Splines, obstacles)
- */
 public class Display extends Application {
 
     public Universe universe = Main.getUniverse();
@@ -55,14 +49,11 @@ public class Display extends Application {
     public static final int FRAME_WIDTH = 1100;
     public static final int FRAME_HEIGHT = 600;
 
-    private GridPane gridPane;
-    private Canvas canvas;
-
     public static Text textPosition;
-    public static int shotCounter = 0;
-    public static int pointCounter = 0;
+    public static int shotCounter, pointCounter = 0;
 
     private SmartGroup group;
+    private GridPane gridPane;
 
 
     @Override
@@ -71,23 +62,7 @@ public class Display extends Application {
         // all the objects are added to smartGroup (rotation built-in)
         group = new SmartGroup();
 
-        // add lighting to the scene
-        addLight();
-
-        // add three types of meshes from the display that represent the terrain
-        addTerrainMeshes();
-
-        addTrees();
-
-        // add the flag to the display (pole and the material)
-        addFlag();
-
-        // add rest of the objects to the SmartGroup
-        this.group.getChildren().add(universe.getBall().getSphere());
-        this.group.getChildren().add(universe.getTarget().getCylinder());
-
-
-        // displayPane hold all other panes of the frame
+        // displayPane holds all other panes of the frame
         Pane displayPane = new Pane();
         displayPane.setPrefSize(FRAME_WIDTH, FRAME_HEIGHT);
 
@@ -119,9 +94,6 @@ public class Display extends Application {
         this.group.initMouseControl(scene);
         scene.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> gridPane.requestFocus());
 
-        // adds panel at the right-hand side with the buttons to the frame
-        addPanel();
-
         // zoomIn, zoomOut added on scroll event
         scene.addEventHandler(ScrollEvent.SCROLL, event -> camera.setTranslateZ(camera.getTranslateZ() + event.getDeltaY()/5));
 
@@ -135,7 +107,6 @@ public class Display extends Application {
             }
         });
 
-
         // exit the application when the window is closed by the user
         stage.setOnCloseRequest(t -> {
             Platform.exit();
@@ -144,21 +115,31 @@ public class Display extends Application {
 
         stage.setScene(scene);
         stage.show();
+        addComponents();
     }
 
-
     /**
-     * create Canvas for arrow visualisation
+     * add all the objects from the universe to the Display
      */
-    private void createCanvas() {
-        this.canvas = new Canvas(150,120);
-        // enable drawing on the canvas
-        GraphicsContext graphicsContext = canvas.getGraphicsContext2D();
-        clearCanvas(this.canvas, graphicsContext);
+    private void addComponents() {
 
-        // whenever the canvas is pressed draw an arrow to the pointer's direction
-        canvas.setOnMousePressed(e -> mouseClicked(e, canvas, graphicsContext));
-        this.gridPane.add(this.canvas, 0, 3);
+        // add lighting to the scene
+        addLight();
+
+        // add three types of meshes from the display that represent the terrain
+        addTerrainMeshes();
+
+        addTrees();
+
+        // add the flag to the display (pole and the material)
+        addFlag();
+
+        // add rest of the objects to the SmartGroup
+        this.group.getChildren().add(universe.getBall().getSphere());
+        this.group.getChildren().add(universe.getTarget().getCylinder());
+
+        // adds panel at the right-hand side with the buttons to the frame
+        addPanel();
     }
 
 
@@ -285,41 +266,80 @@ public class Display extends Application {
 
         position = addBallShootingOptions(position);
         position = addBotButtons(position);
-        position = addSplines(position);
-        position = addObstacles(position);
+        position = addSplineCheckbox(position);
+        position = addObstacleCheckBox(position);
+        handleTerrainEvents();
     }
 
+
     /**
-     * TODO
+     * adds the checkBox that triggers ability to add splines
      */
-    private int addSplines(int position) {
+    private int addSplineCheckbox(int position) {
         CheckBox checkBox = new CheckBox("add splines");
         checkBox.setSelected(false);
         this.gridPane.add(checkBox, 0, position++);
+
         checkBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue) {
-                for (SplineDragger splineDragger : universe.getSplineDraggers()) {
-                    group.getChildren().add(splineDragger.getModel());
-
-                    splineDragger.getModel().setOnMousePressed(mouseEvent -> {
-                        splineDragger.setColor(Color.PALEGOLDENROD);
-                        group.setSplineDraggerOn(true);
-
-                    });
-                    splineDragger.getModel().setOnMouseReleased(mouseEvent -> {
-                        splineDragger.resetColor();
-                        group.setSplineDraggerOn(false);
-                    });
-                }
-            }
-            else {
-                for (SplineDragger splineDragger : universe.getSplineDraggers()) {
-                    group.getChildren().remove(splineDragger.getModel());
-                }
-            }
+            group.setSplineOn(newValue);
         });
         return position;
     }
+
+
+    /**
+     * adds the checkBox for adding the obstacles
+     */
+    private int addObstacleCheckBox(int position) {
+
+        CheckBox checkBox = new CheckBox("add obstacles");
+        checkBox.setSelected(false);
+        this.gridPane.add(checkBox, 0, position++);
+        checkBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            group.setObstaclesOn(newValue);
+        });
+        return position;
+    }
+
+    /**
+     * handle the events when the terrain is clicked:
+     * either the splines are added or the new obstacles
+     */
+    private void handleTerrainEvents() {
+
+        // create the material for the obstacles
+        Image rockImage = new Image("file:src/main/java/resources/rockTexture.jpg");
+        PhongMaterial rockMaterial = new PhongMaterial();
+        rockMaterial.setDiffuseMap(rockImage);
+
+        // point on the terrain was pressed
+        universe.getMeshViews()[0].setOnMousePressed(mouseEvent -> {
+
+            // translation onto the 3D point in the scene where the mouse was clicked
+            PickResult pickResult = mouseEvent.getPickResult();
+            Vector2D clickPosition = new Vector2D(
+                    pickResult.getIntersectedPoint().getX(),
+                    pickResult.getIntersectedPoint().getY()
+            );
+
+            // OBSTACLE events
+            if (group.getObstaclesOn()) {
+
+                Obstacle obstacle = new Obstacle(clickPosition);
+                Box box = obstacle.getBox();
+                box.setMaterial(rockMaterial);
+                this.group.getChildren().add(box);
+                universe.addObstacle(obstacle);
+            }
+
+            // SPLINE events
+            else if (group.getSplineOn()) {
+                Spline spline = new Spline(clickPosition);
+                universe.addSplines(spline);
+            }
+        });
+    }
+
 
     /**
      * updates x and y position of the ball on the panel
@@ -408,46 +428,6 @@ public class Display extends Application {
         return position;
     }
 
-
-    boolean addObstacles = false;
-
-    private int addObstacles(int position) {
-
-        CheckBox checkBox = new CheckBox("add obstacles");
-        checkBox.setSelected(false);
-        this.gridPane.add(checkBox, 0, position++);
-        checkBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            this.addObstacles = newValue;
-            group.setObstaclesOn(newValue);
-        });
-
-
-        ArrayList<Obstacle> obstacles = this.universe.getObstacles();
-        universe.getMeshViews()[0].setOnMousePressed(mouseEvent -> {
-            if (this.addObstacles) {
-                PickResult pickResult = mouseEvent.getPickResult();
-
-                Vector2D ClickPosition = new Vector2D(
-                        pickResult.getIntersectedPoint().getX(),
-                        pickResult.getIntersectedPoint().getY()
-                );
-                Obstacle obstacle = new Obstacle(ClickPosition, new Vector3D(0.5, 0.7, 0.7));
-                obstacles.add(obstacle);
-                Box box = obstacle.getBox();
-
-                // apply the texture for the obstacle
-                Image rockImage = new Image("file:src/main/java/resources/rockTexture.jpg");
-                PhongMaterial phongMaterial = new PhongMaterial();
-                phongMaterial.setDiffuseMap(rockImage);
-                box.setMaterial(phongMaterial);
-                this.group.getChildren().add(box);
-            }
-        });
-
-        return position;
-    }
-
-
     /**
      * triggered when the button is pressed
      * initializes the movement of the ball from the Shot class
@@ -478,79 +458,4 @@ public class Display extends Application {
         }
     }
 
-
-    /**
-     * triggered when the arrow was drawn on canvas
-     * @param velocity initial velocity of the ball
-     */
-    private void shootBall(Vector2D velocity) {
-        if (!universe.getBall().isMoving()) {
-            new Shot(universe, velocity);
-            shotCounter++;
-        }
-    }
-
-
-    /**
-     * clear canvas each time the arrow changes the position so that there's no multiple arrows on the canvas
-     * @param canvas box where arrow is drowned
-     * @param g graphic component enabling drawing on the canvas
-     */
-    public void clearCanvas(Canvas canvas, GraphicsContext g) {
-
-        g.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-        g.setStroke(Color.WHITE);
-        g.setLineWidth(5.0);
-        g.strokeRect(0, 0, canvas.getWidth(), canvas.getHeight());
-        g.setLineWidth(2.0);
-    }
-
-
-    /**
-     * draws the arrow when the canvas was pressed
-     * @param startX starting x position
-     * @param startY starting y position
-     * @param endX ending x position
-     * @param endY ending y position
-     * @param g graphic component enabling drawing on the canvas
-     */
-    public void drawArrow(double startX, double startY, double endX, double endY, GraphicsContext g) {
-
-        //drawing arrow body
-        g.strokeLine(startX, startY, endX, endY);
-
-        //drawing arrow head
-        g.strokeLine(endX, endY, endX-5, endY+5);
-        g.strokeLine(endX, endY, endX-5, endY-5);
-    }
-
-
-    /**
-     * drawing an arrow if the current position of the ball has been clicked
-     * @param mouseEvent mouse clicked on the canvas
-     * @param canvas plane where the arrow will be drawn
-     * @param g graphics
-     */
-    public void mouseClicked(MouseEvent mouseEvent, Canvas canvas, GraphicsContext g) {
-
-        this.group.setArrowOn(true);
-        double clickedX = mouseEvent.getX();
-        double clickedY = mouseEvent.getY();
-
-        canvas.setOnMouseDragged(MouseDragged -> {
-            clearCanvas(canvas, g);
-            drawArrow(clickedX, clickedY, MouseDragged.getX(), MouseDragged.getY(), canvas.getGraphicsContext2D());
-        });
-
-        canvas.setOnMouseReleased(MouseReleased -> {
-            this.group.setArrowOn(false);
-            double vX = MouseReleased.getX()-clickedX;
-            double vY = MouseReleased.getY()-clickedY;
-
-            Vector2D velocity = new Vector2D(vX,vY);
-            clearCanvas(canvas,g);
-            shootBall(velocity);
-        });
-
-    }
 }

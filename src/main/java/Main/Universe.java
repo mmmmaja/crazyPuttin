@@ -25,7 +25,7 @@ public class Universe {
     private Solver solver;
     private ArrayList<Tree> trees;
     private ArrayList<Obstacle> obstacles;
-    private ArrayList<SplineDragger> splineDraggers;
+    private ArrayList<Spline> splines = new ArrayList<>();
 
 
     public Universe(FileReader fileReader) {
@@ -37,7 +37,6 @@ public class Universe {
         createFlag();
         createTrees();
         createObstacles();
-        createSplineDraggers();
     }
 
 
@@ -138,20 +137,13 @@ public class Universe {
     }
 
 
-    private void createSplineDraggers() {
-        int step = 10;
-        this.splineDraggers = new ArrayList<>();
-        for (int i = -Terrain.TERRAIN_HEIGHT + step; i <= Terrain.TERRAIN_HEIGHT - step; i+=step) {
-            for (int j = -Terrain.TERRAIN_WIDTH + step; j <= Terrain.TERRAIN_WIDTH - step; j+=step) {
-                this.splineDraggers.add(new SplineDragger(new Vector2D(i, j), 0.35));
-            }
-        }
+    public ArrayList<Spline> getSplines() {
+        return this.splines;
     }
 
-    public ArrayList<SplineDragger> getSplineDraggers() {
-        return this.splineDraggers;
+    public void addSplines(Spline spline) {
+        this.splines.add(spline);
     }
-
 
     public Solver getSolver(){
         if (solver == null) {
@@ -215,6 +207,10 @@ public class Universe {
 
     public ArrayList<Obstacle> getObstacles() {
         return this.obstacles;
+    }
+
+    public void addObstacle(Obstacle obstacle) {
+        this.obstacles.add(obstacle);
     }
 
 }

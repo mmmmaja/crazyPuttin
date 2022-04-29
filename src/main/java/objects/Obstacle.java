@@ -9,14 +9,14 @@ import physics.Vector2D;
 import physics.Vector3D;
 
 import java.util.Dictionary;
+import java.util.Random;
 
 /**
  * TODO add collision detection
- * TODO improve movement based on the rotation of the scene
  */
 public class Obstacle {
 
-    private Vector2D position;
+    private final Vector2D position;
     private final Vector3D dimension;
     private final Box box;
 
@@ -25,60 +25,22 @@ public class Obstacle {
      */
     public Obstacle(Vector2D position) {
         this.position = position;
-        this.dimension = new Vector3D(0.5, 0.5, 0.7);
+        this.dimension = new Vector3D(
+                getRandomDouble(0.6, 1.0),
+                getRandomDouble(0.5, 1.0),
+                getRandomDouble(0.5, 0.9)
+        );
         this.box = createBox();
     }
 
     /**
      * @param position initial position of the obstacle
-     * @param dimension (length, width, height)
+     * @param dimension (length, width, height) (?)
      */
     public Obstacle(Vector2D position, Vector3D dimension) {
         this.position = position;
         this.dimension = dimension;
         this.box = createBox();
-    }
-
-
-    /**
-     * move the box by the given deltaX and deltaY
-     * TODO take the rotation of the scene into the consideration, how though?
-     */
-    public void move(double deltaX, double deltaY) {
-
-        double moveFactor = 0.05;
-
-        deltaX*= moveFactor;
-        deltaY*= moveFactor;
-
-        this.setPosition(new Vector2D(
-                this.position.getX() + deltaX,
-                this.position.getY() + deltaY));
-        this.box.setTranslateX(deltaX + this.position.getX());
-        this.box.setTranslateY(deltaY + this.position.getY());
-
-        box.setTranslateZ(-(TerrainGenerator.getHeight(this.position) + dimension.getZ() / 2));
-    }
-
-
-    public void move(double deltaX, double deltaY, Vector2D sceneRotation) {
-        double moveFactor = 0.05;
-
-        System.out.println("\nfirst: "+deltaX+" "+deltaY);
-        deltaX*= moveFactor;
-        deltaY*= moveFactor;
-
-        Vector2D delta = new Vector2D(deltaX, deltaY);
-        delta.rotate(sceneRotation.getY());
-        System.out.println("second: "+delta);
-
-        this.setPosition(new Vector2D(
-                this.position.getX() + delta.getX(),
-                this.position.getY() + delta.getY()));
-        this.box.setTranslateX(deltaX + this.position.getX());
-        this.box.setTranslateY(deltaY + this.position.getY());
-
-        box.setTranslateZ(-(TerrainGenerator.getHeight(this.position) + dimension.getZ() / 2));
     }
 
 
@@ -108,9 +70,12 @@ public class Obstacle {
         return this.position;
     }
 
-
-    public void setPosition(Vector2D position) {
-        this.position = position;
+    /**
+     * @return random Double between minimum and maximum value
+     */
+    private double getRandomDouble(double minimum, double maximum) {
+        Random random = new Random();
+        return random.nextDouble() * (maximum - minimum) + minimum;
     }
 
 }
