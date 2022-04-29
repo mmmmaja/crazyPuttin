@@ -20,6 +20,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.PickResult;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -80,8 +81,6 @@ public class Display extends Application {
 
         // add the flag to the display (pole and the material)
         addFlag();
-
-        addObstacles();
 
         // add rest of the objects to the SmartGroup
         this.group.getChildren().add(universe.getBall().getSphere());
@@ -286,41 +285,40 @@ public class Display extends Application {
 
         position = addBallShootingOptions(position);
         position = addBotButtons(position);
-        addSplines(position);
+        position = addSplines(position);
+        position = addObstacles(position);
     }
 
     /**
      * TODO
      */
-    private void addSplines(int position) {
+    private int addSplines(int position) {
         CheckBox checkBox = new CheckBox("add splines");
         checkBox.setSelected(false);
-        this.gridPane.add(checkBox, 0, position + 1);
-        checkBox.selectedProperty().addListener(new ChangeListener<Boolean>() {
-            @Override
-            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                if (newValue) {
-                    for (SplineDragger splineDragger : universe.getSplineDraggers()) {
-                        group.getChildren().add(splineDragger.getModel());
+        this.gridPane.add(checkBox, 0, position++);
+        checkBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                for (SplineDragger splineDragger : universe.getSplineDraggers()) {
+                    group.getChildren().add(splineDragger.getModel());
 
-                        splineDragger.getModel().setOnMousePressed(mouseEvent -> {
-                            splineDragger.setColor(Color.PALEGOLDENROD);
+                    splineDragger.getModel().setOnMousePressed(mouseEvent -> {
+                        splineDragger.setColor(Color.PALEGOLDENROD);
+                        group.setSplineDraggerOn(true);
 
-                        });
-                        splineDragger.getModel().setOnMouseReleased(mouseEvent -> {
-                            splineDragger.resetColor();
-                        });
-                    }
+                    });
+                    splineDragger.getModel().setOnMouseReleased(mouseEvent -> {
+                        splineDragger.resetColor();
+                        group.setSplineDraggerOn(false);
+                    });
                 }
-                else {
-                    for (SplineDragger splineDragger : universe.getSplineDraggers()) {
-                        group.getChildren().remove(splineDragger.getModel());
-                    }
+            }
+            else {
+                for (SplineDragger splineDragger : universe.getSplineDraggers()) {
+                    group.getChildren().remove(splineDragger.getModel());
                 }
-                System.out.println(oldValue);
-                System.out.println(newValue);
             }
         });
+        return position;
     }
 
     /**
@@ -411,49 +409,42 @@ public class Display extends Application {
     }
 
 
-    private double anchorX;
-    private double anchorY;
+    boolean addObstacles = false;
 
-    private void addObstacles() {
+    private int addObstacles(int position) {
+
+        CheckBox checkBox = new CheckBox("add obstacles");
+        checkBox.setSelected(false);
+        this.gridPane.add(checkBox, 0, position++);
+        checkBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            this.addObstacles = newValue;
+            group.setObstaclesOn(newValue);
+        });
+
 
         ArrayList<Obstacle> obstacles = this.universe.getObstacles();
-        for (Obstacle obstacle : obstacles) {
+        universe.getMeshViews()[0].setOnMousePressed(mouseEvent -> {
+            if (this.addObstacles) {
+                PickResult pickResult = mouseEvent.getPickResult();
 
-            // apply the texture for the obstacle
-            Image rockImage = new Image("file:src/main/java/resources/rockTexture.jpg");
-            PhongMaterial phongMaterial = new PhongMaterial();
-            phongMaterial.setDiffuseMap(rockImage);
-            Box box = obstacle.getBox();
-            box.setMaterial(phongMaterial);
+                Vector2D ClickPosition = new Vector2D(
+                        pickResult.getIntersectedPoint().getX(),
+                        pickResult.getIntersectedPoint().getY()
+                );
+                Obstacle obstacle = new Obstacle(ClickPosition, new Vector3D(0.5, 0.7, 0.7));
+                obstacles.add(obstacle);
+                Box box = obstacle.getBox();
 
-            this.group.getChildren().add(box);
+                // apply the texture for the obstacle
+                Image rockImage = new Image("file:src/main/java/resources/rockTexture.jpg");
+                PhongMaterial phongMaterial = new PhongMaterial();
+                phongMaterial.setDiffuseMap(rockImage);
+                box.setMaterial(phongMaterial);
+                this.group.getChildren().add(box);
+            }
+        });
 
-            // when the obstacle is clicked enable dragging it and disable scene rotation
-            obstacle.getBox().setOnMousePressed(mouseEvent -> {
-                this.group.setObstaclesOn(true);
-                this.anchorX = mouseEvent.getSceneX();
-                this.anchorY = mouseEvent.getSceneY();
-
-            });
-
-            // drag the obstacle: TODO fix the movement based on the rotation of the scene
-            obstacle.getBox().setOnMouseDragged(mouseEvent -> {
-
-                Vector2D mouseClick = new Vector2D(mouseEvent.getSceneX(), mouseEvent.getSceneY());
-
-                double deltaX = -(this.anchorX - mouseClick.getX());
-                double deltaY = -(this.anchorY - mouseClick.getY());
-                this.anchorX += deltaX;
-                this.anchorY += deltaY;
-                obstacle.move(deltaX, deltaY); // works but very poorly
-            });
-
-            obstacle.getBox().setOnMouseReleased(mouseEvent -> {
-                this.group.setObstaclesOn(false);
-                System.out.println(this.group.getSceneRotation());
-            });
-        }
-
+        return position;
     }
 
 

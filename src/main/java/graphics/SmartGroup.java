@@ -22,6 +22,9 @@ public class SmartGroup extends Group {
     // indicates whether we can draw the obstacles on the screen
     private boolean obstaclesOn = false;
 
+    // indicates whether we can draw the obstacles on the screen
+    private boolean splineDraggerOn = false;
+
     // starting point for x and y
     private double anchorX, anchorY;
 
@@ -74,7 +77,7 @@ public class SmartGroup extends Group {
         });
 
         scene.setOnMouseDragged(mouseEvent -> {
-            if (!this.arrowOn && !this.obstaclesOn) {
+            if (!this.arrowOn && !this.obstaclesOn && !this.splineDraggerOn) {
                 // lock the X rotation, so we can see under the surface
                 if (this.anchorAngleX - (this.anchorY - mouseEvent.getSceneY()) > -68.0) {
                     if (this.anchorAngleX - (this.anchorY - mouseEvent.getSceneY()) < 5) {
@@ -92,6 +95,10 @@ public class SmartGroup extends Group {
 
     public void setObstaclesOn(boolean obstaclesOn) {
         this.obstaclesOn = obstaclesOn;
+    }
+
+    public void setSplineDraggerOn(boolean splineDraggerOn) {
+        this.splineDraggerOn = splineDraggerOn;
     }
 
     public Vector2D getSceneRotation() {

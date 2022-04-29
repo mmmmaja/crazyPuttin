@@ -5,6 +5,10 @@ import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Sphere;
 import physics.Vector2D;
 
+
+/**
+ * TODO change TerrainGenerator.getHeight() method so that it loops over the array of splines and gets it height
+ */
 public class SplineDragger implements GameObject {
 
     private Vector2D position;
