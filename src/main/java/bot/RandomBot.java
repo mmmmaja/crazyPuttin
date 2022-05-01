@@ -1,6 +1,7 @@
 package bot;
 
 import Main.Universe;
+import objects.Obstacle;
 import physics.Vector2D;
 
 
@@ -38,12 +39,10 @@ public class RandomBot {
         for (int i = 0; i < testNumber; i++) {
             shotCounter++;
 
-            int sign1 = (random.nextDouble() < 0.5) ? 1 : -1;
-            int sign2 = (random.nextDouble() < 0.5) ? 1 : -1;
-            double randomX = random.nextDouble() * random.nextInt(5) * sign1;
-            double randomY = random.nextDouble() * Math.sqrt( 25- Math.pow(randomX,2) ) * sign2;
-//            double randomY = random.nextDouble() * random.nextInt(5) * sign2;
-            Vector2D initialVelocity = new Vector2D( randomX,randomY);
+            Vector2D initialVelocity = new Vector2D(
+                    Obstacle.getRandomDouble(-5.0, 5.0),
+                    Obstacle.getRandomDouble(-5.0, 5.0)
+            );
 
             // distance between the ball and the target in 3D (takes height into consideration)
             double result = new TestShot(this.universe, initialVelocity).getTestResult(Heuristics.finalPosition);

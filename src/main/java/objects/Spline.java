@@ -29,5 +29,7 @@ public class Spline {
         this.height = height;
     }
 
-
+    public void addHeight(double deltaHeight) {
+        this.height+= deltaHeight;
+    }
 }

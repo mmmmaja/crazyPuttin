@@ -20,6 +20,9 @@ public class TerrainGenerator {
     public static double getHeight(Vector2D position) {
         return fileReader.calculator(position.getX() , position.getY()) ;
     }
+    public static double f(double x, double y ) {
+        return fileReader.calculator(x , y) ;
+    }
 
 
     /**
@@ -28,9 +31,10 @@ public class TerrainGenerator {
      * @return x value of the slope at the given position
      */
     public static double getSlopeX(Vector2D currentPosition){
+        double h =STEP_SIZE;
         double x = currentPosition.getX() ;
         double y = currentPosition.getY() ;
-        return (getHeight(new Vector2D(x + STEP_SIZE, y)) - getHeight(new Vector2D(x - STEP_SIZE, y))) / (2 * STEP_SIZE);
+        return (f(x - 2*h, y) - 8*f(x-h ,y) + 8*f(x+h, y)-f(x+2*h, y)) / (12 * h);
     }
 
     /**
@@ -38,9 +42,10 @@ public class TerrainGenerator {
      * @return y value of the slope at the given position
      */
     public static double getSlopeY(Vector2D currentPosition){
+        double h =STEP_SIZE;
         double x = currentPosition.getX() ;
         double y = currentPosition.getY() ;
-        return (getHeight( new Vector2D(x ,y + STEP_SIZE)) - getHeight(new Vector2D(x , y - STEP_SIZE))) / (2 * STEP_SIZE);
+        return (f(x , y- 2*h) - 8 * f(x ,y-h) + 8*f(x, y+h)-f(x, y+2*h)) / (12 * h);
     }
 
     /**

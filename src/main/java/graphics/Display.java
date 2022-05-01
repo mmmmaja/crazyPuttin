@@ -3,6 +3,7 @@ package graphics;
 import Main.Main;
 import Main.Shot;
 import bot.HillClimbingBot;
+import bot.HillClimbingBot2;
 import bot.RandomBot;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -268,7 +269,8 @@ public class Display extends Application {
         position = addBotButtons(position);
         position = addSplineCheckbox(position);
         position = addObstacleCheckBox(position);
-        handleTerrainEvents();
+
+        new TerrainEventHandler(this.universe, this.group);
     }
 
 
@@ -299,45 +301,6 @@ public class Display extends Application {
             group.setObstaclesOn(newValue);
         });
         return position;
-    }
-
-    /**
-     * handle the events when the terrain is clicked:
-     * either the splines are added or the new obstacles
-     */
-    private void handleTerrainEvents() {
-
-        // create the material for the obstacles
-        Image rockImage = new Image("file:src/main/java/resources/rockTexture.jpg");
-        PhongMaterial rockMaterial = new PhongMaterial();
-        rockMaterial.setDiffuseMap(rockImage);
-
-        // point on the terrain was pressed
-        universe.getMeshViews()[0].setOnMousePressed(mouseEvent -> {
-
-            // translation onto the 3D point in the scene where the mouse was clicked
-            PickResult pickResult = mouseEvent.getPickResult();
-            Vector2D clickPosition = new Vector2D(
-                    pickResult.getIntersectedPoint().getX(),
-                    pickResult.getIntersectedPoint().getY()
-            );
-
-            // OBSTACLE events
-            if (group.getObstaclesOn()) {
-
-                Obstacle obstacle = new Obstacle(clickPosition);
-                Box box = obstacle.getBox();
-                box.setMaterial(rockMaterial);
-                this.group.getChildren().add(box);
-                universe.addObstacle(obstacle);
-            }
-
-            // SPLINE events
-            else if (group.getSplineOn()) {
-                Spline spline = new Spline(clickPosition);
-                universe.addSplines(spline);
-            }
-        });
     }
 
 
@@ -408,7 +371,7 @@ public class Display extends Application {
         Button botButton = new Button("bot");
         gridPane.add(new HBox(30, botButton), 0, position++);
 
-        String[] botList = {"randomBot" , "hillClimbingBot"};
+        String[] botList = {"randomBot" , "hillClimbingBot", "hillClimbingBot2"};
         ComboBox<String> botComboBox = new ComboBox(FXCollections.observableArrayList(botList));
         botComboBox.setValue("randomBot");
         gridPane.add(new HBox(30, botComboBox), 0, position++);
@@ -421,6 +384,9 @@ public class Display extends Application {
             }
             if (botComboBox.getValue().equals("hillClimbingBot")) {
                 velocity = new HillClimbingBot(this.universe).getBestVelocity();
+            }
+            if (botComboBox.getValue().equals("hillClimbingBot2")) {
+                velocity = new HillClimbingBot2(this.universe).getBestVelocity();
             }
             new Shot(universe, velocity);
             shotCounter++;

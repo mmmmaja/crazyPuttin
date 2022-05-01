@@ -45,6 +45,7 @@ public class Shot extends Display implements Runnable {
      */
     public synchronized void stop() {
         System.out.println("stop");
+        System.out.println(universe.getTarget().getEuclideanDistance(ball.getPosition()));
         Display.updatePanel(ball.getPosition().getX(), ball.getPosition().getY());
         this.ball.setWillMove(false);
         System.out.println("final position "+this.ball.getPosition());

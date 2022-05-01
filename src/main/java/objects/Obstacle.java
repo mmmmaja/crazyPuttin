@@ -73,7 +73,7 @@ public class Obstacle {
     /**
      * @return random Double between minimum and maximum value
      */
-    private double getRandomDouble(double minimum, double maximum) {
+    public static double getRandomDouble(double minimum, double maximum) {
         Random random = new Random();
         return random.nextDouble() * (maximum - minimum) + minimum;
     }
