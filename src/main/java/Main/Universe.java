@@ -42,13 +42,13 @@ public class Universe {
 
     private void createObstacles() {
         this.obstacles = new ArrayList<>();
-        this.obstacles.add(new Obstacle(new Vector2D(10, 7)));
-        this.obstacles.add(new Obstacle(new Vector2D(8, 6), new Vector3D(0.9, 0.6, 0.9)));
-        this.obstacles.add(new Obstacle(new Vector2D(7, 7), new Vector3D(1, 0.8, 0.9)));
+        this.obstacles.add(new Obstacle(new Vector2D(2, 4)));
+        this.obstacles.add(new Obstacle(new Vector2D(8, 6)));
+        this.obstacles.add(new Obstacle(new Vector2D(7, 7)));
         this.obstacles.add(new Obstacle(new Vector2D(9, 5)));
         this.obstacles.add(new Obstacle(new Vector2D(7, 6)));
-        this.obstacles.add(new Obstacle(new Vector2D(12, 8), new Vector3D(1, 0.9, 0.8)));
-        this.obstacles.add(new Obstacle(new Vector2D(8, 9), new Vector3D(1, 1.2, 0.8)));
+        this.obstacles.add(new Obstacle(new Vector2D(12, 8)));
+        this.obstacles.add(new Obstacle(new Vector2D(8, 9), new Vector3D(3,3,3)));
     }
 
 
