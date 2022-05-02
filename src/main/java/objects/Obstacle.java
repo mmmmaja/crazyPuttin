@@ -17,7 +17,7 @@ import java.util.Random;
 public class Obstacle {
 
     private final Vector2D position;
-    private final Vector3D dimension;
+    public static double SIDE_LENGTH = 0.7;
     private final Box box;
 
     /**
@@ -25,11 +25,6 @@ public class Obstacle {
      */
     public Obstacle(Vector2D position) {
         this.position = position;
-        this.dimension = new Vector3D(
-                getRandomDouble(0.6, 1.0),
-                getRandomDouble(0.5, 1.0),
-                getRandomDouble(0.5, 0.9)
-        );
         this.box = createBox();
     }
 
@@ -39,7 +34,6 @@ public class Obstacle {
      */
     public Obstacle(Vector2D position, Vector3D dimension) {
         this.position = position;
-        this.dimension = dimension;
         this.box = createBox();
     }
 
@@ -49,13 +43,13 @@ public class Obstacle {
      */
     private Box createBox() {
         Box box = new Box();
-        box.setDepth(dimension.getX());
-        box.setWidth(dimension.getY());
-        box.setHeight(dimension.getZ());
+        box.setDepth(SIDE_LENGTH);
+        box.setWidth(SIDE_LENGTH);
+        box.setHeight(SIDE_LENGTH);
 
         box.setTranslateX(this.position.getX());
         box.setTranslateY(this.position.getY());
-        box.setTranslateZ(-(TerrainGenerator.getHeight(this.position) + dimension.getZ() / 2));
+        box.setTranslateZ(-(TerrainGenerator.getHeight(this.position) + SIDE_LENGTH / 2));
 
         return box;
     }

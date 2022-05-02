@@ -32,4 +32,8 @@ public class Spline {
     public void addHeight(double deltaHeight) {
         this.height+= deltaHeight;
     }
+
+    public double getHeight() {
+        return this.height;
+    }
 }

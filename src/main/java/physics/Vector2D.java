@@ -95,4 +95,12 @@ public class Vector2D implements Vector {
         this.x = x2;
         this.y = y2;
     }
+
+
+    public double getEuclideanDistance(Vector2D vector2D) {
+        return Math.sqrt(
+                Math.pow(this.x - vector2D.getX(), 2) +
+                        Math.pow(this.y - vector2D.getY(), 2)
+        );
+    }
 }
