@@ -5,10 +5,9 @@ import javafx.scene.image.Image;
 import javafx.scene.input.PickResult;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
-import javafx.scene.shape.Circle;
 import javafx.scene.shape.Sphere;
 import objects.Obstacle;
-import objects.Spline;
+import splines.Spline;
 import physics.Vector2D;
 
 

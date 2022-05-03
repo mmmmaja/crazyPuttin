@@ -7,6 +7,7 @@ import javafx.scene.shape.DrawMode;
 import javafx.scene.shape.MeshView;
 import objects.*;
 import physics.*;
+import splines.Spline;
 
 import java.util.ArrayList;
 

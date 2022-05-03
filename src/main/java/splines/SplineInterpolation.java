@@ -1,8 +1,4 @@
-package Main;
-
-import objects.Spline;
-import objects.Terrain;
-import physics.Vector2D;
+package splines;
 
 /**
  * linear Bézier curves from P0 to P1 and from P1 to P2 respectively.

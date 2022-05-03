@@ -1,6 +1,6 @@
-package objects;
+package splines;
 
-import Main.SplineInterpolation;
+import objects.TerrainGenerator;
 import physics.Vector2D;
 
 
