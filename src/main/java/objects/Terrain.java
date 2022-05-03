@@ -3,6 +3,7 @@ package objects;
 import javafx.scene.shape.TriangleMesh;
 import physics.Vector2D;
 
+
 /**
  * class responsible for creating the Triangular meshes that will be representation of the terrain in the display
  */
@@ -16,8 +17,13 @@ public class Terrain extends TerrainGenerator {
 
     public static final int TERRAIN_WIDTH = 50;
     public static final int TERRAIN_HEIGHT = 50;
+
+
     // the size of each polygon in the mesh
-    private static final double STEP = 0.25;
+    public static final double STEP = 0.25;
+
+    // to be used to dynamically alter the mesh when dragging the terrain
+    public static float[] points;
 
 
     public Terrain(FileReader fileReader) {
@@ -30,19 +36,27 @@ public class Terrain extends TerrainGenerator {
         addFaces();
     }
 
+
     /**
      * Adds all the points from which the polygons of the three meshes will be created
      */
     private void addPoints() {
+
+        points = new float[(int) ((1 / STEP) * 2 * TERRAIN_HEIGHT * (1 / STEP) * 2 * TERRAIN_WIDTH) * 3];
+        int counter = -1;
+
         for (double i = -TERRAIN_HEIGHT; i < TERRAIN_HEIGHT; i+= STEP) {
             for (double j = -TERRAIN_WIDTH; j < TERRAIN_WIDTH; j+= STEP) {
-                float height = - (float)getHeight(new Vector2D(i, j));
-                this.sandPitMesh.getPoints().addAll((float) i, (float) j, height);
-                this.waterMesh.getPoints().addAll((float) i, (float) j, height);
-                this.grassMesh.getPoints().addAll((float) i, (float) j, height);
+                points[counter+=1] = (float) i;
+                points[counter+=1] = (float) j;
+                points[counter+=1] = - (float)getHeight(new Vector2D(i, j));
             }
         }
+        this.sandPitMesh.getPoints().addAll(points);
+        this.waterMesh.getPoints().addAll(points);
+        this.grassMesh.getPoints().addAll(points);
     }
+
 
     /**
      * creates the faces (triangles) of the meshes and maps the texture into the exact points
@@ -82,7 +96,6 @@ public class Terrain extends TerrainGenerator {
     }
 
 
-
     public TriangleMesh getGrassMesh() {
         return this.grassMesh;
    }
@@ -95,6 +108,7 @@ public class Terrain extends TerrainGenerator {
         return this.sandPitMesh;
     }
 
+
     /**
      * @param i x index of the checked point
      * @param j y index of the checked point
@@ -106,4 +120,5 @@ public class Terrain extends TerrainGenerator {
         }
         return false;
     }
+
 }

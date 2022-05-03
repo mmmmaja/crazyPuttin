@@ -1,25 +1,24 @@
 package objects;
 
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
+import Main.SplineInterpolation;
 import physics.Vector2D;
 
 
 /**
- * TODO change TerrainGenerator.getHeight() method so that it loops over the array of splines and gets it height
+ * 1) change TerrainGenerator.getHeight() method so that it returns correct height
+ * 2) use interpolate() method to modify the mesh
  */
 public class Spline {
 
-    private Vector2D position;
+    private final Vector2D position;
     private double height;
+    private final double RADIUS = 5.5;
 
 
     public Spline(Vector2D position) {
         this.position = position;
         this.height = TerrainGenerator.getHeight(this.position);
     }
-
-    public Spline() {}
 
     public Vector2D getPosition() {
         return this.position;
@@ -29,6 +28,10 @@ public class Spline {
         this.height = height;
     }
 
+    /**
+     * TODO interpolate()
+     * @param deltaHeight difference in height to be added to the initial value
+     */
     public void addHeight(double deltaHeight) {
         this.height+= deltaHeight;
     }
@@ -36,4 +39,10 @@ public class Spline {
     public double getHeight() {
         return this.height;
     }
+
+
+    public double getRADIUS() {
+        return this.RADIUS;
+    }
+
 }

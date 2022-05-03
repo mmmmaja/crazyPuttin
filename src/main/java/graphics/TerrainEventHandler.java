@@ -26,6 +26,7 @@ public class TerrainEventHandler {
     private Spline spline;
     private Vector2D clickPosition;
 
+
     public TerrainEventHandler(Universe universe, SmartGroup group) {
         this.universe = universe;
         this.group = group;
@@ -36,6 +37,7 @@ public class TerrainEventHandler {
         mouseDragged();
         mouseReleased();
     }
+
 
     /**
      * add the obstacle on the position clicked
@@ -75,18 +77,19 @@ public class TerrainEventHandler {
         });
     }
 
+
     /**
      * create the splines
      */
     private void mouseDragged() {
-        double draggingFactor = 0.8;
+        double draggingFactor = 0.5;
 
         universe.getMeshViews()[0].setOnMouseDragged(mouseEvent -> {
+
             // start dragging the terrain
             if (this.group.getSplineOn()) {
 
                 Vector2D newClickPosition = new Vector2D(mouseEvent.getX(), mouseEvent.getY());
-                PickResult newPickResult = mouseEvent.getPickResult();
 
                 double deltaHeight = this.group.getSceneAngle() * (this.clickPosition.getY() - newClickPosition.getY());
                 this.spline.addHeight(deltaHeight * draggingFactor);
