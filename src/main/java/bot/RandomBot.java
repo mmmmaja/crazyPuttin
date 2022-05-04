@@ -15,21 +15,32 @@ import java.util.Random;
 public class RandomBot {
 
     private final Universe universe;
+    private final Vector2D targetPosition;
+
     private Vector2D bestVelocity;
     private double bestResult;
     private int shotCounter;
-
 
     public RandomBot(Universe universe) {
         this.universe = universe;
         this.bestVelocity = new Vector2D(0, 0);
         this.shotCounter = 0;
+        this.targetPosition = this.universe.getTarget().getPosition();
         startRandomTests(2000);
     }
 
     /**
-     * TODO include boundaries for the initialVelocity
+     * extended to fit AStarBot properties
      */
+    public RandomBot(Universe universe, Vector2D targetPosition) {
+        this.universe = universe;
+        this.bestVelocity = new Vector2D(0, 0);
+        this.shotCounter = 0;
+        this.targetPosition = targetPosition;
+        startRandomTests(2000);
+    }
+
+
     public void startRandomTests(int testNumber) {
 
         // maximal number of trial shots
@@ -45,7 +56,7 @@ public class RandomBot {
             );
 
             // distance between the ball and the target in 3D (takes height into consideration)
-            double result = new TestShot(this.universe, initialVelocity).getTestResult(Heuristics.finalPosition);
+            double result = new TestShot(this.universe, initialVelocity, this.targetPosition).getTestResult(Heuristics.finalPosition);
             if (result < this.bestResult) {
                 this.bestResult = result;
                 this.bestVelocity = initialVelocity;

@@ -12,11 +12,19 @@ public class HillClimbingBot2 {
 
 	private final Universe universe;
 	private final Vector2D bestVelocity;
+	private final Vector2D targetPosition;
 	private int shotCounter = 0;
 
 
 	public HillClimbingBot2(Universe universe) {
 		this.universe = universe;
+		this.targetPosition = universe.getTarget().getPosition();
+		this.bestVelocity = climb();
+	}
+
+	public HillClimbingBot2(Universe universe, Vector2D targetPosition) {
+		this.universe = universe;
+		this.targetPosition = targetPosition;
 		this.bestVelocity = climb();
 	}
 
@@ -26,7 +34,7 @@ public class HillClimbingBot2 {
 			randomBot.startRandomTests(1000);
 			Vector2D bestRandomShot = randomBot.getBestVelocity();
 			Vector2D velocity = bestRandomShot;
-			double result = new TestShot(this.universe, bestRandomShot).getTestResult(Heuristics.allPositions);
+			double result = new TestShot(this.universe, bestRandomShot, this.targetPosition).getTestResult(Heuristics.allPositions);
 
 			double[][] stepArray = {
 					{step, 0},
@@ -42,7 +50,7 @@ public class HillClimbingBot2 {
 
 				for (double[] stepCase : stepArray) {
 					Vector2D testVelocity = new Vector2D(velocity.getX() + stepCase[0], velocity.getY() + stepCase[1]);
-					TestShot testShot = new TestShot(this.universe , testVelocity);
+					TestShot testShot = new TestShot(this.universe , testVelocity, this.targetPosition);
 					double testResult = testShot.getTestResult(Heuristics.allPositions);
 
 					// target was reached: break all

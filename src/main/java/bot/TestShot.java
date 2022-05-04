@@ -16,15 +16,17 @@ public class TestShot implements Comparable<TestShot>{
 
     private final Ball ball;
     private final Universe universe;
+    private final Vector2D targetPosition;
 
     private double resultFinalPosition = Integer.MAX_VALUE;
     private double resultAllPositions = Integer.MAX_VALUE;
 
 
-    public TestShot(Universe universe, Vector2D velocity) {
+    public TestShot(Universe universe, Vector2D velocity, Vector2D targetPosition) {
         this.ball = universe.getBall().copyOf();
         this.universe = universe;
         this.ball.setVelocity(velocity);
+        this.targetPosition = targetPosition;
 
         if (velocity.getMagnitude() > 5) {
             Vector2D unit_vector = velocity.getUnitVector();
@@ -33,11 +35,12 @@ public class TestShot implements Comparable<TestShot>{
         start();
     }
 
+
     private void start() {
         while (true) {
 
             universe.getSolver().nextStep(ball);
-            double distance = universe.getTarget().getEuclideanDistance3D(ball.getPosition());
+            double distance = ball.getPosition().getEuclideanDistance(this.targetPosition);
             if (distance < this.resultAllPositions) {
                 this.resultAllPositions = distance;
             }
@@ -49,7 +52,7 @@ public class TestShot implements Comparable<TestShot>{
             }
 
             // target was hit
-            if (ball.isOnTarget(universe.getTarget())) {
+            if (ball.isOnTarget(universe.getTarget()) || ball.isOnTarget(this.targetPosition, this.universe.getFileReader().getTargetRadius())) {
                 ball.setVelocity(new Vector2D(0, 0));
                 ball.setWillMove(false);
                 this.resultFinalPosition = this.resultAllPositions = 0;
@@ -61,9 +64,9 @@ public class TestShot implements Comparable<TestShot>{
 
 
     /**
-     *
-     * @return 0 if the target was hit
-     * in general the distance between the ball and the target
+     * @param heuristics see enum options
+     * @return 0 if the target was hit otherwise
+     * the distance between the ball and the target
      */
     public double getTestResult(Heuristics heuristics) {
         if (heuristics.equals(Heuristics.finalPosition)) {
@@ -75,8 +78,9 @@ public class TestShot implements Comparable<TestShot>{
         return Integer.MAX_VALUE;
     }
 
+
     @Override
-    public int compareTo(TestShot o) {
-        return (this.getTestResult(Heuristics.allPositions) < o.getTestResult(Heuristics.allPositions)) ? -1 : 1;
+    public int compareTo(TestShot testShot) {
+        return (this.getTestResult(Heuristics.allPositions) < testShot.getTestResult(Heuristics.allPositions)) ? -1 : 1;
     }
 }
