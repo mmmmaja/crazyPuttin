@@ -397,6 +397,7 @@ public class Display extends Application {
                     shotCounter++;
                 }
 
+
             }
         });
         return position;

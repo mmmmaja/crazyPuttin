@@ -3,8 +3,6 @@ package bot;
 import Main.Universe;
 import physics.Vector2D;
 
-import java.util.ArrayList;
-
 
 /**
  * iterative algorithm: at each iteration we change the velocity and asses the change by the fitness value
@@ -31,7 +29,7 @@ public class HillClimbingBot {
     }
 
     private Vector2D climb() {
-        // TODO step value is important, should I change it??
+        // TODO apply gradient descent
         double step = 0.01;
 
         Vector2D velocity = new Vector2D(0, 0);
