@@ -103,4 +103,18 @@ public class Vector2D implements Vector {
                         Math.pow(this.y - vector2D.getY(), 2)
         );
     }
+
+    public Vector2D multiply(double c) {
+        return new Vector2D(
+                this.x * c,
+                this.y * c
+        );
+    }
+
+    public Vector2D add(Vector2D vector2D) {
+        return new Vector2D(
+                this.x + vector2D.getX(),
+                this.y + vector2D.getY()
+        );
+    }
 }

@@ -23,7 +23,7 @@ public class Terrain extends TerrainGenerator {
     public static final double STEP = 0.25;
 
     // to be used to dynamically alter the mesh when dragging the terrain
-    public static float[] points;
+    public static float[] points = new float[(int) ((1 / STEP) * 2 * TERRAIN_HEIGHT * (1 / STEP) * 2 * TERRAIN_WIDTH) * 3];
 
 
     public Terrain(FileReader fileReader) {
@@ -32,7 +32,7 @@ public class Terrain extends TerrainGenerator {
         this.grassMesh   = new TriangleMesh();
         this.waterMesh   = new TriangleMesh();
         this.sandPitMesh = new TriangleMesh();
-        addPoints();
+        computePoints();
         addFaces();
     }
 
@@ -40,21 +40,16 @@ public class Terrain extends TerrainGenerator {
     /**
      * Adds all the points from which the polygons of the three meshes will be created
      */
-    private void addPoints() {
+    public static void computePoints() {
 
-        points = new float[(int) ((1 / STEP) * 2 * TERRAIN_HEIGHT * (1 / STEP) * 2 * TERRAIN_WIDTH) * 3];
         int counter = -1;
-
         for (double i = -TERRAIN_HEIGHT; i < TERRAIN_HEIGHT; i+= STEP) {
             for (double j = -TERRAIN_WIDTH; j < TERRAIN_WIDTH; j+= STEP) {
                 points[counter+=1] = (float) i;
                 points[counter+=1] = (float) j;
-                points[counter+=1] = - (float)getHeight(new Vector2D(i, j));
+                points[counter+=1] = - (float) getHeight(new Vector2D(i, j));
             }
         }
-        this.sandPitMesh.getPoints().addAll(points);
-        this.waterMesh.getPoints().addAll(points);
-        this.grassMesh.getPoints().addAll(points);
     }
 
 
@@ -62,6 +57,11 @@ public class Terrain extends TerrainGenerator {
      * creates the faces (triangles) of the meshes and maps the texture into the exact points
      */
     private void addFaces() {
+
+        this.sandPitMesh.getPoints().addAll(points);
+        this.waterMesh.getPoints().addAll(points);
+        this.grassMesh.getPoints().addAll(points);
+
         // add the indexes of the indicated textures
         this.sandPitMesh.getTexCoords().addAll(0, 0, 0, 1, 1, 0, 1, 1);
         this.waterMesh.getTexCoords().addAll(0, 0, 0, 1, 1, 0, 1, 1);

@@ -7,6 +7,8 @@ import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.shape.Sphere;
 import objects.Obstacle;
+import objects.Terrain;
+import objects.TerrainGenerator;
 import splines.Spline;
 import physics.Vector2D;
 
@@ -136,5 +138,6 @@ public class TerrainEventHandler {
         }
         return this.universe.getBall().getPosition().getEuclideanDistance(clickPosition) < 0.6;
     }
+
 
 }
