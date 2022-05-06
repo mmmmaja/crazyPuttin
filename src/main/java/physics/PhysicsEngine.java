@@ -8,7 +8,7 @@ import objects.Tree;
 
 import java.util.ArrayList;
 
-public class PhysicsEngine extends Solver {
+public class PhysicsEngine {
 
 	private static final double g = 9.81;
 	private static final double STEP = 0.004;

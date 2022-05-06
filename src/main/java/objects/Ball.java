@@ -64,15 +64,6 @@ public class Ball extends PhysicsEngine implements GameObject {
     }
 
     /**
-     * @return true if ball hit the target and the point is scored
-     */
-    public boolean isOnTarget(Vector2D targetPosition, double radius) {
-        double xDiff = targetPosition.getX() - position.getX();
-        double yDiff = targetPosition.getY() - position.getY();
-        return new Vector2D(xDiff, yDiff).getMagnitude() < radius;
-    }
-
-    /**
      * @return Sphere object that will be added to the Display
      */
     public Sphere getSphere() {

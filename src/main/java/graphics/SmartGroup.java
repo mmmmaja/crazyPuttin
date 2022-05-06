@@ -109,15 +109,5 @@ public class SmartGroup extends Group {
         return this.splineOn;
     }
 
-    /**
-     * FIXME check thoroughly if works
-     */
-    public double getSceneAngle() {
-        if (this.angleZ.get() < -80 && this.angleZ.get() > -260) {
-            return 1;
-        }
-        return -1;
-    }
-
 
 }

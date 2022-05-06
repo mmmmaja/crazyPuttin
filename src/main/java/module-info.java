@@ -13,8 +13,4 @@ module com.example.crazyputtin {
     opens Main to javafx.fxml;
     exports bot;
     opens bot to javafx.fxml;
-    exports splines;
-    opens splines to javafx.fxml;
-    exports bot.maze;
-    opens bot.maze to javafx.fxml;
 }

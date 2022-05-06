@@ -5,12 +5,13 @@ import Main.Shot;
 import bot.HillClimbingBot;
 import bot.HillClimbingBot2;
 import bot.RandomBot;
-import bot.maze.AstarBot;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.geometry.Pos;
 import javafx.scene.*;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
@@ -18,12 +19,14 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.PickResult;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
+import javafx.scene.shape.Box;
 import javafx.scene.shape.Cylinder;
 import javafx.scene.shape.MeshView;
 import javafx.scene.text.Font;
@@ -31,11 +34,13 @@ import javafx.scene.text.Text;
 
 import javafx.stage.Stage;
 import Main.Universe;
+import objects.Obstacle;
+import objects.Spline;
 import objects.Tree;
 import physics.*;
 
-import java.util.ArrayList;
 import java.util.Objects;
+import java.util.Random;
 
 
 public class Display extends Application {
@@ -349,9 +354,9 @@ public class Display extends Application {
 
         hitTheBall.setOnMouseClicked(mouseEvent -> {
             if(solverComboBox.getValue().equals("RK4")) universe.setSolver( new RK4());
-//            if(solverComboBox.getValue().equals("RK2")) universe.setSolver( new RK2());
+            if(solverComboBox.getValue().equals("RK2")) universe.setSolver( new RK2());
             if(solverComboBox.getValue().equals("Euler")) universe.setSolver( new Euler());
-//            if(solverComboBox.getValue().equals("Heuns3")) universe.setSolver( new Heuns3());
+            if(solverComboBox.getValue().equals("Heuns3")) universe.setSolver( new Heuns3());
             shootBall(xVel, yVel);
         });
         return position;
@@ -366,7 +371,7 @@ public class Display extends Application {
         Button botButton = new Button("bot");
         gridPane.add(new HBox(30, botButton), 0, position++);
 
-        String[] botList = {"randomBot" , "hillClimbingBot", "hillClimbingBot2", "mazeBot"};
+        String[] botList = {"randomBot" , "hillClimbingBot", "hillClimbingBot2"};
         ComboBox<String> botComboBox = new ComboBox(FXCollections.observableArrayList(botList));
         botComboBox.setValue("randomBot");
         gridPane.add(new HBox(30, botComboBox), 0, position++);
@@ -376,37 +381,18 @@ public class Display extends Application {
 
             if (botComboBox.getValue().equals("randomBot")) {
                 velocity = new RandomBot(this.universe).getBestVelocity();
-                new Shot(universe, velocity);
-                shotCounter++;
             }
             if (botComboBox.getValue().equals("hillClimbingBot")) {
                 velocity = new HillClimbingBot(this.universe).getBestVelocity();
-                new Shot(universe, velocity);
-                shotCounter++;
             }
             if (botComboBox.getValue().equals("hillClimbingBot2")) {
                 velocity = new HillClimbingBot2(this.universe).getBestVelocity();
-                new Shot(universe, velocity);
-                shotCounter++;
             }
-            if (botComboBox.getValue().equals("mazeBot")) {
-                ArrayList<Vector2D> nextPositions = new AstarBot().getNextPosition();
-
-                for (Vector2D nextPosition : nextPositions) {
-                    System.out.println("me here");
-                    velocity = new HillClimbingBot2(this.universe, nextPosition).getBestVelocity();
-                    System.out.println("yas queen");
-                    new Shot(universe, velocity);
-                    System.out.println("meow");
-                    shotCounter++;
-                }
-
-
-            }
+            new Shot(universe, velocity);
+            shotCounter++;
         });
         return position;
     }
-
 
     /**
      * triggered when the button is pressed
