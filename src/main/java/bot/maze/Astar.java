@@ -3,20 +3,17 @@ package bot.maze;
 import java.util.ArrayList;
 
 import Main.Main;
-import Main.Universe;
-import objects.Obstacle;
+//import Main.Universe;
 import objects.Terrain;
 import objects.TerrainGenerator;
 import physics.Vector2D;
 
 
 public class Astar {
-    static final int WIDTH=Terrain.TERRAIN_WIDTH;
-    static final int HEIGHT=Terrain.TERRAIN_HEIGHT;
+
     public static int STEP= 2; //todo:decide step size
     public static int cols;           //for grid division of the terrain
     public static int rows;
-    private final Universe universe= Main.getUniverse();
     public Vector2D targetPosition;
     public Vector2D startPosition;
     MyCell[][] grid;
@@ -25,20 +22,18 @@ public class Astar {
     MyCell start;
     MyCell end;
     ArrayList<MyCell> path;
-    ArrayList<Obstacle> Obstacles;
     boolean solutionFound;
 
 
     public Astar() {
-        cols = WIDTH/STEP;
-        rows = HEIGHT/STEP;
-        targetPosition=universe.getTarget().getPosition();
-        startPosition=universe.getFileReader().getInitialPosition();
+        cols = 2*Terrain.TERRAIN_WIDTH/STEP;
+        rows = 2*Terrain.TERRAIN_HEIGHT/STEP;
+        targetPosition=Main.getUniverse().getTarget().getPosition();
+        startPosition=Main.getUniverse().getFileReader().getInitialPosition();
         grid = new MyCell[cols][rows];
         toVisit = new ArrayList<MyCell>(cols*rows);
         visited = new ArrayList<MyCell>(cols*rows);
         path = new ArrayList<MyCell>(cols*rows);
-        Obstacles = universe.getObstacles();
         solutionFound=false;
     }
 
@@ -55,6 +50,13 @@ public class Astar {
 
             }
         }
+        /**
+         * since our start and target position won't necessarily be in one of or cell's positions,
+         * we will let the closest cells to this point serve as our temporary start and end points.
+         */
+        start = grid[(int) Math.round((startPosition.getX()+Terrain.TERRAIN_WIDTH)/STEP)][(int) Math.round((startPosition.getY()+Terrain.TERRAIN_HEIGHT)/STEP)];
+        end = grid[(int) Math.round((targetPosition.getX()+Terrain.TERRAIN_WIDTH)/STEP)][(int) Math.round((targetPosition.getY()+Terrain.TERRAIN_HEIGHT)/STEP)];
+        toVisit.add(start);
     }
     public void createNeighbors() {
         for (int i = 0; i < grid.length; i++) {
@@ -62,21 +64,16 @@ public class Astar {
                 grid[i][j].addNeighbors(grid);
             }
         }
-        /**
-         * since our start and target position won't necessarily be in one of or cell's positions,
-         * we will let the closest cells to this point serve as our temporary start and end points.
-         */
-        start = grid[(int) Math.round(startPosition.getX()/STEP)][(int) Math.round(startPosition.getY()/STEP)];
-        end = grid[(int) Math.round(targetPosition.getX()/STEP)][(int) Math.round(targetPosition.getY()/STEP)];
-        toVisit.add(start);
+
     }
 
     public boolean addObstacles(MyCell cell){
-        for (int k=0; k<Obstacles.size();k++) {
-            if (cell.x == (int) Math.round(Obstacles.get(k).getPosition().getX()) &&
-                cell.y == (int) Math.round(Obstacles.get(k).getPosition().getY())) {
+        for (int k=0; k<Main.getUniverse().getObstacles().size();k++) {
+            if (cell.x == (int) Math.round((Main.getUniverse().getObstacles().get(k).getPosition().getX()+Terrain.TERRAIN_WIDTH)/STEP) &&
+                cell.y == (int) Math.round((Main.getUniverse().getObstacles().get(k).getPosition().getY()+Terrain.TERRAIN_HEIGHT))/STEP) {
                 return true;
             }
+
 
         }
         return false;
@@ -115,6 +112,10 @@ public class Astar {
                 }
                 System.out.println(" we are done");
                 solutionFound=true;
+                System.out.println("start x: "+start.x+"start y: "+start.y);
+                System.out.println("target x: "+end.x+"target y: "+end.y);
+                for (MyCell cell : path) {
+                    System.out.println("x is: "+cell.x+"y is: "+cell.y+"is a wall"+cell.wall);}
                 return path;
 
             }

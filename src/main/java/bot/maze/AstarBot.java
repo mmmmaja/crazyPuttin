@@ -1,8 +1,10 @@
 package bot.maze;
 
+import Main.Main;
 import physics.Vector2D;
 
 import java.util.ArrayList;
+import Main.Universe;
 
 
 
@@ -12,6 +14,7 @@ public class AstarBot {
     public Astar star;
     public static int counter;
 
+
     public AstarBot() {
         this.nextPosition = new ArrayList<>();
         this.star = new Astar();
@@ -19,6 +22,7 @@ public class AstarBot {
         counter=0;
     }
     public void connectUpDownPath(){
+        System.out.println("updown");
         int x=path.get(counter).x;
         int y=path.get(counter).y;
         counter++;
@@ -29,6 +33,9 @@ public class AstarBot {
             }
             else {
                 nextPosition.add(new Vector2D(x, y));
+                for (Vector2D nextPosition : nextPosition) {
+                    System.out.println("x is: "+nextPosition.getX()+" y is: "+nextPosition.getY());
+                }
                 connectLeftRightPath();
             }
         }
@@ -36,6 +43,7 @@ public class AstarBot {
     }
 
     public void connectLeftRightPath(){
+        System.out.println("sides");
         int x=path.get(AstarBot.counter).x;
         int y=path.get(AstarBot.counter).y;
         counter++;
@@ -52,7 +60,7 @@ public class AstarBot {
     }
 
 
-    public void connectCells(){
+    public ArrayList<Vector2D> getNextPosition(){
         int x=path.get(counter).x;
         int y=path.get(counter).y;
         nextPosition.add(new Vector2D(x,y));
@@ -64,30 +72,15 @@ public class AstarBot {
         else {
             connectLeftRightPath();
         }
-        x=path.get(counter-1).x;
-        y=path.get(counter-1).y;
-        nextPosition.add(new Vector2D(x,y));
+        System.out.println("can  get a heeya");
+        nextPosition.set(0,Main.getUniverse().getFileReader().getInitialPosition());
+        nextPosition.add(Main.getUniverse().getTarget().getPosition());
+        return nextPosition;
     }
 
-    /**
-     *
-     * @param from is the initial position
-     * @param to is the target position
-     * @return the needed initial velocity to shoot the ball from start-->end
-     */
-//    public Vector2D initialSpeedCalc(Vector2D from, Vector2D to)
-//    {
-//       Vector2D initialSpeed;
-//        Point2D p1 = new Point2D(from.getX(), from.getY());
-//        double distance= p1.distance(to.getX(),to.getY());
-//
-//       return initialSpeed;
-//    }
-//    public void play(){
-//        connectCells();
-//    }
 
-    public ArrayList<Vector2D> getNextPosition() {
-        return this.nextPosition;
-    }
+
+//    public ArrayList<Vector2D> getNextPosition() {
+//        return this.nextPosition;
+//    }
 }

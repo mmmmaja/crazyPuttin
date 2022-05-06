@@ -44,8 +44,8 @@ public class MyCell {
         f = 0;
         g = 0;
         h = 0;
-        this.width = Astar.WIDTH/Astar.cols;
-        this.height = Astar.HEIGHT/Astar.rows;
+        //this.width = Astar.WIDTH/Astar.cols;
+        //this.height = Astar.HEIGHT/Astar.rows;
         this.neighbors = new ArrayList<>(Astar.cols*Astar.rows);
         /**
          * wall represents a side of the cell the faces an obstacle
@@ -56,20 +56,20 @@ public class MyCell {
 
     }
 
-    public Rectangle draw(Color color){
-
-        Rectangle rectangle = new Rectangle(this.x*width,this.y*height,width,height);
-        if (wall) {
-            rectangle.fillProperty().set(Color.BLACK);
-            rectangle.strokeProperty().setValue(Color.BLACK);
-
-        }
-        else{
-            rectangle.setFill(color);
-            rectangle.strokeProperty().setValue(Color.BLACK);
-        }
-        return rectangle;
-    }
+//    public Rectangle draw(Color color){
+//
+//        Rectangle rectangle = new Rectangle(this.x*width,this.y*height,width,height);
+//        if (wall) {
+//            rectangle.fillProperty().set(Color.BLACK);
+//            rectangle.strokeProperty().setValue(Color.BLACK);
+//
+//        }
+//        else{
+//            rectangle.setFill(color);
+//            rectangle.strokeProperty().setValue(Color.BLACK);
+//        }
+//        return rectangle;
+//    }
     public void addNeighbors(MyCell[][] grid){
         /**
          * if a cell is on the grid's boundaries we do not need to add 4 neighbors

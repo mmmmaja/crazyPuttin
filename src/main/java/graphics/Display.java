@@ -391,9 +391,13 @@ public class Display extends Application {
             }
             if (botComboBox.getValue().equals("mazeBot")) {
                 ArrayList<Vector2D> nextPositions = new AstarBot().getNextPosition();
+
                 for (Vector2D nextPosition : nextPositions) {
+                    System.out.println("me here");
                     velocity = new HillClimbingBot2(this.universe, nextPosition).getBestVelocity();
+                    System.out.println("yas queen");
                     new Shot(universe, velocity);
+                    System.out.println("meow");
                     shotCounter++;
                 }
 
