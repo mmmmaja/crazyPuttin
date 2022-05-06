@@ -23,8 +23,8 @@ public class Universe {
     private Flag flag;
     private MeshView[] meshViews;
     private Solver solver;
-    private ArrayList<Tree> trees;
-    private ArrayList<Obstacle> obstacles;
+    private ArrayList<Tree> trees = new ArrayList<>();
+    private ArrayList<Obstacle> obstacles = new ArrayList<>();
     private ArrayList<Spline> splines = new ArrayList<>();
 
 
@@ -36,20 +36,10 @@ public class Universe {
         createPole();
         createFlag();
         createTrees();
-        createObstacles();
+
     }
 
 
-    private void createObstacles() {
-        this.obstacles = new ArrayList<>();
-        this.obstacles.add(new Obstacle(new Vector2D(2, 4)));
-        this.obstacles.add(new Obstacle(new Vector2D(8, 6)));
-        this.obstacles.add(new Obstacle(new Vector2D(7, 7)));
-        this.obstacles.add(new Obstacle(new Vector2D(9, 5)));
-        this.obstacles.add(new Obstacle(new Vector2D(7, 6)));
-        this.obstacles.add(new Obstacle(new Vector2D(12, 8)));
-        this.obstacles.add(new Obstacle(new Vector2D(8, 9), new Vector3D(3,3,3)));
-    }
 
 
     /**
@@ -128,12 +118,20 @@ public class Universe {
      */
     private void createTrees() {
         this.trees = new ArrayList<>();
-        Tree tree1 = new Tree(3.7, 0.1, new Vector2D(10, 10));
+        Tree tree1 = new Tree(3.7, 0.1, new Vector2D(1, 10));
         Tree tree2 = new Tree(4.1, 0.1, new Vector2D(-10, 5));
         Tree tree3 = new Tree(4.5, 0.1, new Vector2D(-25, -40));
+        Tree tree4 = new Tree(4.5, 0.1, new Vector2D(10, 0));
+        Tree tree5 = new Tree(4.5, 0.1, new Vector2D(-2, 0.05));
+        Tree tree6 = new Tree(4.5, 0.1, new Vector2D(-25, -40));
+        Tree tree7 = new Tree(4.5, 0.1, new Vector2D(0.1, 2));
         this.trees.add(tree1);
         this.trees.add(tree2);
         this.trees.add(tree3);
+        this.trees.add(tree4);
+        this.trees.add(tree5);
+        this.trees.add(tree6);
+        this.trees.add(tree7);
     }
 
 

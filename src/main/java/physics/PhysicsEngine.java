@@ -11,10 +11,10 @@ import java.util.ArrayList;
 public class PhysicsEngine extends Solver {
 
 	private static final double g = 9.81;
-	private static final double STEP = 0.01;
+	private static final double STEP = 0.004;
 	private static final double STOP = 0.005;
 
-	private final double errorTolerance = 0.01;
+	private final double errorTolerance = 0.001;
 
 	public Vector2D calculateAcceleration(GameObject gameObject) {
 		double mu_K = TerrainGenerator.getKineticFrictionCoefficient(gameObject.getPosition());
@@ -72,23 +72,22 @@ public class PhysicsEngine extends Solver {
 			return new Vector2D(aX, aY);
 		}
 		else {
-			System.out.println("stable");
 			return new Vector2D(-vX/STEP, -vY/STEP);
 
 		}
 	}
 
-	public Vector2D getCollisionCoordinates(GameObject gameObject){
+	public Vector2D[] getCollisionCoordinates(GameObject gameObject){
 		double currPosX = gameObject.getPosition().getX();
 		double currPosY = gameObject.getPosition().getY();
-		double rBall = Main.getUniverse().getBall().getRADIUS();
+		double rBall = Main.getUniverse().getBall().getRADIUS() * 2 ;
 
 		// check all trees in universe
 		ArrayList<Tree> trees = Main.getUniverse().getTrees();
 		for (Tree tree : trees) {
 			double treeXPos = tree.getPosition().getX();
 			double treeYPos = tree.getPosition().getY();
-			double r = tree.getCylinder().getRadius();
+			double r = tree.getCylinder().getRadius()*2;
 
 			// when ball ends up in tree
 			if ((new Vector2D(currPosX - treeXPos, currPosY - treeYPos)).getMagnitude() < r) {
@@ -100,23 +99,35 @@ public class PhysicsEngine extends Solver {
 				double bisecMidY = (bisecBeginY + bisecEndY) / 2;
 
 				// keep doing bisection until intersecting point is accurate enough
-				while (new Vector2D(bisecBeginX - bisecEndX, bisecBeginY - bisecEndY)
-						.getMagnitude()> errorTolerance) {
+				while (new Vector2D(bisecBeginX - bisecEndX, bisecBeginY - bisecEndY).getMagnitude()> errorTolerance) {
 					bisecMidX = (bisecBeginX + bisecEndX) / 2;
 					bisecMidY = (bisecBeginY + bisecEndY) / 2;
 					// middle point of bisection is on outline of tree
-					if (new Vector2D(bisecMidX - treeXPos, bisecMidY - treeYPos).getMagnitude() == r)
-						return new Vector2D(bisecMidX, bisecMidY);
-					// middle point of bisection is inside tree
-					else if (new Vector2D(bisecMidX - treeXPos, bisecMidY - treeYPos).getMagnitude() < r) {
-						bisecBeginX = bisecMidX;	bisecBeginY = bisecMidY;
+					if (new Vector2D(bisecMidX - treeXPos, bisecMidY - treeYPos).getMagnitude() == r) {
+						Vector2D normal_vector = new Vector2D(-(treeXPos - bisecMidX), -(treeYPos - bisecMidY)).getUnitVector();
+						Vector2D velocity = gameObject.getVelocity();
+						velocity.reverseVector();
+						Vector2D reflectedVelocity = velocity.reflectAroundVector(normal_vector);
+
+						return new Vector2D[]{new Vector2D(bisecMidX, bisecMidY), reflectedVelocity};
+						// middle point of bisection is inside tree
+					}else if (new Vector2D(bisecMidX - treeXPos, bisecMidY - treeYPos).getMagnitude() < r) {
+						bisecBeginX = bisecMidX;
+						bisecBeginY = bisecMidY;
 					}
 					// middle point of bisection is outside tree
 					else {
-						bisecEndX = bisecMidX;		bisecEndY = bisecMidY;
+						bisecEndX = bisecMidX;
+						bisecEndY = bisecMidY;
 					}
 				}
-				return new Vector2D(bisecMidX, bisecMidY);
+				Vector2D normal_vector = new Vector2D(-(treeXPos - bisecMidX), -(treeYPos - bisecMidY)).getUnitVector();
+				Vector2D velocity = gameObject.getVelocity();
+				velocity.reverseVector();
+				Vector2D reflectedVelocity = velocity.reflectAroundVector(normal_vector);
+
+				return new Vector2D[]{new Vector2D(bisecMidX, bisecMidY), reflectedVelocity};
+
 			}
 		}
 
@@ -131,14 +142,14 @@ public class PhysicsEngine extends Solver {
 			// when ball ends up in between boundaries of obstacle
 			if ((currPosX <= obstXPos+obstDim/2+rBall && currPosX >= obstXPos-obstDim/2-rBall) &&
 					(currPosY <= obstYPos+obstDim/2+rBall && currPosY >= obstYPos-obstDim/2-rBall)) {
-				System.out.println("currposx: "+currPosX);
-				System.out.println("prevposx: "+gameObject.getPreviousPosition().getX());
-				System.out.println(obstXPos+(obstDim/2));
-				System.out.println(obstXPos-(obstDim/2));
-				System.out.println("currposy: "+currPosY);
-				System.out.println("prevposy: "+gameObject.getPreviousPosition().getY());
-				System.out.println(obstYPos+(obstDim/2));
-				System.out.println(obstYPos-(obstDim/2));
+//				System.out.println("currposx: "+currPosX);
+//				System.out.println("prevposx: "+gameObject.getPreviousPosition().getX());
+//				System.out.println(obstXPos+(obstDim/2));
+//				System.out.println(obstXPos-(obstDim/2));
+//				System.out.println("currposy: "+currPosY);
+//				System.out.println("prevposy: "+gameObject.getPreviousPosition().getY());
+//				System.out.println(obstYPos+(obstDim/2));
+//				System.out.println(obstYPos-(obstDim/2));
 
 				double bisecBeginX = currPosX;
 				double bisecBeginY = currPosY;
@@ -148,22 +159,36 @@ public class PhysicsEngine extends Solver {
 				double bisecMidY = (bisecBeginY + bisecEndY) / 2;
 
 				// keep doing bisection until intersecting point is accurate enough
-				while (new Vector2D(bisecBeginX - bisecEndX, bisecBeginY - bisecEndY)
-						.getMagnitude() > errorTolerance) {
-					System.out.println(bisecBeginX - bisecEndX);
-					System.out.println(bisecBeginY - bisecEndY);
-					System.out.println("Length: " + new Vector2D(bisecBeginX - bisecEndX, bisecBeginY - bisecEndY)
-							.getMagnitude());
+				while (new Vector2D(bisecBeginX - bisecEndX, bisecBeginY - bisecEndY).getMagnitude() > errorTolerance) {
 					bisecMidX = (bisecBeginX + bisecEndX) / 2;
 					bisecMidY = (bisecBeginY + bisecEndY) / 2;
 
 					// middle point of bisection is on outline of tree
 					if ((bisecMidX == obstXPos+obstDim/2+rBall || bisecMidX == obstXPos-obstDim/2-rBall) ||
-							(bisecMidY == obstYPos+obstDim/2+rBall || bisecMidY == obstYPos-obstDim/2-rBall))
-						return new Vector2D(bisecMidX, bisecMidY);
+							(bisecMidY == obstYPos+obstDim/2+rBall || bisecMidY == obstYPos-obstDim/2-rBall)) {
+
+//						double vX = gameObject.getVelocity().getX();
+//						double vY = gameObject.getVelocity().getY();
+//
+//						if( (bisecMidX < obstXPos+obstDim/2  && bisecMidX > obstXPos-obstDim/2)) {
+//							System.out.println("X ---> " + (bisecMidX) + " " + (bisecMidX)  + " " +  (obstXPos-obstDim/2) + " " + (obstXPos+obstDim/2));
+//							vY = -gameObject.getVelocity().getY();
+//						}else{
+//							System.out.println("Y ---> " + (bisecMidY) + " " + (bisecMidY)  + " " +  (obstYPos-obstDim/2) + " " + (obstYPos+obstDim/2));
+//							vX = -gameObject.getVelocity().getX();
+//
+//						}
+//						System.out.println(1);
+						Vector2D normal_vector = new Vector2D(-(obstXPos - bisecMidX) , -(obstYPos - bisecMidY)).convertToNormalVectorObstacles();
+						Vector2D velocity = gameObject.getVelocity();
+						velocity.reverseVector();
+						Vector2D reflectedVelocity = velocity.reflectAroundVector(normal_vector);
+
+						return new Vector2D[]{new Vector2D(bisecMidX, bisecMidY), reflectedVelocity};
+
 						// middle point of bisection is inside tree
-					else if ((bisecMidX < obstXPos+obstDim/2+rBall && bisecMidX > obstXPos-obstDim/2-rBall) &&
-							(bisecMidY < obstYPos+obstDim/2+rBall && bisecMidY > obstYPos-obstDim/2-63-rBall)) {
+					}else if ((bisecMidX < obstXPos+obstDim/2+rBall && bisecMidX > obstXPos-obstDim/2-rBall) &&
+							(bisecMidY < obstYPos+obstDim/2+rBall && bisecMidY > obstYPos-obstDim/2-rBall)) {
 						bisecBeginX = bisecMidX;
 						bisecBeginY = bisecMidY;
 					}
@@ -173,8 +198,29 @@ public class PhysicsEngine extends Solver {
 						bisecEndY = bisecMidY;
 					}
 				}
-				System.out.println(new Vector2D(bisecMidX, bisecMidY));
-				return new Vector2D(bisecMidX, bisecMidY);
+
+//				double vX = gameObject.getVelocity().getX();
+//				double vY = gameObject.getVelocity().getY();
+//
+//				if( (bisecMidX < obstXPos+obstDim/2  && bisecMidX > obstXPos-obstDim/2)) {
+//					System.out.println("X ---> " + (bisecMidX) + " " + (bisecMidX)  + " " +  (obstXPos-obstDim/2) + " " + (obstXPos+obstDim/2));
+//					vY = -gameObject.getVelocity().getY();
+//				}else{
+//					System.out.println("X ---> " + (bisecMidX) + " " +  (obstXPos-obstDim/2) + " " + (obstXPos+obstDim/2));
+//					System.out.println("Y ---> " + (bisecMidY) + " " +  (obstYPos-obstDim/2) + " " + (obstYPos+obstDim/2));
+//					vX = -gameObject.getVelocity().getX();
+//				}
+//				System.out.println(2);
+//				System.out.println("X ---> " + (bisecMidX) + " " + (bisecMidX)  + " " +  (obstXPos-obstDim/2) + " " + (obstXPos+obstDim/2));
+
+
+				Vector2D normal_vector = new Vector2D(-(obstXPos - bisecMidX) , -(obstYPos - bisecMidY)).convertToNormalVectorObstacles();
+				Vector2D velocity = gameObject.getVelocity();
+				velocity.reverseVector();
+				Vector2D reflectedVelocity = velocity.reflectAroundVector(normal_vector);
+
+				return new Vector2D[]{new Vector2D(bisecMidX, bisecMidY), reflectedVelocity};
+
 			}
 		}
 		return null;

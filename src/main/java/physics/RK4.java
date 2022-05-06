@@ -22,9 +22,17 @@ public class RK4 extends Solver {
 
 
 		if (TerrainGenerator.getHeight(nextPosition) >= 0 ) {
-			if(PHYSICS.getCollisionCoordinates(gameObject) != null){
-				gameObject.setState(PHYSICS.getCollisionCoordinates(gameObject),
-						new Vector2D(-gameObject.getVelocity().getX(), -gameObject.getVelocity().getY()));
+
+			if( PHYSICS.getCollisionCoordinates(gameObject) != null){
+				Vector2D[] collision_state = PHYSICS.getCollisionCoordinates(gameObject);
+
+//				gameObject.setPreviousPosition(gameObject.getPosition());
+				gameObject.setState(collision_state[0] , collision_state[1]);
+				next = calculateNext(gameObject.getPosition() , gameObject.getVelocity(), H );
+				nextPosition = next[0];
+				nextVelocity = next[1];
+				gameObject.setPreviousPosition(gameObject.getPosition());
+				gameObject.setState(nextPosition,nextVelocity);
 			}
 			else {
 				gameObject.setPreviousPosition(gameObject.getPosition());

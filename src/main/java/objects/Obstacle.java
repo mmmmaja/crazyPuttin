@@ -25,11 +25,7 @@ public class Obstacle {
      */
     public Obstacle(Vector2D position) {
         this.position = position;
-        this.dimension = new Vector3D(
-                getRandomDouble(0.6, 1.0),
-                getRandomDouble(0.5, 1.0),
-                getRandomDouble(0.5, 0.9)
-        );
+        this.dimension = new Vector3D(0.7 , 0.7 , 0.7);
         this.box = createBox();
     }
 
@@ -76,6 +72,9 @@ public class Obstacle {
     public static double getRandomDouble(double minimum, double maximum) {
         Random random = new Random();
         return random.nextDouble() * (maximum - minimum) + minimum;
+    }
+    public Vector2D getDimension(){
+        return new Vector2D( dimension.getX() , dimension.getY());
     }
 
 }

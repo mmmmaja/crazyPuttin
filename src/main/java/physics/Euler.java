@@ -20,8 +20,7 @@ public class Euler extends Solver {
 
 		if (TerrainGenerator.getHeight(nextPosition) >= 0) {
 			if(PHYSICS.getCollisionCoordinates(gameObject) != null){
-				gameObject.setState(PHYSICS.getCollisionCoordinates(gameObject),
-						new Vector2D(-gameObject.getVelocity().getX(), -gameObject.getVelocity().getY()));
+
 			}
 			else {
 				gameObject.setPreviousPosition(gameObject.getPosition());

@@ -354,9 +354,9 @@ public class Display extends Application {
 
         hitTheBall.setOnMouseClicked(mouseEvent -> {
             if(solverComboBox.getValue().equals("RK4")) universe.setSolver( new RK4());
-            if(solverComboBox.getValue().equals("RK2")) universe.setSolver( new RK2());
+//            if(solverComboBox.getValue().equals("RK2")) universe.setSolver( new RK2());
             if(solverComboBox.getValue().equals("Euler")) universe.setSolver( new Euler());
-            if(solverComboBox.getValue().equals("Heuns3")) universe.setSolver( new Heuns3());
+//            if(solverComboBox.getValue().equals("Heuns3")) universe.setSolver( new Heuns3());
             shootBall(xVel, yVel);
         });
         return position;
