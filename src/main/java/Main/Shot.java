@@ -66,7 +66,7 @@ public class Shot extends Display implements Runnable {
         int SPEED = 60;
         double delta = 0;
         long lastTime = System.nanoTime();
-        final double nanos = Math.pow(10, 9)/SPEED ;
+        final double nanos = Math.pow(10, 9) / SPEED ;
         // number of nanoseconds between each update: SPEED times per second
 
         while (running) {
