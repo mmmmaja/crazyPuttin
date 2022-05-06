@@ -82,7 +82,7 @@ public class Astar {
         return false;
     }
     public boolean addWater(MyCell cell){
-        if (TerrainGenerator.getHeight(new Vector2D( cell.x, cell.y )) < 0) {
+        if (TerrainGenerator.getHeightFromFile(new Vector2D( cell.x, cell.y )) < 0) {
             return true;
         }
         return false;

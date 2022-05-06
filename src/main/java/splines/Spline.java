@@ -5,27 +5,23 @@ import physics.Vector2D;
 
 
 /**
- * 1) change TerrainGenerator.getHeight() method so that it returns correct height
+ * 1) change Terrain.getHeight() method so that it returns correct height
  * 2) use interpolate() method to modify the mesh
+ * do we need to run over the mesh again???
  */
-public class Spline {
+public class Spline extends SplineInterpolation {
 
     private final Vector2D position;
     private double height;
-    private final double RADIUS = 5.5;
 
 
     public Spline(Vector2D position) {
         this.position = position;
-        this.height = TerrainGenerator.getHeight(this.position);
+        this.height = TerrainGenerator.getHeightFromFile(this.position);
     }
 
     public Vector2D getPosition() {
         return this.position;
-    }
-
-    public void setHeight(double height) {
-        this.height = height;
     }
 
     /**
@@ -34,6 +30,7 @@ public class Spline {
      */
     public void addHeight(double deltaHeight) {
         this.height+= deltaHeight;
+        interpolateTerrain(this);
     }
 
     public double getHeight() {
@@ -42,7 +39,7 @@ public class Spline {
 
 
     public double getRADIUS() {
-        return this.RADIUS;
+        return 6.0;
     }
 
 }

@@ -26,7 +26,7 @@ public class Pole implements GameObject{
         pole.setHeight(2);
         this.pole.setTranslateX(this.position.getX());
         this.pole.setTranslateY(this.position.getY());
-        this.pole.setTranslateZ( -TerrainGenerator.getHeight(position) - pole.getHeight()/2 );
+        this.pole.setTranslateZ( -TerrainGenerator.getHeightFromFile(position) - pole.getHeight()/2 );
         this.pole.setRotationAxis(Rotate.X_AXIS);
         this.pole.setRotate(90);
         this.pole.setMaterial(new PhongMaterial(Color.WHITE));

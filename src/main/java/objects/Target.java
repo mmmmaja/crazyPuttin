@@ -5,7 +5,6 @@ import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Cylinder;
 import javafx.scene.transform.Rotate;
 import physics.Vector2D;
-import physics.Vector3D;
 
 
 public class Target implements GameObject {
@@ -30,7 +29,7 @@ public class Target implements GameObject {
         this.cylinder.setHeight(0.01);
         this.cylinder.setTranslateX(this.position.getX());
         this.cylinder.setTranslateY(this.position.getY());
-        this.cylinder.setTranslateZ((-TerrainGenerator.getHeight(position) - cylinder.getHeight()*2));
+        this.cylinder.setTranslateZ((-TerrainGenerator.getHeightFromFile(position) - cylinder.getHeight()*2));
         this.cylinder.setRotationAxis(Rotate.X_AXIS);
         this.cylinder.setRotate(90);
         this.cylinder.setMaterial(new PhongMaterial(Color.BLACK));

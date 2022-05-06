@@ -185,7 +185,7 @@ public class Universe {
         Vector2D position = ball.getPosition();
         ball.getSphere().setTranslateX(position.getX() + (ball.getPosition().getX() - ball.getPreviousPosition().getX()));
         ball.getSphere().setTranslateY(position.getY() + (ball.getPosition().getY() - ball.getPreviousPosition().getY()));
-        ball.getSphere().setTranslateZ((-TerrainGenerator.getHeight(position) - 2 * ball.getRADIUS()));
+        ball.getSphere().setTranslateZ((-TerrainGenerator.getHeightFromFile(position) - 2 * ball.getRADIUS()));
 
     }
 

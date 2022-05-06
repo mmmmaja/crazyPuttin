@@ -2,12 +2,14 @@ package splines;
 
 import objects.Terrain;
 import objects.TerrainGenerator;
-import physics.Vector;
 import physics.Vector2D;
+import physics.Vector3D;
 
-import java.util.ArrayList;
+import static objects.Terrain.*;
 
 /**
+ *
+ * ! IDEA: have the array of points with very small step and interpolate if u need point between
  * linear Bézier curves from P0 to P1 and from P1 to P2 respectively.
  * Rearranging the preceding equation yields:
  *
@@ -16,10 +18,9 @@ import java.util.ArrayList;
  * check for n = 5
  *
  * use float[] points from terrain and modify it dynamically
+ * ! work on the points array from the Terrain
  */
 public class SplineInterpolation {
-
-    private final double STEP = 0.1;
 
     /**
      * The curve starts at P0 going toward P1 and arrives at P3 coming from the direction of P2.
@@ -29,12 +30,12 @@ public class SplineInterpolation {
      * @param t [0, 1] step from each point to another
      * uses 4 points to interpolate terrain
      */
-    private double cubicBezierCurve(Vector2D p0, Vector2D p1, Vector2D p2, Vector2D p3, double t) {
+    private double cubicBezierCurve(Vector3D p0, Vector3D p1, Vector3D p2, Vector3D p3, double t) {
         return
-                Math.pow(1 - t, 3) * TerrainGenerator.getHeight(p0) +
-                        3 * Math.pow(1 - t, 2) * t * TerrainGenerator.getHeight(p1) +
-                        3 * (1 - t) * Math.pow(t, 2) * TerrainGenerator.getHeight(p2) +
-                        Math.pow(t, 3) * TerrainGenerator.getHeight(p3);
+                Math.pow(1 - t, 3) * p0.getZ() +
+                        3 * Math.pow(1 - t, 2) * t * p1.getZ() +
+                        3 * (1 - t) * Math.pow(t, 2) * p2.getZ() +
+                        Math.pow(t, 3) * p3.getZ();
     }
 
 
@@ -47,9 +48,9 @@ public class SplineInterpolation {
      * @param t [0, 1] current time
      * @return height at current point start + t
      */
-    private double generalBezierCurve(Vector2D[] points, int start, int end, double t) {
+    private double generalBezierCurve(Vector3D[] points, int start, int end, double t) {
         if (start + 1 == end) {
-            return TerrainGenerator.getHeight(points[0]);
+            return points[0].getZ();
         }
         else {
             double p1 = generalBezierCurve(points, start , end - 1, t);
@@ -59,34 +60,59 @@ public class SplineInterpolation {
     }
 
 
-    private void interpolateTerrain(Spline spline) {
-
-        // TODO play with these values
-        double step = 0.01; // step between points form the edge of the circle
-        int n = 5; // number of points at each line from edge to the centre of the circle
+    public void interpolateTerrain(Spline spline) {
 
         double radius = spline.getRADIUS();
-        Vector2D centre = spline.getPosition();
 
-        ArrayList<Vector2D[]> lines = new ArrayList<>();
+        Vector3D centre = new Vector3D(
+                spline.getPosition().getX(),
+                spline.getPosition().getY(),
+                spline.getHeight()
+        );
+        System.out.println(centre);
+        System.out.println("oldHeight: "+ getHeight(spline.getPosition().getX(),
+                spline.getPosition().getY()));
+
         // loop over the edge of the circle and find the corresponding coordinates
-        for (double y = -radius; y < radius; y+= step) {
+        for (double y = -radius; y < radius; y+= Terrain.STEP) {
             double x = Math.sqrt(radius * radius - y * y);
 
-            Vector2D leftEdgePoint  = new Vector2D(centre.getX() - x, centre.getY() + y);
-            Vector2D rightEdgePoint = new Vector2D(centre.getX() + x, centre.getY() + y);
+            // how to map the point to the array?
+            Vector3D leftEdgePoint  = new Vector3D(
+                    centre.getX() - x,
+                    centre.getY() + y,
+                    Terrain.getHeight(centre.getX() - x,centre.getY() + y)
+            );
+            Vector3D rightEdgePoint  = new Vector3D(
+                    centre.getX() + x,
+                    centre.getY() + y,
+                    Terrain.getHeight(centre.getX() + x,centre.getY() + y)
+            );
 
-            // find n middle points between the edgePoint and centrePoint
-            Vector2D[] leftEdgeLine = findLine(leftEdgePoint, centre, n);
-            Vector2D[] rightEdgeLine = findLine(rightEdgePoint, centre, n);
-
-            interpolateLine(leftEdgeLine);
-            interpolateLine(rightEdgeLine);
+            interpolateOverTwoPoints(leftEdgePoint, centre);
+            interpolateOverTwoPoints(rightEdgePoint, centre);
         }
 
-        // recalculate the points of the triangularMesh after altering the height
-        Terrain.computePoints();
     }
+
+    private void interpolateOverTwoPoints(Vector3D edge, Vector3D centre) {
+        Vector3D[] points = {edge, centre};
+        Vector2D path = new Vector2D(
+                points[points.length - 1].getX() - points[0].getX(),
+                points[points.length - 1].getY() - points[0].getY()
+        );
+        for (double t = 0; t <= 1; t+= Terrain.STEP) {
+            double newHeight = generalBezierCurve(points, 0, points.length, t);
+            Vector2D newPoint = new Vector2D(
+                    points[0].getX() + path.multiply(t).getX(),
+                    points[0].getY() + path.multiply(t).getY()
+            );
+            setHeight(newPoint, newHeight);
+        }
+        alterMesh();
+    }
+
+
 
 
     /**
@@ -94,15 +120,17 @@ public class SplineInterpolation {
      */
     public void interpolateLine(Vector2D[] points) {
 
-        Vector2D path = new Vector2D(
-                points[points.length - 1].getX() - points[0].getX(),
-                points[points.length - 1].getY() - points[0].getY()
-        );
-        for (double t = 0; t <= 1; t+= STEP) {
-            Vector2D step = path.multiply(t);
-            Vector2D newPoint = points[0].add(step);
-            double newHeight = generalBezierCurve(points, 0, points.length, t);
-        }
+//        Vector2D path = new Vector2D(
+//                points[points.length - 1].getX() - points[0].getX(),
+//                points[points.length - 1].getY() - points[0].getY()
+//        );
+//        for (double t = 0; t <= 1; t+= Terrain.STEP) {
+//            Vector2D step = path.multiply(t);
+//            Vector2D newPoint = points[0].add(step);
+//            System.out.println("newPoint: "+newPoint);
+//            double newHeight = generalBezierCurve(points, 0, points.length, t);
+//            System.out.println("newHeight: "+newHeight);
+//        }
     }
 
 

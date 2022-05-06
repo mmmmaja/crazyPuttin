@@ -1,11 +1,9 @@
 package objects;
 
-import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Cylinder;
 import javafx.scene.shape.Sphere;
-import javafx.scene.shape.TriangleMesh;
 import javafx.scene.transform.Rotate;
 import physics.Vector2D;
 
@@ -30,7 +28,7 @@ public class Tree implements GameObject {
         sphere.setRadius(this.dimension.getX() * 12);
         sphere.setTranslateX(this.position.getX());
         sphere.setTranslateY(this.position.getY());
-        sphere.setTranslateZ(-this.dimension.getY() - TerrainGenerator.getHeight(this.position));
+        sphere.setTranslateZ(-this.dimension.getY() - TerrainGenerator.getHeightFromFile(this.position));
         PhongMaterial phongMaterial = new PhongMaterial();
         phongMaterial.setDiffuseColor(Color.FORESTGREEN);
         sphere.setMaterial(phongMaterial);
@@ -44,7 +42,7 @@ public class Tree implements GameObject {
         cylinder.setHeight(this.dimension.getY());
         cylinder.setTranslateX(this.position.getX());
         cylinder.setTranslateY(this.position.getY());
-        cylinder.setTranslateZ(- TerrainGenerator.getHeight(position) - cylinder.getHeight() / 2);
+        cylinder.setTranslateZ(- TerrainGenerator.getHeightFromFile(position) - cylinder.getHeight() / 2);
         cylinder.setRotationAxis(Rotate.X_AXIS);
         cylinder.setRotate(90);
 

@@ -83,7 +83,7 @@ public class TerrainEventHandler {
      * create the splines
      */
     private void mouseDragged() {
-        double draggingFactor = 0.5;
+        double draggingFactor = 1;
 
         universe.getMeshViews()[0].setOnMouseDragged(mouseEvent -> {
 
@@ -93,7 +93,7 @@ public class TerrainEventHandler {
                 Vector2D newClickPosition = new Vector2D(mouseEvent.getX(), mouseEvent.getY());
 
                 double deltaHeight = this.group.getSceneAngle() * (this.clickPosition.getY() - newClickPosition.getY());
-                this.spline.addHeight(deltaHeight * draggingFactor);
+                this.spline.addHeight( deltaHeight * draggingFactor);
                 this.clickPosition = newClickPosition;
 
                 Sphere sphere = new Sphere();

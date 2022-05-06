@@ -25,7 +25,7 @@ public class Flag implements GameObject {
         flag.setDepth(0.5);
         this.flag.setTranslateX(this.position.getX()-flag.getWidth()/2);
         this.flag.setTranslateY(this.position.getY());
-        this.flag.setTranslateZ(-TerrainGenerator.getHeight(position)-2  );
+        this.flag.setTranslateZ(-TerrainGenerator.getHeightFromFile(position)-2  );
     }
 
     /**

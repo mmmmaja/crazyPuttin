@@ -20,7 +20,7 @@ public class RK2 extends Solver {
 		Vector2D nextVelocity = next[1];
 
 
-		if (TerrainGenerator.getHeight(nextPosition) >= 0) {
+		if (TerrainGenerator.getHeightFromFile(nextPosition) >= 0) {
 			gameObject.setPreviousPosition(gameObject.getPosition());
 			gameObject.setState(nextPosition,nextVelocity);
 		}

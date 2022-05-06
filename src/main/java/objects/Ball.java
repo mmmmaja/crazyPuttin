@@ -37,7 +37,7 @@ public class Ball extends PhysicsEngine implements GameObject {
         // set the position of the sphere at the place indicated by the inputFile
         this.sphere.setTranslateX(this.position.getX());
         this.sphere.setTranslateY(this.position.getY());
-        this.sphere.setTranslateZ((-TerrainGenerator.getHeight(position) - 2 * RADIUS));
+        this.sphere.setTranslateZ((-TerrainGenerator.getHeightFromFile(position) - 2 * RADIUS));
         Material material = new PhongMaterial(Color.WHITESMOKE);
         this.sphere.setMaterial(material);
     }

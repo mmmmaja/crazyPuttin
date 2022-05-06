@@ -1,14 +1,9 @@
 package objects;
 
-import graphics.Display;
-import javafx.scene.image.Image;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import physics.Vector2D;
 import physics.Vector3D;
 
-import java.util.Dictionary;
 import java.util.Random;
 
 /**
@@ -49,7 +44,7 @@ public class Obstacle {
 
         box.setTranslateX(this.position.getX());
         box.setTranslateY(this.position.getY());
-        box.setTranslateZ(-(TerrainGenerator.getHeight(this.position) + SIDE_LENGTH / 2));
+        box.setTranslateZ(-(TerrainGenerator.getHeightFromFile(this.position) + SIDE_LENGTH / 2));
 
         return box;
     }

@@ -64,4 +64,13 @@ public class Vector3D implements Vector {
 		setZ(-z);
 	}
 
+	@Override
+	public String toString() {
+		return "Vector2D{" +
+				"x=" + x +
+				", y=" + y +
+				", z=" + z +
+				'}';
+	}
+
 }

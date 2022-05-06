@@ -16,10 +16,20 @@ public class TerrainGenerator {
     /**
      * @param position of the point to be checked
      * @return height of the terrain at the given position based on the function passed in the InputFile
+     * TODO make it not static and place the function in terrain
      */
-    public static double getHeight(Vector2D position) {
+    public static double getHeightFromFile(Vector2D position) {
         return fileReader.calculator(position.getX() , position.getY()) ;
     }
+
+    /**
+     * @return height of the terrain at the given position based on the function passed in the InputFile
+     * TODO make it not static and place the function in terrain
+     */
+    public static double getHeightFromFile(double x, double y) {
+        return fileReader.calculator(x , y);
+    }
+
     public static double f(double x, double y ) {
         return fileReader.calculator(x , y) ;
     }

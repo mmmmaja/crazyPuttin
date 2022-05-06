@@ -4,7 +4,6 @@ import objects.GameObject;
 import objects.TerrainGenerator;
 
 import java.util.Arrays;
-import java.util.Collections;
 
 
 public class Euler extends Solver {
@@ -18,7 +17,7 @@ public class Euler extends Solver {
 		Vector2D nextPosition = next[0];
 		Vector2D nextVelocity = next[1];
 
-		if (TerrainGenerator.getHeight(nextPosition) >= 0) {
+		if (TerrainGenerator.getHeightFromFile(nextPosition) >= 0) {
 			gameObject.setPreviousPosition(gameObject.getPosition());
 			gameObject.setState(nextPosition,nextVelocity);
 		}

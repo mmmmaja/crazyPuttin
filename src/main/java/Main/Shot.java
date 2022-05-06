@@ -49,7 +49,7 @@ public class Shot extends Display implements Runnable {
         Display.updatePanel(ball.getPosition().getX(), ball.getPosition().getY());
         this.ball.setWillMove(false);
         System.out.println("final position "+this.ball.getPosition());
-        System.out.println("final height "+ TerrainGenerator.getHeight(this.ball.getPosition()));
+        System.out.println("final height "+ TerrainGenerator.getHeightFromFile(this.ball.getPosition()));
         this.running = false;
         try {
             this.thread.join();
