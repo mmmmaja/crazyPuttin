@@ -85,7 +85,7 @@ public class SplineInterpolation {
         }
 
         // recalculate the points of the triangularMesh after altering the height
-        Terrain.computePoints();
+        // Terrain.computePoints();
     }
 
 

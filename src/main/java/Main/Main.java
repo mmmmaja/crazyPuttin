@@ -6,9 +6,6 @@ import javafx.application.Application;
 import objects.FileReader;
 
 
-/**
- * TODO add collision detection for the tree!!!!
- */
 public class Main {
 
     private static Universe universe ;

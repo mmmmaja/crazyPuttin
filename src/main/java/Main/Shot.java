@@ -44,12 +44,8 @@ public class Shot extends Display implements Runnable {
      * kills the thread when the ball is in the resting position
      */
     public synchronized void stop() {
-        System.out.println("stop");
-        System.out.println(universe.getTarget().getEuclideanDistance(ball.getPosition()));
         Display.updatePanel(ball.getPosition().getX(), ball.getPosition().getY());
         this.ball.setWillMove(false);
-        System.out.println("final position "+this.ball.getPosition());
-        System.out.println("final height "+ TerrainGenerator.getHeight(this.ball.getPosition()));
         this.running = false;
         try {
             this.thread.join();
@@ -60,10 +56,9 @@ public class Shot extends Display implements Runnable {
 
     @Override
     public void run() {
-        System.out.println("start!");
         ball.setWillMove(true);
 
-        int SPEED = 120;
+        int SPEED = 220;
         double delta = 0;
         long lastTime = System.nanoTime();
         final double nanos = Math.pow(10, 9) / SPEED ;
@@ -85,7 +80,6 @@ public class Shot extends Display implements Runnable {
 
                 // target was hit
                 if(ball.isOnTarget(universe.getTarget())) {
-                    System.out.println("Target hit");
                     Display.pointCounter++;
                     ball.setVelocity(new Vector2D(0,0));
                     ball.setWillMove(false);

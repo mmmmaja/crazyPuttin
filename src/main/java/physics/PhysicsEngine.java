@@ -67,7 +67,6 @@ public class PhysicsEngine extends Solver {
 			return new Vector2D(aX, aY);
 		}
 		else {
-			System.out.println("stable");
 			return new Vector2D(-vX/STEP, -vY/STEP);
 
 		}

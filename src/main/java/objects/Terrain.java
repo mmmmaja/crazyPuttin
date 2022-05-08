@@ -20,10 +20,10 @@ public class Terrain extends TerrainGenerator {
 
 
     // the size of each polygon in the mesh
-    public static final double STEP = 0.25;
+    public static final double STEP = 1;
 
     // to be used to dynamically alter the mesh when dragging the terrain
-    public static float[] points = new float[(int) ((1 / STEP) * 2 * TERRAIN_HEIGHT * (1 / STEP) * 2 * TERRAIN_WIDTH) * 3];
+    private float[] points;
 
 
     public Terrain(FileReader fileReader) {
@@ -32,7 +32,8 @@ public class Terrain extends TerrainGenerator {
         this.grassMesh   = new TriangleMesh();
         this.waterMesh   = new TriangleMesh();
         this.sandPitMesh = new TriangleMesh();
-        computePoints();
+
+        addPoints();
         addFaces();
     }
 
@@ -40,7 +41,8 @@ public class Terrain extends TerrainGenerator {
     /**
      * Adds all the points from which the polygons of the three meshes will be created
      */
-    public static void computePoints() {
+    private void addPoints() {
+        this.points = new float[(int) ((1 / STEP) * 2 * TERRAIN_HEIGHT * (1 / STEP) * 2 * TERRAIN_WIDTH) * 3];
 
         int counter = -1;
         for (double i = -TERRAIN_HEIGHT; i < TERRAIN_HEIGHT; i+= STEP) {

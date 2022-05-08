@@ -4,6 +4,7 @@ import Main.Main;
 import Main.Shot;
 import bot.HillClimbingBot;
 import bot.HillClimbingBot2;
+import bot.ImprovedRandomBot;
 import bot.RandomBot;
 import bot.maze.AstarBot;
 import javafx.application.Application;
@@ -262,7 +263,7 @@ public class Display extends Application {
 
         position = addBallShootingOptions(position);
         position = addBotButtons(position);
-        position = addSplineCheckbox(position);
+        // position = addSplineCheckbox(position);
         position = addObstacleCheckBox(position);
 
         new TerrainEventHandler(this.universe, this.group);
@@ -366,7 +367,7 @@ public class Display extends Application {
         Button botButton = new Button("bot");
         gridPane.add(new HBox(30, botButton), 0, position++);
 
-        String[] botList = {"randomBot" , "hillClimbingBot", "hillClimbingBot2", "mazeBot"};
+        String[] botList = {"randomBot" , "improvedRandomBot", "hillClimbingBot", "hillClimbingBot2", "mazeBot"};
         ComboBox<String> botComboBox = new ComboBox(FXCollections.observableArrayList(botList));
         botComboBox.setValue("randomBot");
         gridPane.add(new HBox(30, botComboBox), 0, position++);
@@ -376,6 +377,11 @@ public class Display extends Application {
 
             if (botComboBox.getValue().equals("randomBot")) {
                 velocity = new RandomBot(this.universe).getBestVelocity();
+                new Shot(universe, velocity);
+                shotCounter++;
+            }
+            if (botComboBox.getValue().equals("improvedRandomBot")) {
+                velocity = new ImprovedRandomBot(this.universe).getBestVelocity();
                 new Shot(universe, velocity);
                 shotCounter++;
             }
@@ -393,9 +399,7 @@ public class Display extends Application {
                 ArrayList<Vector2D> nextPositions = new AstarBot().getNextPosition();
 
                 for (Vector2D nextPosition : nextPositions) {
-                    System.out.println("me here");
                     velocity = new HillClimbingBot2(this.universe, nextPosition).getBestVelocity();
-                    System.out.println("yas queen");
                     new Shot(universe, velocity);
                     System.out.println("meow");
                     shotCounter++;
