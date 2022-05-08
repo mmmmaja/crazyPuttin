@@ -9,26 +9,7 @@ import java.util.Collections;
 
 public class Euler extends Solver {
 
-	public final PhysicsEngine PHYSICS = new PhysicsEngine();
-	public final double H = PHYSICS.getSTEP();
-	@Override
-	public void nextStep(GameObject gameObject) {
-
-		Vector2D[] next = calculateNextStep(gameObject.getPosition() , gameObject.getVelocity() , H );
-		Vector2D nextPosition = next[0];
-		Vector2D nextVelocity = next[1];
-
-		if (TerrainGenerator.getHeight(nextPosition) >= 0) {
-			gameObject.setPreviousPosition(gameObject.getPosition());
-			gameObject.setState(nextPosition,nextVelocity);
-		}
-		else {
-			gameObject.setState(gameObject.getPreviousPosition(),new Vector2D(0,0));
-			gameObject.setWillMove(false);
-		}
-	}
-
-	public Vector2D[] calculateNextStep(Vector2D position , Vector2D velocity , double H) {
+	public Vector2D[] calculateNext(Vector2D position , Vector2D velocity , double H) {
 		double[] a = { 1 };
 		double[] b = { 1 };
 		double[] c = { 0.d , 1.d };

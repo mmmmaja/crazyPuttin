@@ -14,6 +14,10 @@ public class Vector2D implements Vector {
         this.x = x;
         this.y = y;
     }
+    public Vector2D(double x , double y , double xn , double yn){
+        this.x = xn - x ;
+        this.y = yn - y ;
+    }
 
 
     public double getX() {
@@ -95,26 +99,23 @@ public class Vector2D implements Vector {
         this.x = x2;
         this.y = y2;
     }
-
-
-    public double getEuclideanDistance(Vector2D vector2D) {
-        return Math.sqrt(
-                Math.pow(this.x - vector2D.getX(), 2) +
-                        Math.pow(this.y - vector2D.getY(), 2)
-        );
+    public Vector2D reflectAroundVector( Vector2D rotateAround){
+        double dotProduct = dotProduct(rotateAround);
+        double x = -(2 *  dotProduct * rotateAround.getX() - this.x);
+        double y = -(2 *  dotProduct * rotateAround.getY() - this.y);
+//        System.out.println(this.x + " " + this.y + " =====> " + 1.01*x + " " + 1.01*y);
+        return new Vector2D( x ,  y);
+    }
+    public double dotProduct(Vector2D vector ){
+        return this.x * vector.getX() + this.y * vector.getY();
+    }
+    public Vector2D convertToNormalVectorObstacles(){
+        if(Math.abs(this.x) > Math.abs(this.y) ){
+            return new Vector2D(1 , 0 );
+        }else if(Math.abs(this.x) == Math.abs(this.y)){
+            return new Vector2D(1,1);
+        }else
+            return new Vector2D(0 , 1);
     }
 
-    public Vector2D multiply(double c) {
-        return new Vector2D(
-                this.x * c,
-                this.y * c
-        );
-    }
-
-    public Vector2D add(Vector2D vector2D) {
-        return new Vector2D(
-                this.x + vector2D.getX(),
-                this.y + vector2D.getY()
-        );
-    }
 }

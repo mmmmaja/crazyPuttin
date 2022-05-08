@@ -7,29 +7,8 @@ import objects.TerrainGenerator;
 import java.util.Arrays;
 
 public class Heuns3 extends Solver{
-	public final PhysicsEngine PHYSICS = new PhysicsEngine();
-	public final double H = PHYSICS.getSTEP();
-	@Override
-	public void nextStep(GameObject gameObject) {
-		GameObject imaginary = new Ball( gameObject.getPosition()) ;
-		imaginary.setVelocity(gameObject.getVelocity());
-		Vector2D[] next = calculateNext(gameObject.getPosition() , gameObject.getVelocity() , H );
-		Vector2D nextPosition = next[0];
-		Vector2D nextVelocity = next[1];
 
-
-		if (TerrainGenerator.getHeight(nextPosition) >= 0) {
-			gameObject.setPreviousPosition(gameObject.getPosition());
-			gameObject.setState(nextPosition,nextVelocity);
-		}
-		else {
-			gameObject.setState(gameObject.getPreviousPosition(),new Vector2D(0,0));
-			gameObject.setWillMove(false);
-		}
-	}
-
-
-	public Vector2D[] calculateNext(Vector2D position , Vector2D velocity , double H) {
+    public Vector2D[] calculateNext(Vector2D position , Vector2D velocity , double H) {
 		double[] a = { 1/3.d , 2/3.d };
 		double[] b = { 1/3.d , 2/3.d };
 		double[] c = { 1.d , 0.d , 3.d};
