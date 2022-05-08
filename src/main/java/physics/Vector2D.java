@@ -14,10 +14,6 @@ public class Vector2D implements Vector {
         this.x = x;
         this.y = y;
     }
-    public Vector2D(double x , double y , double xn , double yn){
-        this.x = xn - x ;
-        this.y = yn - y ;
-    }
 
 
     public double getX() {
@@ -79,10 +75,7 @@ public class Vector2D implements Vector {
         return new Vector2D( x * c , y * c);
     }
 
-    public void rotate(double angle) {
-        double x2 = Math.cos(angle * x) - Math.sin(angle * y);
-        double y2 = Math.sin(angle * x) + Math.cos(angle * y);
-    }
+
 
     public void rotateAroundOrigin(double angle, Vector2D origin) {
         double sin = Math.sin(angle);
@@ -99,6 +92,36 @@ public class Vector2D implements Vector {
         this.x = x2;
         this.y = y2;
     }
+
+
+    public double getEuclideanDistance(Vector2D vector2D) {
+        return Math.sqrt(
+                Math.pow(this.x - vector2D.getX(), 2) +
+                        Math.pow(this.y - vector2D.getY(), 2)
+        );
+    }
+
+    public Vector2D multiply(double c) {
+        return new Vector2D(
+                this.x * c,
+                this.y * c
+        );
+    }
+
+    public Vector2D add(Vector2D vector2D) {
+        return new Vector2D(
+                this.x + vector2D.getX(),
+                this.y + vector2D.getY()
+        );
+    }
+    public Vector2D rotate(double angle){
+        double cos = Math.cos(Math.toRadians(angle));
+        double sin = Math.sin(Math.toRadians(angle));
+        Vector2D vel = new Vector2D( x * cos - y * sin , x * sin + y * cos );
+        System.out.println(vel);
+        return vel;
+    }
+
     public Vector2D reflectAroundVector( Vector2D rotateAround){
         double dotProduct = dotProduct(rotateAround);
         double x = -(2 *  dotProduct * rotateAround.getX() - this.x);
@@ -106,9 +129,11 @@ public class Vector2D implements Vector {
 //        System.out.println(this.x + " " + this.y + " =====> " + 1.01*x + " " + 1.01*y);
         return new Vector2D( x ,  y);
     }
+
     public double dotProduct(Vector2D vector ){
         return this.x * vector.getX() + this.y * vector.getY();
     }
+
     public Vector2D convertToNormalVectorObstacles(){
         if(Math.abs(this.x) > Math.abs(this.y) ){
             return new Vector2D(1 , 0 );
@@ -117,5 +142,4 @@ public class Vector2D implements Vector {
         }else
             return new Vector2D(0 , 1);
     }
-
 }

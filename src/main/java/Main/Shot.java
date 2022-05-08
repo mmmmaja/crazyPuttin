@@ -58,7 +58,7 @@ public class Shot extends Display implements Runnable {
     public void run() {
         ball.setWillMove(true);
 
-        int SPEED = 220;
+        int SPEED = 60;
         double delta = 0;
         long lastTime = System.nanoTime();
         final double nanos = Math.pow(10, 9) / SPEED ;

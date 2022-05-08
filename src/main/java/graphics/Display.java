@@ -37,6 +37,7 @@ import physics.*;
 
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.Random;
 
 
 public class Display extends Application {
@@ -376,17 +377,23 @@ public class Display extends Application {
             Vector2D velocity = new Vector2D(0, 0);
 
             if (botComboBox.getValue().equals("randomBot")) {
-                velocity = new RandomBot(this.universe).getBestVelocity();
+                RandomBot randomBot = new RandomBot(this.universe);
+                velocity = randomBot.getBestVelocity();
+                System.out.println(randomBot);
                 new Shot(universe, velocity);
                 shotCounter++;
             }
             if (botComboBox.getValue().equals("improvedRandomBot")) {
-                velocity = new ImprovedRandomBot(this.universe).getBestVelocity();
+                ImprovedRandomBot improvedRandomBot = new ImprovedRandomBot(this.universe);
+                velocity = improvedRandomBot.getBestVelocity();
+                System.out.println(improvedRandomBot);
                 new Shot(universe, velocity);
                 shotCounter++;
             }
             if (botComboBox.getValue().equals("hillClimbingBot")) {
-                velocity = new HillClimbingBot(this.universe).getBestVelocity();
+                HillClimbingBot hillClimbingBot = new HillClimbingBot(this.universe);
+                velocity = hillClimbingBot.getBestVelocity();
+                System.out.println(hillClimbingBot);
                 new Shot(universe, velocity);
                 shotCounter++;
             }

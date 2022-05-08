@@ -1,5 +1,6 @@
 package objects;
 
+import org.controlsfx.tools.ValueExtractor;
 import physics.Vector2D;
 
 /**
@@ -36,16 +37,31 @@ public class TerrainGenerator {
         double y = currentPosition.getY() ;
         return (f(x - 2*h, y) - 8*f(x-h ,y) + 8*f(x+h, y)-f(x+2*h, y)) / (12 * h);
     }
+    public static double getSlopeX(double x , double y ){
+        double h =STEP_SIZE;
+        return (f(x - 2*h, y) - 8*f(x-h ,y) + 8*f(x+h, y)-f(x+2*h, y)) / (12 * h);
+    }
 
     /**
      * @param currentPosition of the ball
      * @return y value of the slope at the given position
      */
     public static double getSlopeY(Vector2D currentPosition){
-        double h =STEP_SIZE;
+        double h = STEP_SIZE;
         double x = currentPosition.getX() ;
         double y = currentPosition.getY() ;
         return (f(x , y- 2*h) - 8 * f(x ,y-h) + 8*f(x, y+h)-f(x, y+2*h)) / (12 * h);
+    }
+
+
+   public static double getSlopeY(double x, double y ){
+        double h = STEP_SIZE;
+        return (f(x , y- 2*h) - 8 * f(x ,y-h) + 8*f(x, y+h)-f(x, y+2*h)) / (12 * h);
+    }
+    public static Vector2D getSlopes(Vector2D position ){
+        double slopeX = getSlopeX(position);
+        double slopeY = getSlopeY(position);
+        return new Vector2D(slopeX , slopeY);
     }
 
     /**

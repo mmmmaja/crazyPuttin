@@ -15,21 +15,47 @@ import java.util.Random;
 public class RandomBot {
 
     private final Universe universe;
+    private final Vector2D targetPosition;
+    private final Heuristics heuristics = Heuristics.finalPosition;
+
     private Vector2D bestVelocity;
     private double bestResult;
     private int shotCounter;
-
+    private int testNumber = 1000;
 
     public RandomBot(Universe universe) {
         this.universe = universe;
         this.bestVelocity = new Vector2D(0, 0);
         this.shotCounter = 0;
-        startRandomTests(2000);
+        this.targetPosition = this.universe.getTarget().getPosition();
+        startRandomTests(this.testNumber);
+    }
+
+    public RandomBot(Universe universe, int testNumber) {
+        this.universe = universe;
+        this.bestVelocity = new Vector2D(0, 0);
+        this.shotCounter = 0;
+        this.targetPosition = this.universe.getTarget().getPosition();
+        this.testNumber = testNumber;
+        startRandomTests(this.testNumber);
     }
 
     /**
-     * TODO include boundaries for the initialVelocity
+     * extended to fit AStarBot properties
      */
+    public RandomBot(Universe universe, Vector2D targetPosition) {
+        this.universe = universe;
+        this.bestVelocity = new Vector2D(0, 0);
+        this.shotCounter = 0;
+        this.targetPosition = targetPosition;
+        startRandomTests(this.testNumber);
+    }
+
+    public void setTestNumber(int testNumber) {
+        this.testNumber = testNumber;
+    }
+
+
     public void startRandomTests(int testNumber) {
 
         // maximal number of trial shots
@@ -45,7 +71,7 @@ public class RandomBot {
             );
 
             // distance between the ball and the target in 3D (takes height into consideration)
-            double result = new TestShot(this.universe, initialVelocity).getTestResult(Heuristics.finalPosition);
+            double result = new TestShot(this.universe, initialVelocity, this.targetPosition).getTestResult(this.heuristics);
             if (result < this.bestResult) {
                 this.bestResult = result;
                 this.bestVelocity = initialVelocity;
@@ -62,13 +88,20 @@ public class RandomBot {
      * @return initial velocity that gave the best shot out of every test
      */
     public Vector2D getBestVelocity() {
-        System.out.println("\n\nBest velocity: "+this.bestVelocity+"\nresult: "+this.bestResult);
-        System.out.println("shotCounter: "+this.shotCounter);
         return this.bestVelocity;
     }
 
     public int getShotCounter() {
         return this.shotCounter;
     }
+
+    public String toString() {
+        return "Random Bot: "+
+                "\nBest velocity: " + this.bestVelocity +
+                "\nresult: " + this.bestResult +
+                "\nshotCounter: " + this.shotCounter +
+                "\nheuristics: " + this.heuristics + "\n";
+    }
+
 
 }

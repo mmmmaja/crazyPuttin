@@ -14,7 +14,7 @@ public class PhysicsEngine {
 	private static final double STEP = 0.004;
 	private static final double STOP = 0.005;
 
-	private final double errorTolerance = 0.001;
+	private final double errorTolerance = 0.01;
 
 	public Vector2D calculateAcceleration(GameObject gameObject) {
 		double mu_K = TerrainGenerator.getKineticFrictionCoefficient(gameObject.getPosition());
@@ -137,7 +137,7 @@ public class PhysicsEngine {
 			double obstXPos = obstacle.getPosition().getX();
 			double obstYPos = obstacle.getPosition().getY();
 			// assuming that obstacle is square (length=width=height)
-			double obstDim = obstacle.getDimension().getX();
+			double obstDim = obstacle.getDimension();
 
 			// when ball ends up in between boundaries of obstacle
 			if ((currPosX <= obstXPos+obstDim/2+rBall && currPosX >= obstXPos-obstDim/2-rBall) &&
