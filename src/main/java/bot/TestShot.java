@@ -2,6 +2,7 @@ package bot;
 
 import Main.Universe;
 import objects.Ball;
+import objects.TerrainGenerator;
 import physics.Vector2D;
 
 
@@ -47,6 +48,9 @@ public class TestShot implements Comparable<TestShot>{
 
             // ball is in the resting position: target was not hit
             if ((!ball.isMoving() && !ball.getWillMove())) {
+                if (TerrainGenerator.getHeight(ball.getPosition()) < 0) {
+                    distance+= Integer.MAX_VALUE;
+                }
                 this.resultFinalPosition = distance;
                 break;
             }
@@ -83,4 +87,9 @@ public class TestShot implements Comparable<TestShot>{
     public int compareTo(TestShot testShot) {
         return (this.getTestResult(Heuristics.allPositions) < testShot.getTestResult(Heuristics.allPositions)) ? -1 : 1;
     }
+
+    public Vector2D getFinalPosition() {
+        return this.ball.getPosition();
+    }
+
 }

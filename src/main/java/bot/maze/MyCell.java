@@ -32,18 +32,13 @@ public class MyCell {
      */
 
 
-    MyCell(int x,int y){
+    MyCell(int x, int y){
         this.x = x;
         this.y = y;
-        /**
-         * g --> the cost of the movement from the start cell to the current cell
-         * h -->the distance from the target's cell to the current cell
-         * f=g+h
-         *
-         */
-        f = 0;
-        g = 0;
-        h = 0;
+
+        g = 0; // the cost of the movement from the start cell to the current cell
+        h = 0; // the distance from the target's cell to the current cell
+        f = 0; // g + h
         //this.width = Astar.WIDTH/Astar.cols;
         //this.height = Astar.HEIGHT/Astar.rows;
         this.neighbors = new ArrayList<>(Astar.cols*Astar.rows);
@@ -109,6 +104,19 @@ public class MyCell {
          */
         if(y>0){
             this.neighbors.add(grid[x][y-1]);
+        }
+        // DIAGONALS
+        if(x<Astar.cols-1 && y<Astar.rows-1){
+            this.neighbors.add(grid[x+1][y+1]);
+        }
+        if(x>0 && y>0){
+            this.neighbors.add(grid[x-1][y-1]);
+        }
+        if(x<Astar.cols-1 && y>0){
+            this.neighbors.add(grid[x+1][y-1]);
+        }
+        if(x>0 && y<Astar.rows-1){
+            this.neighbors.add(grid[x-1][y+1]);
         }
     }
 

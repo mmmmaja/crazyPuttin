@@ -1,35 +1,34 @@
 package bot.maze;
 
 import Main.Main;
+import bot.Bot;
 import physics.Vector2D;
 
 import java.util.ArrayList;
-import Main.Universe;
 
 
+public class AStarBot implements Bot {
 
-public class AstarBot {
-    public ArrayList<Vector2D> nextPosition;
-    public ArrayList<MyCell> path;
-    public Astar star;
-    public static int counter;
+    private final ArrayList<Vector2D> nextPosition;
+    private final ArrayList<MyCell> path;
+    private  int counter;
 
 
-    public AstarBot() {
+    public AStarBot() {
         this.nextPosition = new ArrayList<>();
-        this.star = new Astar();
+        Astar star = new Astar();
         this.path = star.findPath();
-        counter=0;
+        this.counter = 0;
     }
+
     public void connectUpDownPath(){
-        System.out.println("updown");
-        int x=path.get(counter).x;
-        int y=path.get(counter).y;
-        counter++;
-        for (; counter< path.size();counter++){
+        System.out.println("upDown");
+        int x = path.get(counter).x;
+        int y = path.get(counter).y;
+        this.counter++;
+        for (; counter < path.size(); counter++){
             if (x==path.get(counter).x){
                 y=path.get(counter).y;
-
             }
             else {
                 nextPosition.add(new Vector2D(x, y));
@@ -44,8 +43,8 @@ public class AstarBot {
 
     public void connectLeftRightPath(){
         System.out.println("sides");
-        int x=path.get(AstarBot.counter).x;
-        int y=path.get(AstarBot.counter).y;
+        int x=path.get(counter).x;
+        int y=path.get(counter).y;
         counter++;
         for (; counter< path.size();counter++){
             if (y==path.get(counter).y){
@@ -59,8 +58,13 @@ public class AstarBot {
 
     }
 
+    @Override
+    public int getShotCounter() {
+        return 0;
+    }
 
-    public ArrayList<Vector2D> getNextPosition(){
+    @Override
+    public ArrayList<Vector2D> getVelocities() {
         int x=path.get(counter).x;
         int y=path.get(counter).y;
         nextPosition.add(new Vector2D(x,y));
@@ -72,15 +76,14 @@ public class AstarBot {
         else {
             connectLeftRightPath();
         }
-        System.out.println("can  get a heeya");
         nextPosition.set(0,Main.getUniverse().getFileReader().getInitialPosition());
         nextPosition.add(Main.getUniverse().getTarget().getPosition());
         return nextPosition;
     }
 
-
-
-//    public ArrayList<Vector2D> getNextPosition() {
-//        return this.nextPosition;
-//    }
+    @Override
+    public String toString() {
+        return "";
+    }
 }
+

@@ -20,7 +20,7 @@ public class Terrain extends TerrainGenerator {
 
 
     // the size of each polygon in the mesh
-    public static final double STEP = 1;
+    public static final double STEP = 0.2;
 
     // to be used to dynamically alter the mesh when dragging the terrain
     private float[] points;
@@ -79,12 +79,12 @@ public class Terrain extends TerrainGenerator {
                 int bottomRight = bottomLeft + 1;
 
                 // add texture and faces to water mesh
-                if (TerrainGenerator.getHeight(new Vector2D( i * STEP - 50, j * STEP -50 )) < 0) {
+                if (TerrainGenerator.getHeight(new Vector2D( i * STEP - TERRAIN_HEIGHT, j * STEP - TERRAIN_WIDTH )) < 0) {
                     this.waterMesh.getFaces().addAll(topLeft, 0, topRight, 1, bottomLeft, 2);
                     this.waterMesh.getFaces().addAll(bottomLeft, 0, topRight, 1, bottomRight, 2);
                 }
                 // add texture and faces to sandPit mesh
-                else if (isSandPit((i * STEP - (TERRAIN_HEIGHT)) , (j * STEP - (TERRAIN_HEIGHT)) ) ) {
+                else if (isSandPit((i * STEP - (TERRAIN_HEIGHT)) , (j * STEP - (TERRAIN_WIDTH)) ) ) {
                     this.sandPitMesh.getFaces().addAll(topLeft, 0, topRight, 1, bottomLeft, 2);
                     this.sandPitMesh.getFaces().addAll(bottomLeft, 0, topRight, 1, bottomRight, 2);
                 }

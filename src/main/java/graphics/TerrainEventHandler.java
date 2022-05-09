@@ -14,6 +14,7 @@ import physics.Vector2D;
 
 
 /**
+ * TODO add obstacles on mouse dragged
  * Handles the events when the mouse is clicked on the terrain
  *      adding obstacles
  *      is supposed to work with splines later as well (dragging the mouse)
@@ -24,15 +25,10 @@ public class TerrainEventHandler {
     private final SmartGroup group;
     private final PhongMaterial rockMaterial;
 
-    private Spline spline;
-    private Vector2D clickPosition;
-
-
     public TerrainEventHandler(Universe universe, SmartGroup group) {
         this.universe = universe;
         this.group = group;
         this.rockMaterial = createRockMaterial();
-        this.spline = null;
 
         mousePressed();
         mouseDragged();
@@ -49,7 +45,6 @@ public class TerrainEventHandler {
 
             // 3D point in the scene where the mouse was clicked
             PickResult pickResult = mouseEvent.getPickResult();
-            this.clickPosition = new Vector2D(mouseEvent.getX(), mouseEvent.getY());
 
             Vector2D clickPosition = new Vector2D(
                     pickResult.getIntersectedPoint().getX(),
@@ -69,12 +64,6 @@ public class TerrainEventHandler {
                     universe.addObstacle(obstacle);
                 }
             }
-
-            // SPLINE events
-            else if (group.getSplineOn()) {
-                this.spline = new Spline(clickPosition);
-                universe.addSplines(this.spline);
-            }
         });
     }
 
@@ -83,36 +72,14 @@ public class TerrainEventHandler {
      * create the splines
      */
     private void mouseDragged() {
-        double draggingFactor = 0.5;
-
-        universe.getMeshViews()[0].setOnMouseDragged(mouseEvent -> {
-
-            // start dragging the terrain
-            if (this.group.getSplineOn()) {
-
-                Vector2D newClickPosition = new Vector2D(mouseEvent.getX(), mouseEvent.getY());
-
-                double deltaHeight = this.group.getSceneAngle() * (this.clickPosition.getY() - newClickPosition.getY());
-                this.spline.addHeight(deltaHeight * draggingFactor);
-                this.clickPosition = newClickPosition;
-
-                Sphere sphere = new Sphere();
-                sphere.setTranslateX(this.spline.getPosition().getX());
-                sphere.setTranslateY(this.spline.getPosition().getY());
-                sphere.setTranslateZ(this.spline.getHeight());
-                sphere.setRadius(0.4);
-                this.group.getChildren().add(sphere);
-            }
-        });
+        universe.getMeshViews()[0].setOnMouseDragged(mouseEvent -> {});
     }
 
     /**
      * does nothing for now
      */
     private void mouseReleased() {
-        universe.getMeshViews()[0].setOnMouseReleased(mouseEvent -> {
-            //System.out.println("spline "+this.universe.getSplines().size()+": "+ this.spline.getHeight());
-        });
+        universe.getMeshViews()[0].setOnMouseReleased(mouseEvent -> {});
 
     }
 

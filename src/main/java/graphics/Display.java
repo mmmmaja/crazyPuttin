@@ -2,11 +2,8 @@ package graphics;
 
 import Main.Main;
 import Main.Shot;
-import bot.HillClimbingBot;
-import bot.HillClimbingBot2;
-import bot.ImprovedRandomBot;
-import bot.RandomBot;
-import bot.maze.AstarBot;
+import bot.*;
+import bot.maze.AStarBot;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -32,12 +29,12 @@ import javafx.scene.text.Text;
 
 import javafx.stage.Stage;
 import Main.Universe;
+import objects.TerrainGenerator;
 import objects.Tree;
 import physics.*;
 
 import java.util.ArrayList;
 import java.util.Objects;
-import java.util.Random;
 
 
 public class Display extends Application {
@@ -368,52 +365,33 @@ public class Display extends Application {
         Button botButton = new Button("bot");
         gridPane.add(new HBox(30, botButton), 0, position++);
 
-        String[] botList = {"randomBot" , "improvedRandomBot", "hillClimbingBot", "hillClimbingBot2", "mazeBot"};
+        String[] botList = {"randomBot" , "improvedRandomBot", "hillClimbingBot", "mazeBot"};
         ComboBox<String> botComboBox = new ComboBox(FXCollections.observableArrayList(botList));
         botComboBox.setValue("randomBot");
         gridPane.add(new HBox(30, botComboBox), 0, position++);
 
         botButton.setOnMouseClicked(mouseEvent -> {
-            Vector2D velocity = new Vector2D(0, 0);
+            Bot bot;
 
             if (botComboBox.getValue().equals("randomBot")) {
-                RandomBot randomBot = new RandomBot(this.universe);
-                velocity = randomBot.getBestVelocity();
-                System.out.println(randomBot);
-                new Shot(universe, velocity);
+                bot = new RandomBot(this.universe);
+            }
+            else if (botComboBox.getValue().equals("improvedRandomBot")) {
+               bot = new ImprovedRandomBot(this.universe);
+            }
+            else if (botComboBox.getValue().equals("hillClimbingBot")) {
+                bot = new HillClimbingBot(this.universe);
+            }
+            else {
+                bot = new AStarBot();
+            }
+            ArrayList<Vector2D> velocities = bot.getVelocities();
+            for (Vector2D velocity : velocities) {
+                new Shot(this.universe, velocity);
                 shotCounter++;
             }
-            if (botComboBox.getValue().equals("improvedRandomBot")) {
-                ImprovedRandomBot improvedRandomBot = new ImprovedRandomBot(this.universe);
-                velocity = improvedRandomBot.getBestVelocity();
-                System.out.println(improvedRandomBot);
-                new Shot(universe, velocity);
-                shotCounter++;
-            }
-            if (botComboBox.getValue().equals("hillClimbingBot")) {
-                HillClimbingBot hillClimbingBot = new HillClimbingBot(this.universe);
-                velocity = hillClimbingBot.getBestVelocity();
-                System.out.println(hillClimbingBot);
-                new Shot(universe, velocity);
-                shotCounter++;
-            }
-            if (botComboBox.getValue().equals("hillClimbingBot2")) {
-                velocity = new HillClimbingBot2(this.universe).getBestVelocity();
-                new Shot(universe, velocity);
-                shotCounter++;
-            }
-            if (botComboBox.getValue().equals("mazeBot")) {
-                ArrayList<Vector2D> nextPositions = new AstarBot().getNextPosition();
+            System.out.println(bot);
 
-                for (Vector2D nextPosition : nextPositions) {
-                    velocity = new HillClimbingBot2(this.universe, nextPosition).getBestVelocity();
-                    new Shot(universe, velocity);
-                    System.out.println("meow");
-                    shotCounter++;
-                }
-
-
-            }
         });
         return position;
     }
@@ -446,6 +424,10 @@ public class Display extends Application {
                 new Shot(universe, velocity);
                 shotCounter++;
             }
+            // fixme: water was hit so we subtract points
+//            if (TerrainGenerator.getHeight(this.universe.getBall().getPosition()) < 0) {
+//                pointCounter--;
+//            }
         }
     }
 

@@ -117,16 +117,13 @@ public class Vector2D implements Vector {
     public Vector2D rotate(double angle){
         double cos = Math.cos(Math.toRadians(angle));
         double sin = Math.sin(Math.toRadians(angle));
-        Vector2D vel = new Vector2D( x * cos - y * sin , x * sin + y * cos );
-        System.out.println(vel);
-        return vel;
+        return new Vector2D( x * cos - y * sin , x * sin + y * cos );
     }
 
     public Vector2D reflectAroundVector( Vector2D rotateAround){
         double dotProduct = dotProduct(rotateAround);
         double x = -(2 *  dotProduct * rotateAround.getX() - this.x);
         double y = -(2 *  dotProduct * rotateAround.getY() - this.y);
-//        System.out.println(this.x + " " + this.y + " =====> " + 1.01*x + " " + 1.01*y);
         return new Vector2D( x ,  y);
     }
 
@@ -141,5 +138,12 @@ public class Vector2D implements Vector {
             return new Vector2D(1,1);
         }else
             return new Vector2D(0 , 1);
+    }
+
+    public Vector2D copyOf() {
+        return new Vector2D(
+                this.x,
+                this.y
+        );
     }
 }

@@ -5,6 +5,7 @@ import objects.Obstacle;
 import physics.Vector2D;
 
 
+import java.util.ArrayList;
 import java.util.Random;
 
 
@@ -12,7 +13,7 @@ import java.util.Random;
  * This bot performs random steps and chooses the best one based on the heuristics
  * shotCounter can be used to assess the heuristics used
  */
-public class RandomBot {
+public class RandomBot implements Bot {
 
     private final Universe universe;
     private final Vector2D targetPosition;
@@ -21,45 +22,43 @@ public class RandomBot {
     private Vector2D bestVelocity;
     private double bestResult;
     private int shotCounter;
-    private int testNumber = 1000;
 
     public RandomBot(Universe universe) {
         this.universe = universe;
         this.bestVelocity = new Vector2D(0, 0);
         this.shotCounter = 0;
         this.targetPosition = this.universe.getTarget().getPosition();
-        startRandomTests(this.testNumber);
+        startRandomTests(1000);
     }
 
+    /**
+     * constructor used for the hillClimbing bot to specify number of trials
+     */
     public RandomBot(Universe universe, int testNumber) {
         this.universe = universe;
         this.bestVelocity = new Vector2D(0, 0);
         this.shotCounter = 0;
         this.targetPosition = this.universe.getTarget().getPosition();
-        this.testNumber = testNumber;
-        startRandomTests(this.testNumber);
+        startRandomTests(testNumber);
     }
 
     /**
-     * extended to fit AStarBot properties
+     * extended to fit AStarBot properties (specify the target position)
      */
     public RandomBot(Universe universe, Vector2D targetPosition) {
         this.universe = universe;
         this.bestVelocity = new Vector2D(0, 0);
         this.shotCounter = 0;
         this.targetPosition = targetPosition;
-        startRandomTests(this.testNumber);
+        startRandomTests(1000);
     }
 
-    public void setTestNumber(int testNumber) {
-        this.testNumber = testNumber;
-    }
-
-
+    /**
+     * performs number shots and picks the best one
+     * @param testNumber number of testShots performed
+     */
     public void startRandomTests(int testNumber) {
 
-        // maximal number of trial shots
-        Random random = new Random();
         this.bestResult = Integer.MAX_VALUE;
 
         for (int i = 0; i < testNumber; i++) {
@@ -70,7 +69,7 @@ public class RandomBot {
                     Obstacle.getRandomDouble(-5.0, 5.0)
             );
 
-            // distance between the ball and the target in 3D (takes height into consideration)
+            // euclidean distance between the ball and the target
             double result = new TestShot(this.universe, initialVelocity, this.targetPosition).getTestResult(this.heuristics);
             if (result < this.bestResult) {
                 this.bestResult = result;
@@ -83,18 +82,20 @@ public class RandomBot {
         }
     }
 
-    /**
-     *
-     * @return initial velocity that gave the best shot out of every test
-     */
-    public Vector2D getBestVelocity() {
-        return this.bestVelocity;
+    @Override
+    public ArrayList<Vector2D> getVelocities() {
+        ArrayList<Vector2D> velocities = new ArrayList<>();
+        velocities.add(this.bestVelocity);
+        return velocities;
     }
 
+    @Override
     public int getShotCounter() {
         return this.shotCounter;
     }
 
+
+    @Override
     public String toString() {
         return "Random Bot: "+
                 "\nBest velocity: " + this.bestVelocity +
