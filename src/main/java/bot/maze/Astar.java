@@ -11,7 +11,7 @@ import physics.Vector2D;
 
 public class Astar {
 
-    public static int STEP= 2; //todo:decide step size
+    public static int STEP= 1; //todo:decide step size
     public static int cols;           //for grid division of the terrain
     public static int rows;
     public Vector2D targetPosition;
@@ -70,7 +70,7 @@ public class Astar {
     public boolean addObstacles(MyCell cell){
         for (int k=0; k<Main.getUniverse().getObstacles().size();k++) {
             if (cell.x == (int) Math.round((Main.getUniverse().getObstacles().get(k).getPosition().getX()+Terrain.TERRAIN_WIDTH)/STEP) &&
-                cell.y == (int) Math.round((Main.getUniverse().getObstacles().get(k).getPosition().getY()+Terrain.TERRAIN_HEIGHT))/STEP) {
+                    cell.y == (int) Math.round((Main.getUniverse().getObstacles().get(k).getPosition().getY()+Terrain.TERRAIN_HEIGHT))/STEP) {
                 return true;
             }
 
@@ -127,7 +127,7 @@ public class Astar {
             for (int i = 0; i < neighbors.size(); i++) {
                 MyCell neighbor = neighbors.get(i);//checking every neighbor
                 if (!visited.contains(neighbor) && !neighbor.wall) {
-                    int temp = current.g+1;
+                    int temp = current.g+ MyCell.euclidianDistance(neighbor, current);
                     if(toVisit.contains(neighbor)){//neighbor has not been visited
                         if(temp<neighbor.g){//check if this g is a better cost
                             neighbor.g = temp;//update g

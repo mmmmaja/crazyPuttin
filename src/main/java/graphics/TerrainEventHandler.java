@@ -5,11 +5,7 @@ import javafx.scene.image.Image;
 import javafx.scene.input.PickResult;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
-import javafx.scene.shape.Sphere;
 import objects.Obstacle;
-import objects.Terrain;
-import objects.TerrainGenerator;
-import splines.Spline;
 import physics.Vector2D;
 
 
@@ -41,21 +37,29 @@ public class TerrainEventHandler {
      */
     private void mousePressed() {
 
-        universe.getMeshViews()[0].setOnMousePressed(mouseEvent -> {
+        universe.getMeshViews()[0].setOnMousePressed(mouseEvent -> {});
+    }
+
+
+    /**
+     * create the splines
+     */
+    private void mouseDragged() {
+        universe.getMeshViews()[0].setOnMouseDragged(mouseEvent -> {
 
             // 3D point in the scene where the mouse was clicked
             PickResult pickResult = mouseEvent.getPickResult();
+
 
             Vector2D clickPosition = new Vector2D(
                     pickResult.getIntersectedPoint().getX(),
                     pickResult.getIntersectedPoint().getY()
             );
-
             // OBSTACLE events
             if (group.getObstaclesOn()) {
 
                 // if not a target or a ball
-                if (!collides(clickPosition)) {
+                if (!collides(clickPosition) && !(ifClickedInCentre(clickPosition))) {
 
                     Obstacle obstacle = new Obstacle(clickPosition);
                     Box box = obstacle.getBox();
@@ -67,14 +71,6 @@ public class TerrainEventHandler {
         });
     }
 
-
-    /**
-     * create the splines
-     */
-    private void mouseDragged() {
-        universe.getMeshViews()[0].setOnMouseDragged(mouseEvent -> {});
-    }
-
     /**
      * does nothing for now
      */
@@ -82,6 +78,12 @@ public class TerrainEventHandler {
         universe.getMeshViews()[0].setOnMouseReleased(mouseEvent -> {});
 
     }
+
+    private boolean ifClickedInCentre(Vector2D clickPosition) {
+        double epsilon = 0.7;
+        return clickPosition.getX() < epsilon && clickPosition.getY() < epsilon;
+    }
+
 
     /**
      * creates the material for the obstacles

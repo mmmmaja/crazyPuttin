@@ -51,20 +51,7 @@ public class MyCell {
 
     }
 
-//    public Rectangle draw(Color color){
-//
-//        Rectangle rectangle = new Rectangle(this.x*width,this.y*height,width,height);
-//        if (wall) {
-//            rectangle.fillProperty().set(Color.BLACK);
-//            rectangle.strokeProperty().setValue(Color.BLACK);
-//
-//        }
-//        else{
-//            rectangle.setFill(color);
-//            rectangle.strokeProperty().setValue(Color.BLACK);
-//        }
-//        return rectangle;
-//    }
+
     public void addNeighbors(MyCell[][] grid){
         /**
          * if a cell is on the grid's boundaries we do not need to add 4 neighbors
@@ -105,6 +92,7 @@ public class MyCell {
         if(y>0){
             this.neighbors.add(grid[x][y-1]);
         }
+
         // DIAGONALS
         if(x<Astar.cols-1 && y<Astar.rows-1){
             this.neighbors.add(grid[x+1][y+1]);
@@ -125,7 +113,7 @@ public class MyCell {
      *distance between to cells- will be used to calculate the g and h value's
      */
     public static int euclidianDistance(MyCell from,MyCell to){
-            int distance = (to.x-from.x)^2 + (to.y-from.y)^2;
+        int distance = (to.x-from.x)^2 + (to.y-from.y)^2;
         return distance;
     }
 

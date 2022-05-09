@@ -131,6 +131,7 @@ public class Vector2D implements Vector {
         return this.x * vector.getX() + this.y * vector.getY();
     }
 
+
     public Vector2D convertToNormalVectorObstacles(){
         if(Math.abs(this.x) > Math.abs(this.y) ){
             return new Vector2D(1 , 0 );
@@ -146,4 +147,5 @@ public class Vector2D implements Vector {
                 this.y
         );
     }
+
 }
