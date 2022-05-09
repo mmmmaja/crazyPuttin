@@ -37,15 +37,7 @@ public class TerrainEventHandler {
      */
     private void mousePressed() {
 
-        universe.getMeshViews()[0].setOnMousePressed(mouseEvent -> {});
-    }
-
-
-    /**
-     * create the splines
-     */
-    private void mouseDragged() {
-        universe.getMeshViews()[0].setOnMouseDragged(mouseEvent -> {
+        universe.getMeshViews()[0].setOnMousePressed(mouseEvent -> {
 
             // 3D point in the scene where the mouse was clicked
             PickResult pickResult = mouseEvent.getPickResult();
@@ -59,7 +51,7 @@ public class TerrainEventHandler {
             if (group.getObstaclesOn()) {
 
                 // if not a target or a ball
-                if (!collides(clickPosition) && !(ifClickedInCentre(clickPosition))) {
+                if (!collides(clickPosition)) {
 
                     Obstacle obstacle = new Obstacle(clickPosition);
                     Box box = obstacle.getBox();
@@ -71,17 +63,20 @@ public class TerrainEventHandler {
         });
     }
 
+
+    /**
+     * create the splines
+     */
+    private void mouseDragged() {
+        universe.getMeshViews()[0].setOnMouseDragged(mouseEvent -> {});
+    }
+
     /**
      * does nothing for now
      */
     private void mouseReleased() {
         universe.getMeshViews()[0].setOnMouseReleased(mouseEvent -> {});
 
-    }
-
-    private boolean ifClickedInCentre(Vector2D clickPosition) {
-        double epsilon = 0.7;
-        return clickPosition.getX() < epsilon && clickPosition.getY() < epsilon;
     }
 
 

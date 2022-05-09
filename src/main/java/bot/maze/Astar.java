@@ -59,9 +59,9 @@ public class Astar {
         toVisit.add(start);
     }
     public void createNeighbors() {
-        for (int i = 0; i < grid.length; i++) {
-            for (int j = 0; j < grid[i].length; j++) {
-                grid[i][j].addNeighbors(grid);
+        for (MyCell[] myCells : grid) {
+            for (MyCell myCell : myCells) {
+                myCell.addNeighbors(grid);
             }
         }
 
@@ -79,10 +79,7 @@ public class Astar {
         return false;
     }
     public boolean addWater(MyCell cell){
-        if (TerrainGenerator.getHeight(new Vector2D( cell.x, cell.y )) < 0) {
-            return true;
-        }
-        return false;
+        return TerrainGenerator.getHeight(new Vector2D(cell.x, cell.y)) < 0;
 
     }
     //todo : sand..changes f?
@@ -110,12 +107,12 @@ public class Astar {
                     path.add(temp.previous);
                     temp = temp.previous;
                 }
-                System.out.println(" we are done");
+                //System.out.println(" we are done");
                 solutionFound=true;
-                System.out.println("start x: "+start.x+"start y: "+start.y);
-                System.out.println("target x: "+end.x+"target y: "+end.y);
-                for (MyCell cell : path) {
-                    System.out.println("x is: "+cell.x+"y is: "+cell.y+"is a wall"+cell.wall);}
+//                System.out.println("start x: "+start.x+"start y: "+start.y);
+//                System.out.println("target x: "+end.x+"target y: "+end.y);
+//                for (MyCell cell : path) {
+//                    System.out.println("x is: "+cell.x+"y is: "+cell.y+"is a wall"+cell.wall);}
                 return path;
 
             }

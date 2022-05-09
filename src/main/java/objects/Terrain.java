@@ -20,7 +20,7 @@ public class Terrain extends TerrainGenerator {
 
 
     // the size of each polygon in the mesh
-    public static final double STEP = 0.2;
+    public static final double STEP = 1;
 
     // to be used to dynamically alter the mesh when dragging the terrain
     private float[] points;
