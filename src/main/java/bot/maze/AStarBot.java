@@ -2,6 +2,7 @@ package bot.maze;
 
 import Main.Main;
 import bot.Bot;
+import bot.HillClimbingBot;
 import physics.Vector2D;
 
 import java.util.ArrayList;
@@ -22,7 +23,6 @@ public class AStarBot implements Bot {
     }
 
     public void connectUpDownPath(){
-        System.out.println("upDown");
         int x = path.get(counter).x;
         int y = path.get(counter).y;
         this.counter++;
@@ -32,9 +32,6 @@ public class AStarBot implements Bot {
             }
             else {
                 nextPosition.add(new Vector2D(x, y));
-                for (Vector2D nextPosition : nextPosition) {
-                    System.out.println("x is: "+nextPosition.getX()+" y is: "+nextPosition.getY());
-                }
                 connectLeftRightPath();
             }
         }
@@ -42,7 +39,6 @@ public class AStarBot implements Bot {
     }
 
     public void connectLeftRightPath(){
-        System.out.println("sides");
         int x=path.get(counter).x;
         int y=path.get(counter).y;
         counter++;
@@ -65,6 +61,18 @@ public class AStarBot implements Bot {
 
     @Override
     public ArrayList<Vector2D> getVelocities() {
+        ArrayList<Vector2D> velocities = new ArrayList<>();
+
+        getNextPosition();
+        for (Vector2D position : this.nextPosition) {
+            HillClimbingBot hillClimbingBot = new HillClimbingBot(Main.getUniverse(), position);
+            Vector2D velocity = hillClimbingBot.getVelocities().get(0);
+            velocities.add(velocity);
+        }
+        return velocities;
+    }
+
+    public ArrayList<Vector2D> getNextPosition() {
         int x=path.get(counter).x;
         int y=path.get(counter).y;
         nextPosition.add(new Vector2D(x,y));

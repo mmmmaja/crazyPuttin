@@ -11,7 +11,7 @@ import physics.Vector2D;
 
 public class Astar {
 
-    public static int STEP= 2; //todo:decide step size
+    public static int STEP= 1; //todo:decide step size
     public static int cols;           //for grid division of the terrain
     public static int rows;
     public Vector2D targetPosition;
@@ -59,9 +59,9 @@ public class Astar {
         toVisit.add(start);
     }
     public void createNeighbors() {
-        for (int i = 0; i < grid.length; i++) {
-            for (int j = 0; j < grid[i].length; j++) {
-                grid[i][j].addNeighbors(grid);
+        for (MyCell[] myCells : grid) {
+            for (MyCell myCell : myCells) {
+                myCell.addNeighbors(grid);
             }
         }
 
@@ -70,7 +70,7 @@ public class Astar {
     public boolean addObstacles(MyCell cell){
         for (int k=0; k<Main.getUniverse().getObstacles().size();k++) {
             if (cell.x == (int) Math.round((Main.getUniverse().getObstacles().get(k).getPosition().getX()+Terrain.TERRAIN_WIDTH)/STEP) &&
-                cell.y == (int) Math.round((Main.getUniverse().getObstacles().get(k).getPosition().getY()+Terrain.TERRAIN_HEIGHT))/STEP) {
+                    cell.y == (int) Math.round((Main.getUniverse().getObstacles().get(k).getPosition().getY()+Terrain.TERRAIN_HEIGHT))/STEP) {
                 return true;
             }
 
@@ -79,10 +79,7 @@ public class Astar {
         return false;
     }
     public boolean addWater(MyCell cell){
-        if (TerrainGenerator.getHeight(new Vector2D( cell.x, cell.y )) < 0) {
-            return true;
-        }
-        return false;
+        return TerrainGenerator.getHeight(new Vector2D(cell.x, cell.y)) < 0;
 
     }
     //todo : sand..changes f?
@@ -110,12 +107,12 @@ public class Astar {
                     path.add(temp.previous);
                     temp = temp.previous;
                 }
-                System.out.println(" we are done");
+                //System.out.println(" we are done");
                 solutionFound=true;
-                System.out.println("start x: "+start.x+"start y: "+start.y);
-                System.out.println("target x: "+end.x+"target y: "+end.y);
-                for (MyCell cell : path) {
-                    System.out.println("x is: "+cell.x+"y is: "+cell.y+"is a wall"+cell.wall);}
+//                System.out.println("start x: "+start.x+"start y: "+start.y);
+//                System.out.println("target x: "+end.x+"target y: "+end.y);
+//                for (MyCell cell : path) {
+//                    System.out.println("x is: "+cell.x+"y is: "+cell.y+"is a wall"+cell.wall);}
                 return path;
 
             }
@@ -127,7 +124,7 @@ public class Astar {
             for (int i = 0; i < neighbors.size(); i++) {
                 MyCell neighbor = neighbors.get(i);//checking every neighbor
                 if (!visited.contains(neighbor) && !neighbor.wall) {
-                    int temp = current.g+1;
+                    int temp = current.g+ MyCell.euclidianDistance(neighbor, current);
                     if(toVisit.contains(neighbor)){//neighbor has not been visited
                         if(temp<neighbor.g){//check if this g is a better cost
                             neighbor.g = temp;//update g

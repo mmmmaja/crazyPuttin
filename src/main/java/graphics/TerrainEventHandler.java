@@ -5,11 +5,7 @@ import javafx.scene.image.Image;
 import javafx.scene.input.PickResult;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
-import javafx.scene.shape.Sphere;
 import objects.Obstacle;
-import objects.Terrain;
-import objects.TerrainGenerator;
-import splines.Spline;
 import physics.Vector2D;
 
 
@@ -46,11 +42,11 @@ public class TerrainEventHandler {
             // 3D point in the scene where the mouse was clicked
             PickResult pickResult = mouseEvent.getPickResult();
 
+
             Vector2D clickPosition = new Vector2D(
                     pickResult.getIntersectedPoint().getX(),
                     pickResult.getIntersectedPoint().getY()
             );
-
             // OBSTACLE events
             if (group.getObstaclesOn()) {
 
@@ -82,6 +78,7 @@ public class TerrainEventHandler {
         universe.getMeshViews()[0].setOnMouseReleased(mouseEvent -> {});
 
     }
+
 
     /**
      * creates the material for the obstacles
