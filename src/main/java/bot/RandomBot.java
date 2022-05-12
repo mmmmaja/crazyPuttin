@@ -22,6 +22,7 @@ public class RandomBot implements Bot {
     private Vector2D bestVelocity;
     private double bestResult;
     private int shotCounter;
+    private final ArrayList<Vector2D> velocities = new ArrayList<>();
 
     public RandomBot(Universe universe) {
         this.universe = universe;
@@ -30,6 +31,7 @@ public class RandomBot implements Bot {
         this.targetPosition = this.universe.getTarget().getPosition();
         startRandomTests(1000);
     }
+
 
     /**
      * constructor used for the hillClimbing bot to specify number of trials
@@ -74,6 +76,7 @@ public class RandomBot implements Bot {
             if (result < this.bestResult) {
                 this.bestResult = result;
                 this.bestVelocity = initialVelocity;
+                velocities.add(0,bestVelocity);
             }
             // ball was hit
             if (this.bestResult == 0.0) {
@@ -84,8 +87,6 @@ public class RandomBot implements Bot {
 
     @Override
     public ArrayList<Vector2D> getVelocities() {
-        ArrayList<Vector2D> velocities = new ArrayList<>();
-        velocities.add(this.bestVelocity);
         return velocities;
     }
 

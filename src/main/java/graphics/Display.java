@@ -3,6 +3,8 @@ package graphics;
 import Main.Main;
 import Main.Shot;
 import bot.*;
+//import bot.maze.AStarBot;
+import Main.Experiments;
 import bot.maze.AStarBot;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -341,16 +343,16 @@ public class Display extends Application {
         });
 
         // add the box with the solver options
-        String[] solverList = {"RK4" , "RK2" , "Euler","Heuns3"};
+        String[] solverList = {"RK4" ,"Heuns3", "RK2" , "Euler","Experiments"};
         ComboBox<String> solverComboBox = new ComboBox(FXCollections.observableArrayList(solverList));
         solverComboBox.setValue("RK4");
         gridPane.add(new HBox(30, solverComboBox), 0, position++);
 
         hitTheBall.setOnMouseClicked(mouseEvent -> {
             if(solverComboBox.getValue().equals("RK4")) universe.setSolver( new RK4());
+            if(solverComboBox.getValue().equals("Heuns3")) universe.setSolver( new Heuns3());
             if(solverComboBox.getValue().equals("RK2")) universe.setSolver( new RK2());
             if(solverComboBox.getValue().equals("Euler")) universe.setSolver( new Euler());
-            if(solverComboBox.getValue().equals("Heuns3")) universe.setSolver( new Heuns3());
             shootBall(xVel, yVel);
         });
         return position;
@@ -365,7 +367,7 @@ public class Display extends Application {
         Button botButton = new Button("bot");
         gridPane.add(new HBox(30, botButton), 0, position++);
 
-        String[] botList = {"randomBot" , "improvedRandomBot", "hillClimbingBot", "mazeBot"};
+        String[] botList = {"randomBot" , "improvedRandomBot", "hillClimbingBot", "mazeBot","HillClimbingGradientDescent"};
         ComboBox<String> botComboBox = new ComboBox(FXCollections.observableArrayList(botList));
         botComboBox.setValue("randomBot");
         gridPane.add(new HBox(30, botComboBox), 0, position++);
@@ -381,15 +383,16 @@ public class Display extends Application {
             }
             else if (botComboBox.getValue().equals("hillClimbingBot")) {
                 bot = new HillClimbingBot(this.universe);
+            }else if(botComboBox.getValue().equals("HillClimbingGradientDescent")) {
+
+                bot = new HillClimbingGradientDescent(this.universe);
             }
             else {
                 bot = new AStarBot();
             }
             ArrayList<Vector2D> velocities = bot.getVelocities();
-            for (Vector2D velocity : velocities) {
-                new Shot(this.universe, velocity);
-                shotCounter++;
-            }
+            new Shot(this.universe, velocities.get(0));
+            shotCounter++;
             System.out.println(bot);
 
         });

@@ -3,10 +3,12 @@ y0 = 0
 xt = 4
 yt = 1
 r = 0.1
-muk = 0.05
+muk = 0.08
 mus = 0.2
 heightProfile = 0.4*(0.9-Math.exp(-(x*x+y*y)/8))
 sandPitX = 40<x<50
 sandPitY = 40<y<50
 muks = 0.25
 muss = 0.3
+0.4*(0.9-Math.exp(-(x*x+y*y)/8))
+0.05* ( x*x+y*y)

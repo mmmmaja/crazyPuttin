@@ -6,8 +6,8 @@ import objects.TerrainGenerator;
 
 public abstract class Solver {
 
-	public final PhysicsEngine PHYSICS = new PhysicsEngine();
-	public final double H = PHYSICS.getSTEP();
+	public PhysicsEngine PHYSICS = new PhysicsEngine();
+	public double H = PHYSICS.getSTEP();
 
 	public void nextStep(GameObject gameObject) {
 		GameObject imaginary = new Ball( gameObject.getPosition()) ;
@@ -53,5 +53,15 @@ public abstract class Solver {
 	public Vector2D[] calculateNext(Vector2D position , Vector2D velocity , double H) {
 		return null;
 	}
+
+	public PhysicsEngine getPHYSICS() {
+		return PHYSICS;
 	}
+	public void setH(double H ){
+		this.H = H ;
+	}
+	public void setPHYSICS(PhysicsEngine PHYSICS) {
+		this.PHYSICS = PHYSICS;
+	}
+}
 

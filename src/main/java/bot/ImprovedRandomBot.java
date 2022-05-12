@@ -77,7 +77,7 @@ public class ImprovedRandomBot implements Bot {
             this.shotCounter++;
             double range = 60 ;
 
-            Vector2D velocity = direction.multiply( Obstacle.getRandomDouble(5,5)).
+            Vector2D velocity = direction.multiply( Obstacle.getRandomDouble(0.5,5)).
                     rotate(Obstacle.getRandomDouble(-1*range,range));
 
             // distance between the ball and the target in 3D (takes height into consideration)

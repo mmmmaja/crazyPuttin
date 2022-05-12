@@ -44,6 +44,7 @@ public class Shot extends Display implements Runnable {
      * kills the thread when the ball is in the resting position
      */
     public synchronized void stop() {
+        System.out.println(ball.getPosition());
         Display.updatePanel(ball.getPosition().getX(), ball.getPosition().getY());
         this.ball.setWillMove(false);
         this.running = false;

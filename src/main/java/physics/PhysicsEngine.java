@@ -11,8 +11,8 @@ import java.util.ArrayList;
 public class PhysicsEngine {
 
 	private static final double g = 9.81;
-	private static final double STEP = 0.004;
-	private static final double STOP = 0.005;
+	private double step = 0.004;
+	private double stop = step ;
 
 	private final double errorTolerance = 0.01;
 
@@ -72,7 +72,7 @@ public class PhysicsEngine {
 			return new Vector2D(aX, aY);
 		}
 		else {
-			return new Vector2D(-vX/STEP, -vY/STEP);
+			return new Vector2D(-vX/ step, -vY/ step);
 
 		}
 	}
@@ -225,10 +225,9 @@ public class PhysicsEngine {
 		}
 		return null;
 	}
-
-	public double getSTEP() {
-		return STEP;
-	}
-	public double getSTOP() { return STOP; }
+	public void setStep(double step){this.step = step;}
+	public void setStop(double stop){this.stop = stop;}
+	public double getSTEP() {return step;}
+	public double getSTOP() { return stop; }
 
 }

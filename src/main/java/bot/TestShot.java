@@ -49,7 +49,7 @@ public class TestShot implements Comparable<TestShot>{
             // ball is in the resting position: target was not hit
             if ((!ball.isMoving() && !ball.getWillMove())) {
                 if (TerrainGenerator.getHeight(ball.getPosition()) < 0) {
-                    distance+= Integer.MAX_VALUE;
+                    distance= Integer.MAX_VALUE;
                 }
                 this.resultFinalPosition = distance;
                 break;
@@ -92,4 +92,7 @@ public class TestShot implements Comparable<TestShot>{
         return this.ball.getPosition();
     }
 
+    public Universe getUniverse() {
+        return universe;
+    }
 }

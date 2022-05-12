@@ -114,6 +114,12 @@ public class Vector2D implements Vector {
                 this.y + vector2D.getY()
         );
     }
+    public Vector2D add(double x , double y) {
+        return new Vector2D(
+                this.x + x ,
+                this.y + y
+        );
+    }
     public Vector2D rotate(double angle){
         double cos = Math.cos(Math.toRadians(angle));
         double sin = Math.sin(Math.toRadians(angle));

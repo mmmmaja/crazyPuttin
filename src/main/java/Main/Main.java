@@ -4,6 +4,7 @@ package Main;
 import graphics.Display;
 import javafx.application.Application;
 import objects.FileReader;
+import physics.Vector2D;
 
 
 public class Main {
@@ -14,7 +15,8 @@ public class Main {
 
         universe = new Universe(new FileReader());
         Application.launch(Display.class);
-
+//        Experiments experiments = new Experiments( new Vector2D( 2, 0 ));
+//        experiments.run();
     }
 
     public static Universe getUniverse(){
