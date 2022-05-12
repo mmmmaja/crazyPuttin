@@ -10,7 +10,7 @@ import java.util.ArrayList;
  * iterative algorithm: at each iteration we change the velocity and asses the change by the fitness value
  * look at step: what should be the value be?
  */
-public class HillClimbingGradientDescent implements Bot {
+public class GradientDescent implements Bot {
 
     private final Universe universe;
     private final Vector2D targetPosition;
@@ -23,14 +23,14 @@ public class HillClimbingGradientDescent implements Bot {
     private final double LR = 0.9;
     private double learningRate = 0.9;
 
-    public HillClimbingGradientDescent(Universe universe) {
+    public GradientDescent(Universe universe) {
         this.universe = universe;
         this.targetPosition = universe.getTarget().getPosition();
         this.bestVelocity = climb();
     }
 
 
-    public HillClimbingGradientDescent(Universe universe, Vector2D targetPosition) {
+    public GradientDescent(Universe universe, Vector2D targetPosition) {
         this.universe = universe;
         this.targetPosition = targetPosition;
         this.bestVelocity = climb();
@@ -38,20 +38,21 @@ public class HillClimbingGradientDescent implements Bot {
 
     private Vector2D climb() {
         int index = 0 ;
-        int iteration = 10 ;
-        int power = -5;
-        int testNumber = 25;
+        int iteration = 20 ;
+        int power = -8;
+        int testNumber = 50;
         double stepSize = 0.000001;
-
-        Vector2D velocity = new RandomBot(this.universe,testNumber).getVelocities().get(0);
-        shotCounter += testNumber;
+        ImprovedRandomBot improvedRandomBot = new ImprovedRandomBot(this.universe,testNumber);
+        Vector2D velocity = improvedRandomBot.getVelocities().get(0);
+        totalShotCounter += improvedRandomBot.getTotalShotCounter();
         this.bestVelocity = velocity;
         this.bestResult = new TestShot(this.universe, velocity, this.targetPosition).getTestResult(this.heuristics);
         boolean play = true;
         ArrayList<Vector2D> testVelocities = new ArrayList<>();
         testVelocities.add(0,velocity);
 
-        while (play && totalShotCounter < iteration*100 ) {
+        while (play && totalShotCounter < iteration*200 ) {
+            if(bestResult == 0 ) break;
             play = false;
             this.shotCounter++;
             this.totalShotCounter++;
@@ -61,7 +62,7 @@ public class HillClimbingGradientDescent implements Bot {
             Vector2D testVelocity = new Vector2D(velocity.getX() - derivativeX, velocity.getY() - derivativeY);
             testVelocities.add(0,testVelocity);
             double testResult = new TestShot(this.universe, testVelocity, this.targetPosition).getTestResult(Heuristics.allPositions);
-            System.out.println(bestResult + " --------> " + learningRate + " " + derivativeX  +" " + derivativeY);
+//            System.out.println(bestResult + " --------> " + learningRate + " " + derivativeX  +" " + derivativeY);
 
             if (testResult == 0) {
                 this.bestVelocity = testVelocity;
@@ -80,15 +81,16 @@ public class HillClimbingGradientDescent implements Bot {
             if( bestResult != 0 && testResult > bestResult && learningRate > Math.pow(10, power) ){
                 testVelocities.remove(0);
                 velocity = testVelocities.get(0);
-                learningRate *= 0.2;
+                learningRate *= 0.1;
                 play = true ;
             }
             if((learningRate < Math.pow(10, power) && index < iteration) || testVelocities.size()>200  ){
-                System.out.println("RESET==================================================\n============================================");
+//                System.out.println("RESET==================================================\n============================================");
                 play = true;
-                velocity = new RandomBot(this.universe,testNumber).getVelocities().get(0);
+                improvedRandomBot = new ImprovedRandomBot(this.universe,testNumber);
+                velocity = improvedRandomBot.getVelocities().get(0);
+                totalShotCounter += improvedRandomBot.getTotalShotCounter();
                 this.bestResult = new TestShot(this.universe, velocity, this.targetPosition).getTestResult(this.heuristics);
-                shotCounter+=testNumber;
                 testVelocities = new ArrayList<>();
                 testVelocities.add(0,velocity);
                 learningRate = LR;
@@ -102,7 +104,7 @@ public class HillClimbingGradientDescent implements Bot {
 
     @Override
     public int getTotalShotCounter() {
-        return this.shotCounter;
+        return this.totalShotCounter;
     }
 
     @Override
@@ -117,7 +119,7 @@ public class HillClimbingGradientDescent implements Bot {
         return "Hill Climbing Gradient Descent Bot: "+
                 "\nBest velocity: " + this.bestVelocity +
                 "\nresult: " + this.bestResult +
-                "\nshotCounter: " + this.shotCounter +
+                "\nshotCounter: " + this.totalShotCounter +
                 "\nheuristics: " + this.heuristics+ "\n";
     }
     public double derivativeX( Vector2D velocity , double step){

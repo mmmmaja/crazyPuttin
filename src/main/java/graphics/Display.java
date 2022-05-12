@@ -4,7 +4,6 @@ import Main.Main;
 import Main.Shot;
 import bot.*;
 //import bot.maze.AStarBot;
-import Main.Experiments;
 import bot.maze.AStarBot;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -31,7 +30,6 @@ import javafx.scene.text.Text;
 
 import javafx.stage.Stage;
 import Main.Universe;
-import objects.TerrainGenerator;
 import objects.Tree;
 import physics.*;
 
@@ -338,6 +336,7 @@ public class Display extends Application {
             if (!universe.getBall().isMoving()) {
                 universe.resetBall();
                 universe.updateBallPosition();
+                shotCounter=0;
                 updatePanel(universe.getBall().getPosition().getX(),universe.getBall().getPosition().getY());
             }
         });
@@ -367,7 +366,7 @@ public class Display extends Application {
         Button botButton = new Button("bot");
         gridPane.add(new HBox(30, botButton), 0, position++);
 
-        String[] botList = {"randomBot" , "improvedRandomBot", "hillClimbingBot", "mazeBot","HillClimbingGradientDescent"};
+        String[] botList = {"randomBot" , "improvedRandomBot", "hillClimbingBot", "mazeBot","GradientDescent"};
         ComboBox<String> botComboBox = new ComboBox(FXCollections.observableArrayList(botList));
         botComboBox.setValue("randomBot");
         gridPane.add(new HBox(30, botComboBox), 0, position++);
@@ -383,9 +382,9 @@ public class Display extends Application {
             }
             else if (botComboBox.getValue().equals("hillClimbingBot")) {
                 bot = new HillClimbingBot(this.universe);
-            }else if(botComboBox.getValue().equals("HillClimbingGradientDescent")) {
+            }else if(botComboBox.getValue().equals("GradientDescent")) {
 
-                bot = new HillClimbingGradientDescent(this.universe);
+                bot = new GradientDescent(this.universe);
             }
             else {
                 bot = new AStarBot();
