@@ -94,7 +94,7 @@ public class ImprovedRandomBot implements Bot {
     }
 
     @Override
-    public int getShotCounter() {
+    public int getTotalShotCounter() {
         return this.shotCounter;
     }
 

@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 public interface Bot {
 
-    int getShotCounter();
+    int getTotalShotCounter();
 
     ArrayList<Vector2D> getVelocities();
 

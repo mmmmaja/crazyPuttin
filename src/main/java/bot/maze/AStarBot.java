@@ -55,7 +55,7 @@ public class AStarBot implements Bot {
     }
 
     @Override
-    public int getShotCounter() {
+    public int getTotalShotCounter() {
         return 0;
     }
 
