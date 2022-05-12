@@ -37,15 +37,18 @@ public class HillClimbingGradientDescent implements Bot {
 
     private Vector2D climb() {
         int index = 0 ;
-        ArrayList<Vector2D> velocities = new RandomBot(this.universe,5).getVelocities();
-        Vector2D velocity  = velocities.get(index);
+        int iteration = 10 ;
+        int power = -5;
+        int testNumber = 10;
+        double stepSize = 0.000001;
+
+        Vector2D velocity = new RandomBot(this.universe,testNumber).getVelocities().get(0);
         this.bestResult = new TestShot(this.universe, velocity, this.targetPosition).getTestResult(this.heuristics);
         boolean play = true;
-        double stepSize = 0.000001;
         ArrayList<Vector2D> testVelocities = new ArrayList<>();
         testVelocities.add(0,velocity);
 
-        while (play && testVelocities.size()<10000 &&  index < velocities.size()) {
+        while (play && testVelocities.size()<200 ) {
             play = false;
             this.shotCounter++;
             double derivativeX = derivativeX(velocity, stepSize)*learningRate;
@@ -70,19 +73,22 @@ public class HillClimbingGradientDescent implements Bot {
 
 //            System.out.println(bestResult);
 //            System.out.println("BEST " + bestResult);
-            if( bestResult != 0 && testResult > bestResult && learningRate > Math.pow(10, -8)){
+            if( bestResult != 0 && testResult > bestResult && learningRate > Math.pow(10, power)){
                 testVelocities.remove(0);
                 velocity = testVelocities.get(0);
                 learningRate *= 0.1;
                 play = true ;
             }
-            if(learningRate < Math.pow(10, -8) ){
+            if(learningRate < Math.pow(10, power) && index < iteration ){
                 System.out.println("RESET==================================================\n============================================");
-                this.bestResult = new TestShot(this.universe, velocities.get(index++), this.targetPosition).getTestResult(this.heuristics);
                 play = true;
+                velocity = new RandomBot(this.universe,testNumber).getVelocities().get(0);
+
+                this.bestResult = new TestShot(this.universe, velocity, this.targetPosition).getTestResult(this.heuristics);
                 testVelocities = new ArrayList<>();
                 testVelocities.add(0,velocity);
                 learningRate = LR;
+                index++;
             }
 
         }
