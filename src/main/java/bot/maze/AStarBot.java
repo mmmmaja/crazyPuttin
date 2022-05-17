@@ -8,11 +8,11 @@ import physics.Vector2D;
 import java.util.ArrayList;
 
 
-public class AStarBot implements Bot {
+public class AStarBot {
 
     private final ArrayList<Vector2D> nextPosition;
     private final ArrayList<MyCell> path;
-    private  int counter;
+    private int counter;
 
 
     public AStarBot() {
@@ -22,68 +22,129 @@ public class AStarBot implements Bot {
         this.counter = 0;
     }
 
-    public void connectUpDownPath(){
+    public void connectUpDownPath() {
         int x = path.get(counter).x;
         int y = path.get(counter).y;
         this.counter++;
-        for (; counter < path.size(); counter++){
-            if (x==path.get(counter).x){
-                y=path.get(counter).y;
-            }
-            else {
+        for (; counter < path.size(); counter++) {
+            if (x == path.get(counter).x) {
+                y = path.get(counter).y;
+            } else {
                 nextPosition.add(new Vector2D(x, y));
-                connectLeftRightPath();
+                callConnection();
             }
         }
 
     }
 
-    public void connectLeftRightPath(){
+//    public void connectLeftRightPath() {
+//        int x = path.get(counter).x;
+//        int y = path.get(counter).y;
+//        counter++;
+//        for (; counter < path.size(); counter++) {
+//            if (y == path.get(counter).y) {
+//                x = path.get(counter).x;
+//            } else {
+//                nextPosition.add(new Vector2D(x, y));
+//                callConnection();
+//            }
+//        }
+//
+//    }
+
+    public void connectLines() {
+        int x0 = path.get(counter-1).x;
+        int y0 = path.get(counter-1).y;
+        int x2;
+        int y2;
+        double prevSlope;
+        double nextSlope;
+        counter++;
+        for (; counter < path.size(); counter++) {
+            int x1 = path.get(counter).x;
+            int y1 = path.get(counter).y;
+            if (counter < path.size() - 1) {
+                x2 = path.get(counter + 1).x;
+                y2 = path.get(counter + 1).y;
+                prevSlope = (y1 - y0) / (x1 - x0);
+                nextSlope = (y2 - y1) / (x2 - x1);
+                if (prevSlope == nextSlope) {
+                    x0 = path.get(counter + 2).x;
+                    y0 = path.get(counter + 2).y;
+
+                } else {
+                    nextPosition.add(new Vector2D(x0, y0));
+
+                    callConnection();
+                }
+            }
+            else {
+                x2 = path.get(counter - 2).x;
+                y2 = path.get(counter - 2).y;
+                prevSlope = (y1 - y0) / (x1 - x0);
+                nextSlope = (y2 - y1) / (x2 - x1);
+                if (prevSlope == nextSlope) {
+                    x0 = path.get(counter + 1).x;
+                    y0 = path.get(counter + 1).y;
+
+                }
+                else {
+                    nextPosition.add(new Vector2D(x0, y0));
+
+                    callConnection();
+                }
+            }
+
+
+        }
+
+    }
+
+
+
+
+    public void callConnection(){
         int x=path.get(counter).x;
         int y=path.get(counter).y;
-        counter++;
-        for (; counter< path.size();counter++){
-            if (y==path.get(counter).y){
-                x=path.get(counter).x;
-            }
-            else {
-                nextPosition.add(new Vector2D(x, y));
-                connectUpDownPath();
-            }
+        if (x==path.get(counter).x) {
+            connectUpDownPath();
+        }
+        else{
+            connectLines();
         }
 
     }
 
-    @Override
+
     public int getShotCounter() {
         return 0;
     }
 
-    @Override
+
     public ArrayList<Vector2D> getVelocities() {
         ArrayList<Vector2D> velocities = new ArrayList<>();
 
         getNextPosition();
+        System.out.println(nextPosition.size());
         for (Vector2D position : this.nextPosition) {
-            HillClimbingBot hillClimbingBot = new HillClimbingBot(Main.getUniverse(), position);
-            Vector2D velocity = hillClimbingBot.getVelocities().get(0);
-            velocities.add(velocity);
+            System.out.println(position);
+//            HillClimbingBot hillClimbingBot = new HillClimbingBot(Main.getUniverse(), position);
+//            Vector2D velocity = hillClimbingBot.getVelocities().get(0);
+//            velocities.add(velocity);
         }
         return velocities;
     }
 
     public ArrayList<Vector2D> getNextPosition() {
-        int x=path.get(counter).x;
-        int y=path.get(counter).y;
+
+
+        int x=path.get(0).x;
+        int y=path.get(0).y;
         nextPosition.add(new Vector2D(x,y));
         counter++;
 
-        if (x==path.get(counter).x) {
-            connectUpDownPath();
-        }
-        else {
-            connectLeftRightPath();
-        }
+        callConnection();
+
         nextPosition.set(0,Main.getUniverse().getFileReader().getInitialPosition());
         nextPosition.add(Main.getUniverse().getTarget().getPosition());
         return nextPosition;

@@ -14,6 +14,7 @@ public class Main {
 
         universe = new Universe(new FileReader());
         Application.launch(Display.class);
+//        new BotExperiments();
 
     }
 

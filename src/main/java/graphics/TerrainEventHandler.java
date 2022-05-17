@@ -5,7 +5,10 @@ import javafx.scene.image.Image;
 import javafx.scene.input.PickResult;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
+import javafx.scene.shape.Cylinder;
+import javafx.scene.shape.Sphere;
 import objects.Obstacle;
+import objects.Tree;
 import physics.Vector2D;
 
 
@@ -51,13 +54,32 @@ public class TerrainEventHandler {
             if (group.getObstaclesOn()) {
 
                 // if not a target or a ball
-                if (!collides(clickPosition)) {
+                if (!collides(clickPosition, 0.6)) {
 
                     Obstacle obstacle = new Obstacle(clickPosition);
                     Box box = obstacle.getBox();
                     box.setMaterial(rockMaterial);
                     this.group.getChildren().add(box);
                     universe.addObstacle(obstacle);
+                }
+            }
+
+            // OBSTACLE events
+            else if (group.getTreesOn()) {
+                // if not a target or a ball
+                if (!collides(clickPosition, 0.1)) {
+
+                    Tree tree = new Tree(3.7, 0.1, clickPosition);
+                    this.group.getChildren().add(tree.getSphere());
+
+                    Cylinder cylinder = tree.getCylinder();
+                    Image cylinderImage = new Image("file:src/main/java/resources/Bark Dark_3D_p.png", 0.3, 0.01, false, false);
+                    PhongMaterial cylinderMaterial = new PhongMaterial();
+                    cylinderMaterial.setDiffuseMap(cylinderImage);
+                    cylinder.setMaterial(cylinderMaterial);
+                    this.group.getChildren().add(cylinder);
+
+                    universe.addTree(tree);
                 }
             }
         });
@@ -95,12 +117,12 @@ public class TerrainEventHandler {
      * @param clickPosition position on the frame where the mouse was clicked
      * @return true if the obstacle would collide with the target or the ball
      */
-    private boolean collides(Vector2D clickPosition) {
+    private boolean collides(Vector2D clickPosition, double radius) {
 
-        if (this.universe.getTarget().getEuclideanDistance(clickPosition) < 0.6) {
+        if (this.universe.getTarget().getEuclideanDistance(clickPosition) < radius) {
             return true;
         }
-        return this.universe.getBall().getPosition().getEuclideanDistance(clickPosition) < 0.6;
+        return this.universe.getBall().getPosition().getEuclideanDistance(clickPosition) < radius;
     }
 
 

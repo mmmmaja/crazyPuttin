@@ -148,4 +148,11 @@ public class Vector2D implements Vector {
         );
     }
 
+    public Vector2D add(double x , double y) {
+        return new Vector2D(
+                this.x + x ,
+                this.y + y
+        );
+    }
+
 }

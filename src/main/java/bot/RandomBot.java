@@ -1,5 +1,6 @@
 package bot;
 
+import Main.Shot;
 import Main.Universe;
 import objects.Obstacle;
 import physics.Vector2D;
@@ -10,59 +11,59 @@ import java.util.Random;
 
 
 /**
- * This bot performs random steps and chooses the best one based on the heuristics
- * shotCounter can be used to assess the heuristics used
+ * This bot performs random shots in all directions
  */
-public class RandomBot implements Bot {
+public class RandomBot extends Bot {
 
-    private final Universe universe;
-    private final Vector2D targetPosition;
-    private final Heuristics heuristics = Heuristics.finalPosition;
+    private int testNumber = 1000;
 
-    private Vector2D bestVelocity;
-    private double bestResult;
-    private int shotCounter;
-
-    public RandomBot(Universe universe) {
-        this.universe = universe;
-        this.bestVelocity = new Vector2D(0, 0);
-        this.shotCounter = 0;
+    public RandomBot() {
         this.targetPosition = this.universe.getTarget().getPosition();
-        startRandomTests(1000);
+        this.name = "Random Bot";
+        start();
     }
 
     /**
      * constructor used for the hillClimbing bot to specify number of trials
      */
-    public RandomBot(Universe universe, int testNumber) {
-        this.universe = universe;
-        this.bestVelocity = new Vector2D(0, 0);
-        this.shotCounter = 0;
+    public RandomBot(int testNumber) {
+        this.testNumber = testNumber;
         this.targetPosition = this.universe.getTarget().getPosition();
-        startRandomTests(testNumber);
+        this.name = "Random Bot";
+        start();
     }
 
     /**
-     * extended to fit AStarBot properties (specify the target position)
+     * constructor used for the hillClimbing bot to specify number of trials
      */
-    public RandomBot(Universe universe, Vector2D targetPosition) {
-        this.universe = universe;
-        this.bestVelocity = new Vector2D(0, 0);
-        this.shotCounter = 0;
+    public RandomBot(int testNumber, boolean shootBall) {
+        this.testNumber = testNumber;
+        this.shootBall = shootBall;
+        this.targetPosition = this.universe.getTarget().getPosition();
+        this.name = "Random Bot";
+        start();
+    }
+
+    /**
+     * constructor extended to fit AStarBot properties (specify the target position)
+     */
+    public RandomBot(Vector2D targetPosition) {
         this.targetPosition = targetPosition;
-        startRandomTests(1000);
+        this.name = "Random Bot";
+        start();
     }
 
     /**
-     * performs number shots and picks the best one
-     * @param testNumber number of testShots performed
+     * simulate the shot and pick the best one of all based on heuristics
      */
-    public void startRandomTests(int testNumber) {
-
-        this.bestResult = Integer.MAX_VALUE;
+    @Override
+    public void run() {
 
         for (int i = 0; i < testNumber; i++) {
-            shotCounter++;
+            if (!running) {
+                stop();
+            }
+            this.shotCounter++;
 
             Vector2D initialVelocity = new Vector2D(
                     Obstacle.getRandomDouble(-5.0, 5.0),
@@ -77,32 +78,10 @@ public class RandomBot implements Bot {
             }
             // ball was hit
             if (this.bestResult == 0.0) {
-                break;
+                stop();
             }
         }
+        stop();
     }
-
-    @Override
-    public ArrayList<Vector2D> getVelocities() {
-        ArrayList<Vector2D> velocities = new ArrayList<>();
-        velocities.add(this.bestVelocity);
-        return velocities;
-    }
-
-    @Override
-    public int getShotCounter() {
-        return this.shotCounter;
-    }
-
-
-    @Override
-    public String toString() {
-        return "Random Bot: "+
-                "\nBest velocity: " + this.bestVelocity +
-                "\nresult: " + this.bestResult +
-                "\nshotCounter: " + this.shotCounter +
-                "\nheuristics: " + this.heuristics + "\n";
-    }
-
 
 }

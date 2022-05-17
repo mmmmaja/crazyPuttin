@@ -214,4 +214,8 @@ public class Universe {
         this.obstacles.add(obstacle);
     }
 
+    public void addTree(Tree tree) {
+        this.trees.add(tree);
+    }
+
 }

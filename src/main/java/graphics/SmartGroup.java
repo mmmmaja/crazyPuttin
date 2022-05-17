@@ -22,6 +22,9 @@ public class SmartGroup extends Group {
     // indicates whether we can draw the obstacles on the screen
     private boolean obstaclesOn = false;
 
+    // indicates whether we can add the trees on the screen
+    private boolean treesOn = false;
+
     // indicates whether we can draw the obstacles on the screen
     private boolean splineOn = false;
 
@@ -89,35 +92,20 @@ public class SmartGroup extends Group {
         });
     }
 
-    public void setArrowOn(boolean arrowOn) {
-        this.arrowOn = arrowOn;
-    }
-
     public void setObstaclesOn(boolean obstaclesOn) {
         this.obstaclesOn = obstaclesOn;
-    }
-
-    public void setSplineOn(boolean splineOn) {
-        this.splineOn = splineOn;
     }
 
     public boolean getObstaclesOn() {
         return this.obstaclesOn;
     }
 
-    public boolean getSplineOn() {
-        return this.splineOn;
+    public void setTreesOn(boolean treesOn) {
+        this.treesOn = treesOn;
     }
 
-    /**
-     * FIXME check thoroughly if works
-     */
-    public double getSceneAngle() {
-        if (this.angleZ.get() < -80 && this.angleZ.get() > -260) {
-            return 1;
-        }
-        return -1;
+    public boolean getTreesOn() {
+        return this.treesOn;
     }
-
 
 }

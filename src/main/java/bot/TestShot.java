@@ -21,6 +21,7 @@ public class TestShot implements Comparable<TestShot>{
 
     private double resultFinalPosition = Integer.MAX_VALUE;
     private double resultAllPositions = Integer.MAX_VALUE;
+    private final double WATER_PUNISHMENT = 5.8;
 
 
     public TestShot(Universe universe, Vector2D velocity, Vector2D targetPosition) {
@@ -42,15 +43,18 @@ public class TestShot implements Comparable<TestShot>{
 
             universe.getSolver().nextStep(ball);
             double distance = ball.getPosition().getEuclideanDistance(this.targetPosition);
+
+            // subtract points if ball hit the water
+            if (TerrainGenerator.getHeight(ball.getPosition()) < 0) {
+                distance+= WATER_PUNISHMENT;
+            }
+
             if (distance < this.resultAllPositions) {
                 this.resultAllPositions = distance;
             }
 
             // ball is in the resting position: target was not hit
             if ((!ball.isMoving() && !ball.getWillMove())) {
-                if (TerrainGenerator.getHeight(ball.getPosition()) < 0) {
-                    distance+= Integer.MAX_VALUE;
-                }
                 this.resultFinalPosition = distance;
                 break;
             }

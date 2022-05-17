@@ -24,6 +24,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Cylinder;
 import javafx.scene.shape.MeshView;
+import javafx.scene.shape.Sphere;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
@@ -262,38 +263,31 @@ public class Display extends Application {
         position = addBallShootingOptions(position);
         position = addBotButtons(position);
         // position = addSplineCheckbox(position);
-        position = addObstacleCheckBox(position);
+        position = addCheckBoxes(position);
 
         new TerrainEventHandler(this.universe, this.group);
     }
 
 
     /**
-     * adds the checkBox that triggers ability to add splines
+     * adds the checkBox for adding the obstacles and trees
      */
-    private int addSplineCheckbox(int position) {
-        CheckBox checkBox = new CheckBox("add splines");
-        checkBox.setSelected(false);
-        this.gridPane.add(checkBox, 0, position++);
+    private int addCheckBoxes(int position) {
 
-        checkBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            group.setSplineOn(newValue);
-        });
-        return position;
-    }
-
-
-    /**
-     * adds the checkBox for adding the obstacles
-     */
-    private int addObstacleCheckBox(int position) {
-
-        CheckBox checkBox = new CheckBox("add obstacles");
-        checkBox.setSelected(false);
-        this.gridPane.add(checkBox, 0, position++);
-        checkBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
+        CheckBox checkBoxObstacles = new CheckBox("add obstacles");
+        checkBoxObstacles.setSelected(false);
+        this.gridPane.add(checkBoxObstacles, 0, position++);
+        checkBoxObstacles.selectedProperty().addListener((observable, oldValue, newValue) -> {
             group.setObstaclesOn(newValue);
         });
+
+        CheckBox checkBoxTrees = new CheckBox("add tree");
+        checkBoxTrees.setSelected(false);
+        this.gridPane.add(checkBoxTrees, 0, position++);
+        checkBoxTrees.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            group.setTreesOn(newValue);
+        });
+
         return position;
     }
 
@@ -365,32 +359,41 @@ public class Display extends Application {
         Button botButton = new Button("bot");
         gridPane.add(new HBox(30, botButton), 0, position++);
 
-        String[] botList = {"randomBot" , "improvedRandomBot", "hillClimbingBot", "mazeBot"};
+        String[] botList = {"randomBot" , "improvedRandomBot", "hillClimbingBot", "mazeBot", "gradientDescentBot"};
         ComboBox<String> botComboBox = new ComboBox(FXCollections.observableArrayList(botList));
         botComboBox.setValue("randomBot");
         gridPane.add(new HBox(30, botComboBox), 0, position++);
 
-        botButton.setOnMouseClicked(mouseEvent -> {
-            Bot bot;
+           botButton.setOnMouseClicked(mouseEvent -> {
 
             if (botComboBox.getValue().equals("randomBot")) {
-                bot = new RandomBot(this.universe);
+                new RandomBot();
             }
             else if (botComboBox.getValue().equals("improvedRandomBot")) {
-               bot = new ImprovedRandomBot(this.universe);
+               new ImprovedRandomBot();
             }
-            else if (botComboBox.getValue().equals("hillClimbingBot")) {
-                bot = new HillClimbingBot(this.universe);
+            else if (botComboBox.getValue().equals("gradientDescentBot")) {
+                new GradientDescentBot();
             }
-            else {
-                bot = new AStarBot();
+            else if (botComboBox.getValue().equals("hillClimbingBot")){
+                new HillClimbingBot();
             }
-            ArrayList<Vector2D> velocities = bot.getVelocities();
-            for (Vector2D velocity : velocities) {
-                new Shot(this.universe, velocity);
-                shotCounter++;
+            else if (botComboBox.getValue().equals("mazeBot")){
+                ArrayList<Vector2D> positions = new AStarBot().getNextPosition();
+                System.out.println(positions.size());
+                for (Vector2D p : positions) {
+                    //System.out.println(p);
+                    Sphere sphere = new Sphere();
+                    sphere.setRadius(0.05);
+                    sphere.setTranslateX(p.getX());
+                    sphere.setTranslateY(p.getY());
+                    sphere.setTranslateZ((-TerrainGenerator.getHeight(p) - 1));
+                    PhongMaterial material = new PhongMaterial();
+                    material.setDiffuseColor(Color.SILVER);
+                    sphere.setMaterial(material);
+                    this.group.getChildren().add(sphere);
+                }
             }
-            System.out.println(bot);
 
         });
         return position;
