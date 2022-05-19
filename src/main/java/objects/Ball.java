@@ -20,6 +20,7 @@ public class Ball extends PhysicsEngine implements GameObject {
     private Sphere sphere;
     private boolean willMove;
 
+
     public Ball(Vector2D position) {
         this.position = position;
         this.previousPosition = position ;

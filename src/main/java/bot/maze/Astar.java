@@ -11,8 +11,8 @@ import physics.Vector2D;
 
 public class Astar {
 
-    public static int STEP= 1; //todo:decide step size
-    public static int cols;           //for grid division of the terrain
+    public static int STEP = 1; // todo:decide step size
+    public static int cols;     //for grid division of the terrain
     public static int rows;
     public Vector2D targetPosition;
     public Vector2D startPosition;
@@ -31,9 +31,9 @@ public class Astar {
         targetPosition=Main.getUniverse().getTarget().getPosition();
         startPosition=Main.getUniverse().getFileReader().getInitialPosition();
         grid = new MyCell[cols][rows];
-        toVisit = new ArrayList<MyCell>(cols*rows);
-        visited = new ArrayList<MyCell>(cols*rows);
-        path = new ArrayList<MyCell>(cols*rows);
+        toVisit = new ArrayList<>(cols * rows);
+        visited = new ArrayList<>(cols * rows);
+        path = new ArrayList<>(cols * rows);
         solutionFound=false;
     }
 
@@ -78,33 +78,36 @@ public class Astar {
         }
         return false;
     }
+
     public boolean addWater(MyCell cell){
         return TerrainGenerator.getHeight(new Vector2D(cell.x, cell.y)) < 0;
 
     }
 
-    public int calcL(MyCell cell){
-        int x = cell.x;
-        int y = cell.y;
-        int xlast=path.get(path.size()-1).x;
-        int ylast=path.get(path.size()-1).y;
-        int x2last=path.get(path.size()-2).x;
-        int y2last=path.get(path.size()-2).y;
-        if (x-xlast==xlast-x2last) { //if we are moving on the vertical axis
-            return 0;
-        }
-        else{
-            double prevSlope= (ylast-ylast)/(xlast-x2last);
-            double nextSlope=(ylast-y2last)/(xlast-x2last);
-            if (prevSlope==nextSlope){//we are moving in a straight line
-                return 0;
-            }
-            else{
-                return 1;
-            }
-        }
+//
+//    public int calcL(MyCell cell){
+//        int x = cell.x;
+//        int y = cell.y;
+//        int xlast=path.get(path.size()-1).x;
+//        int ylast=path.get(path.size()-1).y;
+//        int x2last=path.get(path.size()-2).x;
+//        int y2last=path.get(path.size()-2).y;
+//        if (x-xlast==xlast-x2last) { //if we are moving on the vertical axis
+//            return 0;
+//        }
+//        else{
+//            double prevSlope= (ylast-ylast)/(xlast-x2last);
+//            double nextSlope=(ylast-y2last)/(xlast-x2last);
+//            if (prevSlope==nextSlope){//we are moving in a straight line
+//                return 0;
+//            }
+//            else{
+//                return 1;
+//            }
+//        }
+//
+//    }
 
-    }
     //todo : sand..changes f?
 
     public ArrayList<MyCell> findPath(){
@@ -158,10 +161,11 @@ public class Astar {
                         toVisit.add(neighbor);
                     }
                     if (path.size()>2){
-                        neighbor.l=calcL(neighbor);
+                        // neighbor.l=calcL(neighbor);
                     }
                     neighbor.h = MyCell.euclidianDistance(neighbor, end);
-                    neighbor.f = neighbor.g + neighbor.h +neighbor.l;
+                    neighbor.f = neighbor.g + neighbor.h ;
+                    //+neighbor.l;
                     neighbor.previous = current;
                 }
             }

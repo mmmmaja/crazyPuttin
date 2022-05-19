@@ -52,7 +52,6 @@ public class ImprovedRandomBot extends Bot {
         Vector2D slopeTarget = TerrainGenerator.getSlopes(this.targetPosition);
         Vector2D slopeBall = TerrainGenerator.getSlopes(this.universe.getBall().getPosition());
 
-        // TODO how to incorporate the average of slopes???
         Vector2D slope = new Vector2D(
                 (slopeTarget.getY() + slopeBall.getY()) / 2.d,
                 (slopeTarget.getX() + slopeBall.getX()) / 2.d
@@ -66,7 +65,7 @@ public class ImprovedRandomBot extends Bot {
         Vector2D direction = analiseCourse();
 
         this.bestVelocity = direction;
-        this.bestResult = new TestShot(this.universe, bestVelocity, this.targetPosition).getTestResult(this.heuristics);
+        this.bestResult = new TestShot(this.universe, bestVelocity, this.targetPosition).getTestResult();
         if (this.bestResult == 0) {
             stop();
         }
@@ -80,7 +79,7 @@ public class ImprovedRandomBot extends Bot {
                     rotate(Obstacle.getRandomDouble(-1 * range, range));
 
             // distance between the ball and the target in 3D (takes height into consideration)
-            double result = new TestShot(this.universe, velocity, this.targetPosition).getTestResult(this.heuristics);
+            double result = new TestShot(this.universe, velocity, this.targetPosition).getTestResult();
             if (result < this.bestResult) {
                 this.bestResult = result;
                 this.bestVelocity = velocity;

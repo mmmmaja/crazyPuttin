@@ -19,6 +19,9 @@ public class Flag implements GameObject {
         createFlag();
     };
 
+    /**
+     * create Box that is the representation of the flag
+     */
     public void createFlag(){
         flag.setHeight(0.05);
         flag.setWidth(1);

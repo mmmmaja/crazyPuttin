@@ -9,7 +9,7 @@ import javafx.scene.transform.Rotate;
 /**
  * Class that holds the objects needed to render the pole for the 3D flag
  */
-public class Pole implements GameObject{
+public class Pole implements GameObject {
 
     private Vector2D position;
     private Vector2D dimension;
@@ -18,10 +18,13 @@ public class Pole implements GameObject{
     public Pole(Vector2D position){
         this.position = position;
         this.pole = new Cylinder();
-        createFlag();
+        createPole();
     };
 
-    public void createFlag(){
+    /**
+     * create the cylinder for the display
+     */
+    public void createPole(){
         pole.setRadius(0.02);
         pole.setHeight(2);
         this.pole.setTranslateX(this.position.getX());

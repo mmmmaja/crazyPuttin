@@ -1,5 +1,6 @@
 package graphics;
 
+import Main.Main;
 import Main.Universe;
 import javafx.scene.image.Image;
 import javafx.scene.input.PickResult;
@@ -13,9 +14,9 @@ import physics.Vector2D;
 
 
 /**
- * TODO add obstacles on mouse dragged
  * Handles the events when the mouse is clicked on the terrain
  *      adding obstacles
+ *      adding trees
  *      is supposed to work with splines later as well (dragging the mouse)
  */
 public class TerrainEventHandler {
@@ -24,8 +25,8 @@ public class TerrainEventHandler {
     private final SmartGroup group;
     private final PhongMaterial rockMaterial;
 
-    public TerrainEventHandler(Universe universe, SmartGroup group) {
-        this.universe = universe;
+    public TerrainEventHandler(SmartGroup group) {
+        this.universe = Main.getUniverse();
         this.group = group;
         this.rockMaterial = createRockMaterial();
 

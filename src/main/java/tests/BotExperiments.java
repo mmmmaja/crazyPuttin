@@ -1,10 +1,12 @@
-package Main;
+package tests;
 
+import Main.Main;
+import Main.Universe;
 import bot.Bot;
 import bot.HillClimbingBot;
 import bot.ImprovedRandomBot;
 import bot.RandomBot;
-import physics.Vector2D;
+
 
 public class BotExperiments {
 

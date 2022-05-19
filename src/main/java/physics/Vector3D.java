@@ -1,5 +1,6 @@
 package physics;
 
+
 public class Vector3D implements Vector {
 
 	private double x;

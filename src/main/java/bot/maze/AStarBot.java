@@ -1,10 +1,8 @@
 package bot.maze;
 
 import Main.Main;
-import bot.Bot;
-import bot.HillClimbingBot;
+import objects.Terrain;
 import physics.Vector2D;
-
 import java.util.ArrayList;
 
 
@@ -144,8 +142,13 @@ public class AStarBot {
         counter++;
 
         callConnection();
-
         nextPosition.set(0,Main.getUniverse().getFileReader().getInitialPosition());
+        for (int i = 1; i<nextPosition.size();i++){
+            double realX =nextPosition.get(i).getX()*Astar.STEP- Terrain.TERRAIN_WIDTH;
+            double realY =nextPosition.get(i).getY()*Astar.STEP- Terrain.TERRAIN_HEIGHT;
+            nextPosition.set(i,new Vector2D(realX,realY));
+        }
+
         nextPosition.add(Main.getUniverse().getTarget().getPosition());
         return nextPosition;
     }

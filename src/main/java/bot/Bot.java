@@ -11,9 +11,8 @@ import physics.Vector2D;
  */
 public abstract class Bot implements Runnable{
 
-    String name = "bot";
+    String name;
     final Universe universe = Main.getUniverse();
-    final Heuristics heuristics = Heuristics.allPositions;
     Vector2D targetPosition;
     boolean shootBall = true;
 
@@ -75,12 +74,11 @@ public abstract class Bot implements Runnable{
 
 
     public String toString() {
-        return name + ": "+
+        return name + ": " +
                 "\nBest velocity: " + this.bestVelocity +
                 "\nresult: " + this.bestResult +
-                "\nshotCounter: " + this.shotCounter +
-                "\nheuristics: " + this.heuristics+ "\n";
-    };
+                "\nshotCounter: " + this.shotCounter;
+    }
 
     public Vector2D getBestVelocity() {
         return this.bestVelocity;

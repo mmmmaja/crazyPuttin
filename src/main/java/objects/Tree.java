@@ -9,6 +9,10 @@ import javafx.scene.shape.TriangleMesh;
 import javafx.scene.transform.Rotate;
 import physics.Vector2D;
 
+
+/**
+ * Obstacle for the course, list od the trees is in the Universe
+ */
 public class Tree implements GameObject {
 
     private Vector2D position;
@@ -25,6 +29,9 @@ public class Tree implements GameObject {
     }
 
 
+    /**
+     * @return the sphere representing the leaves of the tree
+     */
     private Sphere createSphere() {
         Sphere sphere = new Sphere();
         sphere.setRadius(this.dimension.getX() * 12);
@@ -38,6 +45,9 @@ public class Tree implements GameObject {
     }
 
 
+    /**
+     * @return the cylinder representing the branch of the tree
+     */
     private Cylinder createCylinder() {
         Cylinder cylinder = new Cylinder();
         cylinder.setRadius(this.dimension.getX());
@@ -57,27 +67,38 @@ public class Tree implements GameObject {
         return this.position;
     }
 
+
     @Override
     public void setPosition(Vector2D position) {
         this.position = position;
     }
 
+    /**
+     * @return Vector2D(radius, height)
+     */
     @Override
     public Vector2D getDimension() {
         return this.dimension;
     }
 
+    /**
+     * @param dimension Vector2D(radius, height)
+     */
     @Override
     public void setDimension(Vector2D dimension) {
         this.dimension = dimension;
     }
 
-    @Override
-    public boolean isMoving() {
-        return false;
+    public Cylinder getCylinder() {
+        return this.cylinder;
     }
 
+    public Sphere getSphere() {
+        return this.sphere;
+    }
 
+    @Override
+    public boolean isMoving() { return false; }
 
     @Override
     public Vector2D getVelocity() { return null; }
@@ -106,11 +127,4 @@ public class Tree implements GameObject {
     @Override
     public boolean isOnSlope() { return false; }
 
-    public Cylinder getCylinder() {
-        return this.cylinder;
-    }
-
-    public Sphere getSphere() {
-        return this.sphere;
-    }
 }

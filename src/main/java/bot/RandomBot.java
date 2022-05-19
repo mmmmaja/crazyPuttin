@@ -17,6 +17,7 @@ public class RandomBot extends Bot {
 
     private int testNumber = 1000;
 
+
     public RandomBot() {
         this.targetPosition = this.universe.getTarget().getPosition();
         this.name = "Random Bot";
@@ -71,7 +72,7 @@ public class RandomBot extends Bot {
             );
 
             // euclidean distance between the ball and the target
-            double result = new TestShot(this.universe, initialVelocity, this.targetPosition).getTestResult(this.heuristics);
+            double result = new TestShot(this.universe, initialVelocity, this.targetPosition).getTestResult();
             if (result < this.bestResult) {
                 this.bestResult = result;
                 this.bestVelocity = initialVelocity;

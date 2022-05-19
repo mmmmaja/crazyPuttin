@@ -13,4 +13,6 @@ module com.example.crazyputtin {
     opens Main to javafx.fxml;
     exports bot;
     opens bot to javafx.fxml;
+    exports tests;
+    opens tests to javafx.fxml;
 }

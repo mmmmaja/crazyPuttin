@@ -38,6 +38,9 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 
+/**
+ * class responsible for displaying the game
+ */
 public class Display extends Application {
 
     public Universe universe = Main.getUniverse();
@@ -119,29 +122,20 @@ public class Display extends Application {
      */
     private void addComponents() {
 
-        // add lighting to the scene
-        addLight();
-
-        // add three types of meshes from the display that represent the terrain
-        addTerrainMeshes();
-
+        addLight(); // add lighting to the scene
+        addTerrainMeshes(); // add three types of meshes from the display that represent the terrain
         addTrees();
-
-        // add the flag to the display (pole and the material)
-        addFlag();
+        addFlag(); // add the flag to the display (pole and the material)
+        addPanel(); // adds panel at the right-hand side with the buttons to the frame
 
         // add rest of the objects to the SmartGroup
         this.group.getChildren().add(universe.getBall().getSphere());
         this.group.getChildren().add(universe.getTarget().getCylinder());
-
-        // adds panel at the right-hand side with the buttons to the frame
-        addPanel();
     }
 
 
     /**
-     * add the flag to the display
-     * (the pole: cylinder object and the material: the box)
+     * add the flag and its pole to the display
      */
     private void addFlag() {
         Image flagImage = new Image("file:src/main/java/resources/flag.jpg" ,5,5,false,false);
@@ -155,7 +149,7 @@ public class Display extends Application {
 
 
     /**
-     * add the trees to the display: the root (cylinder) and the leafs (sphere)
+     * add the default trees to the display: the root (cylinder) and the leafs (sphere)
      */
     private void addTrees() {
         for (Tree tree : this.universe.getTrees()) {
@@ -223,7 +217,7 @@ public class Display extends Application {
         // create the gridPane
         this.gridPane.setPrefSize(200, FRAME_HEIGHT);
         this.gridPane.setStyle("-fx-background-color: darkgrey");
-        this.gridPane.setTranslateX(FRAME_WIDTH-200);
+        this.gridPane.setTranslateX(FRAME_WIDTH - 200);
         this.gridPane.setHgap(8);
         this.gridPane.setVgap(8);
         this.gridPane.setAlignment(Pos.CENTER);
@@ -236,17 +230,15 @@ public class Display extends Application {
         title.setFont(bigFont);
         gridPane.add(new HBox(30, title), 0, 0);
 
-        textPosition = new Text("Number of shots: " + shotCounter +
+        textPosition = new Text(
+                "Number of shots: " + shotCounter +
                 "\nNumber of points: " + pointCounter +
                 "\n\nX-position:  " + String.format("%.2f", universe.getBall().getPosition().getX())  +
-                "\nY-position:  " + String.format("%.2f", universe.getBall().getPosition().getY()));
+                "\nY-position:  " + String.format("%.2f", universe.getBall().getPosition().getY())
+        );
         textPosition.setFill(Color.WHITE);
         textPosition.setFont(font);
-
         this.gridPane.add(new HBox(30, textPosition), 0, 2);
-
-        // add clear canvas for arrow visualization
-        // createCanvas();
 
         int position = 3;
 
@@ -262,10 +254,10 @@ public class Display extends Application {
 
         position = addBallShootingOptions(position);
         position = addBotButtons(position);
-        // position = addSplineCheckbox(position);
         position = addCheckBoxes(position);
 
-        new TerrainEventHandler(this.universe, this.group);
+        // enable adding the obstacles when the terrain is pressed by the mouse
+        new TerrainEventHandler(this.group);
     }
 
 
@@ -313,11 +305,11 @@ public class Display extends Application {
      */
     private int addBallShootingOptions(int position) {
 
-        // add the textFields to display the velocity of the ball
+        // add the textFields to input the initial velocity of the ball
         TextField xVel = new TextField();
         gridPane.add(new HBox(30, xVel), 0, position - 1);
         TextField yVel = new TextField();
-        gridPane.add(new HBox(30, yVel), 0, position+=2);
+        gridPane.add(new HBox(30, yVel), 0, position+= 2);
         position++;
 
         Button hitTheBall = new Button("Hit the ball");
@@ -341,10 +333,12 @@ public class Display extends Application {
         gridPane.add(new HBox(30, solverComboBox), 0, position++);
 
         hitTheBall.setOnMouseClicked(mouseEvent -> {
-            if(solverComboBox.getValue().equals("RK4")) universe.setSolver( new RK4());
-            if(solverComboBox.getValue().equals("RK2")) universe.setSolver( new RK2());
-            if(solverComboBox.getValue().equals("Euler")) universe.setSolver( new Euler());
-            if(solverComboBox.getValue().equals("Heuns3")) universe.setSolver( new Heuns3());
+            switch (solverComboBox.getValue()) {
+                case "RK4" -> universe.setSolver(new RK4());
+                case "RK2" -> universe.setSolver(new RK2());
+                case "Euler" -> universe.setSolver(new Euler());
+                case "Heun3" -> universe.setSolver(new Heuns3());
+            }
             shootBall(xVel, yVel);
         });
         return position;
@@ -356,47 +350,48 @@ public class Display extends Application {
      */
     private int addBotButtons(int position) {
 
-        Button botButton = new Button("bot");
+        Button botButton = new Button("bot shot");
         gridPane.add(new HBox(30, botButton), 0, position++);
 
-        String[] botList = {"randomBot" , "improvedRandomBot", "hillClimbingBot", "mazeBot", "gradientDescentBot"};
+        String[] botList = {
+                "randomBot" ,
+                "improvedRandomBot",
+                "hillClimbingBot",
+                "mazeBot",
+                "gradientDescentBot"
+        };
         ComboBox<String> botComboBox = new ComboBox(FXCollections.observableArrayList(botList));
         botComboBox.setValue("randomBot");
         gridPane.add(new HBox(30, botComboBox), 0, position++);
 
            botButton.setOnMouseClicked(mouseEvent -> {
-
-            if (botComboBox.getValue().equals("randomBot")) {
-                new RandomBot();
-            }
-            else if (botComboBox.getValue().equals("improvedRandomBot")) {
-               new ImprovedRandomBot();
-            }
-            else if (botComboBox.getValue().equals("gradientDescentBot")) {
-                new GradientDescentBot();
-            }
-            else if (botComboBox.getValue().equals("hillClimbingBot")){
-                new HillClimbingBot();
-            }
-            else if (botComboBox.getValue().equals("mazeBot")){
-                ArrayList<Vector2D> positions = new AStarBot().getNextPosition();
-                System.out.println(positions.size());
-                for (Vector2D p : positions) {
-                    //System.out.println(p);
-                    Sphere sphere = new Sphere();
-                    sphere.setRadius(0.05);
-                    sphere.setTranslateX(p.getX());
-                    sphere.setTranslateY(p.getY());
-                    sphere.setTranslateZ((-TerrainGenerator.getHeight(p) - 1));
-                    PhongMaterial material = new PhongMaterial();
-                    material.setDiffuseColor(Color.SILVER);
-                    sphere.setMaterial(material);
-                    this.group.getChildren().add(sphere);
-                }
-            }
-
+               switch (botComboBox.getValue()) {
+                   case "randomBot" -> new RandomBot();
+                   case "improvedRandomBot" -> new ImprovedRandomBot();
+                   case "gradientDescentBot" -> new GradientDescentBot();
+                   case "hillClimbingBot" -> new HillClimbingBot();
+                   case "mazeBot" -> aStarTest();
+               }
         });
         return position;
+    }
+
+
+    private void aStarTest() {
+        ArrayList<Vector2D> positions = new AStarBot().getNextPosition();
+        System.out.println(positions.size());
+        for (Vector2D p : positions) {
+            //System.out.println(p);
+            Sphere sphere = new Sphere();
+            sphere.setRadius(0.05);
+            sphere.setTranslateX(p.getX());
+            sphere.setTranslateY(p.getY());
+            sphere.setTranslateZ((-TerrainGenerator.getHeight(p) - 1));
+            PhongMaterial material = new PhongMaterial();
+            material.setDiffuseColor(Color.SILVER);
+            sphere.setMaterial(material);
+            this.group.getChildren().add(sphere);
+        }
     }
 
 
@@ -427,10 +422,11 @@ public class Display extends Application {
                 new Shot(universe, velocity);
                 shotCounter++;
             }
-            // fixme: water was hit so we subtract points
-//            if (TerrainGenerator.getHeight(this.universe.getBall().getPosition()) < 0) {
-//                pointCounter--;
-//            }
+            // subtract the points of the water was hit
+            if (TerrainGenerator.getHeight(this.universe.getBall().getPosition()) < 0) {
+                pointCounter--;
+                updatePanel(this.universe.getBall().getPosition().getX(),this.universe.getBall().getPosition().getY());
+            }
         }
     }
 

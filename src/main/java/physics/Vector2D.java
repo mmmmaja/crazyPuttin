@@ -71,11 +71,6 @@ public class Vector2D implements Vector {
         return Objects.hash(x, y);
     }
 
-    public Vector2D times(double c){
-        return new Vector2D( x * c , y * c);
-    }
-
-
 
     public void rotateAroundOrigin(double angle, Vector2D origin) {
         double sin = Math.sin(angle);

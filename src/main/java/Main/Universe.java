@@ -7,8 +7,6 @@ import javafx.scene.shape.DrawMode;
 import javafx.scene.shape.MeshView;
 import objects.*;
 import physics.*;
-import splines.Spline;
-
 import java.util.ArrayList;
 
 
@@ -18,15 +16,16 @@ import java.util.ArrayList;
 public class Universe {
 
     private final FileReader fileReader;
+    private Solver solver;
+
     private Ball ball;
     private Target target;
     private Pole pole;
     private Flag flag;
+
     private MeshView[] meshViews;
-    private Solver solver;
     private ArrayList<Tree> trees;
-    private ArrayList<Obstacle> obstacles;
-    private ArrayList<Spline> splines = new ArrayList<>();
+    private ArrayList<Obstacle> obstacles = new ArrayList<>();
 
 
     public Universe(FileReader fileReader) {
@@ -37,19 +36,6 @@ public class Universe {
         createPole();
         createFlag();
         createTrees();
-        createObstacles();
-    }
-
-
-    private void createObstacles() {
-        this.obstacles = new ArrayList<>();
-        this.obstacles.add(new Obstacle(new Vector2D(10, 7)));
-        this.obstacles.add(new Obstacle(new Vector2D(8, 6), new Vector3D(0.9, 0.6, 0.9)));
-        this.obstacles.add(new Obstacle(new Vector2D(7, 7), new Vector3D(1, 0.8, 0.9)));
-        this.obstacles.add(new Obstacle(new Vector2D(9, 5)));
-        this.obstacles.add(new Obstacle(new Vector2D(7, 6)));
-        this.obstacles.add(new Obstacle(new Vector2D(12, 8), new Vector3D(1, 0.9, 0.8)));
-        this.obstacles.add(new Obstacle(new Vector2D(8, 9), new Vector3D(1, 1.2, 0.8)));
     }
 
 
@@ -137,14 +123,6 @@ public class Universe {
         this.trees.add(tree3);
     }
 
-
-    public ArrayList<Spline> getSplines() {
-        return this.splines;
-    }
-
-    public void addSplines(Spline spline) {
-        this.splines.add(spline);
-    }
 
     public Solver getSolver(){
         if (solver == null) {

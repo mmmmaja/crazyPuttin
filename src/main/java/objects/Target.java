@@ -13,7 +13,8 @@ public class Target implements GameObject {
     private Vector2D position;
     private Vector2D dimension;
     private Cylinder cylinder;
-    private final double radius ;
+    private final double radius;
+
 
     public Target(Vector2D position, double radius) {
         this.radius = radius;
@@ -102,17 +103,9 @@ public class Target implements GameObject {
         return this.cylinder;
     }
 
+
     public double getEuclideanDistance(Vector2D vector2D) {
         return this.position.getEuclideanDistance(vector2D);
-    }
-
-    public double getEuclideanDistance3D(Vector2D vector2D) {
-        //Height is not taken into account to calculate distance anymore.If you want to know why please let me know. E.Karabulut
-        return Math.sqrt(
-                        Math.pow(this.position.getX() - vector2D.getX(), 2) +
-                        Math.pow(this.position.getY() - vector2D.getY(), 2)
-
-        );
     }
 
 }

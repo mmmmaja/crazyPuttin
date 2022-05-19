@@ -5,7 +5,8 @@ import physics.Vector2D;
 
 
 /**
- * class responsible for creating the Triangular meshes that will be representation of the terrain in the display
+ * class responsible for creating the Triangular meshes,
+ * that will be representation of the terrain in the display
  */
 public class Terrain extends TerrainGenerator {
 
@@ -18,12 +19,8 @@ public class Terrain extends TerrainGenerator {
     public static final int TERRAIN_WIDTH = 50;
     public static final int TERRAIN_HEIGHT = 50;
 
-
     // the size of each polygon in the mesh
     public static final double STEP = 0.25;
-
-    // to be used to dynamically alter the mesh when dragging the terrain
-    private float[] points;
 
 
     public Terrain(FileReader fileReader) {
@@ -33,16 +30,15 @@ public class Terrain extends TerrainGenerator {
         this.waterMesh   = new TriangleMesh();
         this.sandPitMesh = new TriangleMesh();
 
-        addPoints();
         addFaces();
     }
 
 
     /**
-     * Adds all the points from which the polygons of the three meshes will be created
+     * @return array of points consisting of their coordinates and height
      */
-    private void addPoints() {
-        this.points = new float[(int) ((1 / STEP) * 2 * TERRAIN_HEIGHT * (1 / STEP) * 2 * TERRAIN_WIDTH) * 3];
+    private float[] addPoints() {
+        float[] points = new float[(int) ((1 / STEP) * 2 * TERRAIN_HEIGHT * (1 / STEP) * 2 * TERRAIN_WIDTH) * 3];
 
         int counter = -1;
         for (double i = -TERRAIN_HEIGHT; i < TERRAIN_HEIGHT; i+= STEP) {
@@ -52,13 +48,17 @@ public class Terrain extends TerrainGenerator {
                 points[counter+=1] = - (float) getHeight(new Vector2D(i, j));
             }
         }
+        return points;
     }
 
 
     /**
-     * creates the faces (triangles) of the meshes and maps the texture into the exact points
+     * creates the faces (triangles) of the meshes
+     * maps the texture into the exact points
      */
     private void addFaces() {
+
+        float[] points = addPoints();
 
         this.sandPitMesh.getPoints().addAll(points);
         this.waterMesh.getPoints().addAll(points);

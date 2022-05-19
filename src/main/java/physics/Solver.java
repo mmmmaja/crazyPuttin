@@ -20,21 +20,17 @@ public abstract class Solver {
 
 		if (TerrainGenerator.getHeight(nextPosition) >= 0 ) {
 
-			if( PHYSICS.getCollisionCoordinates(gameObject) != null){
+			if ( PHYSICS.getCollisionCoordinates(gameObject) != null){
 				Vector2D[] collision_state = PHYSICS.getCollisionCoordinates(gameObject);
 
-//				gameObject.setPreviousPosition(gameObject.getPosition());
 				gameObject.setState(collision_state[0] , collision_state[1]);
 				next = calculateNext(gameObject.getPosition() , gameObject.getVelocity(), H );
 				nextPosition = next[0];
 				nextVelocity = next[1];
-				gameObject.setPreviousPosition(gameObject.getPosition());
-				gameObject.setState(nextPosition,nextVelocity);
 			}
-			else {
-				gameObject.setPreviousPosition(gameObject.getPosition());
-				gameObject.setState(nextPosition,nextVelocity);
-			}
+
+			gameObject.setPreviousPosition(gameObject.getPosition());
+			gameObject.setState(nextPosition,nextVelocity);
 
 		}
 		else {
@@ -42,6 +38,8 @@ public abstract class Solver {
 			gameObject.setWillMove(false);
 		}
 	}
+
+
 	public double average(double[] coefficients , double[] k , double denominator){
 
 		double sum = 0;
@@ -50,8 +48,10 @@ public abstract class Solver {
 		}
 		return sum / denominator;
 	}
+
 	public Vector2D[] calculateNext(Vector2D position , Vector2D velocity , double H) {
 		return null;
 	}
-	}
+
+}
 
