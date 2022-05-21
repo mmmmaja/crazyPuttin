@@ -1,22 +1,22 @@
 package bot;
 
-import Main.Shot;
-import objects.Obstacle;
 import objects.TerrainGenerator;
 import physics.Vector2D;
 
+
 public class ImprovedRandomBot extends Bot {
 
-    private int testNumber = 1000;
+    private int testNumber = 1500;
+    private double range = 1; // the range we can rotate the angle of the velocity vector in each iteration
+
 
     public ImprovedRandomBot() {
-        this.targetPosition = this.universe.getTarget().getPosition();
         this.name = "Improved Random Bot";
         start();
     }
 
     /**
-     * extended to fit AStarBot properties (specify the target position)
+     * @param targetPosition to be specified for the maze bot
      */
     public ImprovedRandomBot(Vector2D targetPosition) {
         this.targetPosition = targetPosition;
@@ -24,23 +24,28 @@ public class ImprovedRandomBot extends Bot {
         start();
     }
 
+    /**
+     * @param testNumber number of simulations to run the bot
+     */
     public ImprovedRandomBot(int testNumber) {
         this.testNumber = testNumber;
-        this.targetPosition = this.universe.getTarget().getPosition();
-        this.name = "Improved Random Bot";
-        start();
-    }
-
-    public ImprovedRandomBot(int testNumber, boolean shootBall) {
-        this.testNumber = testNumber;
-        this.shootBall = shootBall;
-        this.targetPosition = this.universe.getTarget().getPosition();
         this.name = "Improved Random Bot";
         start();
     }
 
     /**
-     * @return initial velocity to start random shots, which is direction from ball to the target
+     * @param testNumber number of simulations to run the bot
+     * @param shootBall true if at the end shot should be display and Ball() object modified
+     */
+    public ImprovedRandomBot(int testNumber, boolean shootBall) {
+        this.testNumber = testNumber;
+        this.shootBall = shootBall;
+        this.name = "Improved Random Bot";
+        start();
+    }
+
+    /**
+     * @return initial velocity to start random shots (direction from ball to the target)
      */
     private Vector2D analiseCourse() {
         Vector2D direction =  new Vector2D(
@@ -48,37 +53,34 @@ public class ImprovedRandomBot extends Bot {
                 this.universe.getTarget().getPosition().getY() - this.universe.getBall().getPosition().getY()
         );
         direction = direction.getUnitVector();
-
-        Vector2D slopeTarget = TerrainGenerator.getSlopes(this.targetPosition);
-        Vector2D slopeBall = TerrainGenerator.getSlopes(this.universe.getBall().getPosition());
-
-        Vector2D slope = new Vector2D(
-                (slopeTarget.getY() + slopeBall.getY()) / 2.d,
-                (slopeTarget.getX() + slopeBall.getX()) / 2.d
-        );
-        System.out.println("slope: "+slope);
         return direction;
     }
 
     @Override
     public void run() {
+        // direction from ball to target
         Vector2D direction = analiseCourse();
 
         this.bestVelocity = direction;
         this.bestResult = new TestShot(this.universe, bestVelocity, this.targetPosition).getTestResult();
+
+        // target was hit
         if (this.bestResult == 0) {
             stop();
         }
 
         for (int i = 0; i < testNumber; i++) {
+            // widen the range of the rotation angle
+            if (range < 50 && i % 40 == 0 ) {
+                range++;
+            }
             this.shotCounter++;
-            double range = 60; // FIXME make range dependant on the slope
 
             Vector2D velocity = direction.
-                    multiply(Obstacle.getRandomDouble(5, 5)).
-                    rotate(Obstacle.getRandomDouble(-1 * range, range));
+                    multiply(getRandomDouble(0.1, 5)).
+                    rotate(getRandomWithinTwoRanges(-range - 1, -range, range, range + 1));
 
-            // distance between the ball and the target in 3D (takes height into consideration)
+            // Euclidean distance between the ball and the target
             double result = new TestShot(this.universe, velocity, this.targetPosition).getTestResult();
             if (result < this.bestResult) {
                 this.bestResult = result;

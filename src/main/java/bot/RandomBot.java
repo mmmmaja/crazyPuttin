@@ -1,13 +1,7 @@
 package bot;
 
-import Main.Shot;
-import Main.Universe;
-import objects.Obstacle;
+
 import physics.Vector2D;
-
-
-import java.util.ArrayList;
-import java.util.Random;
 
 
 /**
@@ -15,27 +9,27 @@ import java.util.Random;
  */
 public class RandomBot extends Bot {
 
-    private int testNumber = 1000;
+    private int testNumber = 1500;
 
 
     public RandomBot() {
-        this.targetPosition = this.universe.getTarget().getPosition();
         this.name = "Random Bot";
         start();
     }
 
+
     /**
-     * constructor used for the hillClimbing bot to specify number of trials
+     * @param testNumber number of simulations to run the bot
      */
     public RandomBot(int testNumber) {
         this.testNumber = testNumber;
-        this.targetPosition = this.universe.getTarget().getPosition();
         this.name = "Random Bot";
         start();
     }
 
     /**
-     * constructor used for the hillClimbing bot to specify number of trials
+     * @param testNumber number of simulations to run the bot
+     * @param shootBall true if at the end shot should be display and Ball() object modified
      */
     public RandomBot(int testNumber, boolean shootBall) {
         this.testNumber = testNumber;
@@ -46,7 +40,7 @@ public class RandomBot extends Bot {
     }
 
     /**
-     * constructor extended to fit AStarBot properties (specify the target position)
+     * @param targetPosition to be specified for the maze bot
      */
     public RandomBot(Vector2D targetPosition) {
         this.targetPosition = targetPosition;
@@ -55,23 +49,25 @@ public class RandomBot extends Bot {
     }
 
     /**
-     * simulate the shot and pick the best one of all based on heuristics
+     * simulate the shot and pick the best one of all
      */
     @Override
     public void run() {
 
         for (int i = 0; i < testNumber; i++) {
+            // Thread was killed
             if (!running) {
                 stop();
             }
             this.shotCounter++;
 
+            // generate random velocity
             Vector2D initialVelocity = new Vector2D(
-                    Obstacle.getRandomDouble(-5.0, 5.0),
-                    Obstacle.getRandomDouble(-5.0, 5.0)
+                    getRandomDouble(-5.0, 5.0),
+                    getRandomDouble(-5.0, 5.0)
             );
 
-            // euclidean distance between the ball and the target
+            // Euclidean distance between the ball and the target
             double result = new TestShot(this.universe, initialVelocity, this.targetPosition).getTestResult();
             if (result < this.bestResult) {
                 this.bestResult = result;

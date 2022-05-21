@@ -37,7 +37,7 @@ public class TerrainEventHandler {
 
 
     /**
-     * add the obstacle on the position clicked
+     * add the obstacle or tree on the position clicked
      */
     private void mousePressed() {
 
@@ -58,6 +58,7 @@ public class TerrainEventHandler {
                 if (!collides(clickPosition, 0.6)) {
 
                     Obstacle obstacle = new Obstacle(clickPosition);
+                    System.out.println(clickPosition);
                     Box box = obstacle.getBox();
                     box.setMaterial(rockMaterial);
                     this.group.getChildren().add(box);
@@ -93,6 +94,7 @@ public class TerrainEventHandler {
     private void mouseDragged() {
         universe.getMeshViews()[0].setOnMouseDragged(mouseEvent -> {});
     }
+
 
     /**
      * does nothing for now

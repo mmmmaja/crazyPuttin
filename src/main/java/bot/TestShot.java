@@ -18,7 +18,7 @@ public class TestShot implements Comparable<TestShot>{
     private final Vector2D targetPosition;
 
     private double testResult = Integer.MAX_VALUE;
-    private static final double WATER_PUNISHMENT = 5.8;
+    private static final double WATER_PUNISHMENT = 5.8; // subtract the score when the ball is hit
 
 
     public TestShot(Universe universe, Vector2D velocity, Vector2D targetPosition) {
@@ -78,10 +78,6 @@ public class TestShot implements Comparable<TestShot>{
     @Override
     public int compareTo(TestShot testShot) {
         return (this.testResult < testShot.getTestResult() ? -1 : 1);
-    }
-
-    public Vector2D getFinalPosition() {
-        return this.ball.getPosition();
     }
 
 }

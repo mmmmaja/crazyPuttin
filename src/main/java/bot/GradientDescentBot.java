@@ -4,17 +4,30 @@ package bot;
 import physics.Vector2D;
 import java.util.ArrayList;
 
-
+/**
+ * not to be included in this phase
+ */
 public class GradientDescentBot extends Bot {
 
     private double learningRate = 0.9;
 
     public GradientDescentBot() {
-        this.targetPosition = universe.getTarget().getPosition();
         this.name = "Gradient Descent Bot";
         start();
     }
 
+    /**
+     * @param shootBall true if at the end shot should be display and Ball() object modified
+     */
+    public GradientDescentBot(boolean shootBall) {
+        this.name = "Gradient Descent Bot";
+        this.shootBall = shootBall;
+        start();
+    }
+
+    /**
+     * @param targetPosition to be specified for the maze bot
+     */
     public GradientDescentBot(Vector2D targetPosition) {
         this.targetPosition = targetPosition;
         this.name = "Gradient Descent Bot";
@@ -24,6 +37,7 @@ public class GradientDescentBot extends Bot {
 
     @Override
     public void run() {
+
         int power = -8;
         double stepSize = 0.01;
 
@@ -54,7 +68,6 @@ public class GradientDescentBot extends Bot {
             );
             testVelocities.add(0, testVelocity);
             double testResult = new TestShot(this.universe, testVelocity, this.targetPosition).getTestResult();
-            System.out.println(testResult);
 
             // target was hit
             if (testResult == 0) {

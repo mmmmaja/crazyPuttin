@@ -354,11 +354,10 @@ public class Display extends Application {
         gridPane.add(new HBox(30, botButton), 0, position++);
 
         String[] botList = {
+                "ruleBasedBot",
                 "randomBot" ,
                 "improvedRandomBot",
                 "hillClimbingBot",
-                "mazeBot",
-                "gradientDescentBot"
         };
         ComboBox<String> botComboBox = new ComboBox(FXCollections.observableArrayList(botList));
         botComboBox.setValue("randomBot");
@@ -367,6 +366,7 @@ public class Display extends Application {
            botButton.setOnMouseClicked(mouseEvent -> {
                switch (botComboBox.getValue()) {
                    case "randomBot" -> new RandomBot();
+                   case "ruleBasedBot" -> new RuleBasedBot();
                    case "improvedRandomBot" -> new ImprovedRandomBot();
                    case "gradientDescentBot" -> new GradientDescentBot();
                    case "hillClimbingBot" -> new HillClimbingBot();

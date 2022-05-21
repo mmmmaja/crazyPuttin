@@ -64,13 +64,6 @@ public class Obstacle {
         return this.position;
     }
 
-    /**
-     * @return random Double between minimum and maximum value
-     */
-    public static double getRandomDouble(double minimum, double maximum) {
-        Random random = new Random();
-        return random.nextDouble() * (maximum - minimum) + minimum;
-    }
     public double getDimension(){
         return this.SIDE_LENGTH;
     }

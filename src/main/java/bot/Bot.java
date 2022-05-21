@@ -4,32 +4,35 @@ import Main.Main;
 import Main.Shot;
 import Main.Universe;
 import physics.Vector2D;
+import java.util.Random;
 
 
 /**
- * template for the bots, using Threads to speed everything up (??)
+ * template for the bots, using Threads when simulating shots
  */
-public abstract class Bot implements Runnable{
+public abstract class Bot implements Runnable {
 
-    String name;
     final Universe universe = Main.getUniverse();
-    Vector2D targetPosition;
-    boolean shootBall = true;
 
-    Vector2D bestVelocity = new Vector2D(0, 0);
-    double bestResult = Integer.MAX_VALUE;
-    int shotCounter = 0;
+    Vector2D targetPosition = universe.getTarget().getPosition();
+    boolean shootBall = true; // if shot is just simulation do not shoot the ball
 
-    boolean running;
-    Thread thread;
+    String name; // name to be set for each bot type
+    Vector2D bestVelocity = new Vector2D(0, 0); // velocity that gives the closest position to the target
+    double bestResult = Integer.MAX_VALUE; // distance between the target and the ball
+    int shotCounter = 0; // number of simulations run
+
+    long start; // start of the simulations
+    public boolean running;
+    public Thread thread;
 
 
     /**
-     * start the new Thread that will run the shot simulations
+     * starts the new Thread that runs the shot simulations
      */
     public synchronized void start() {
-        System.out.println("start");
-        running = true;
+        this.start = System.nanoTime();
+        this.running = true;
         this.thread = new Thread(this);
         this.thread.start();
     }
@@ -38,13 +41,10 @@ public abstract class Bot implements Runnable{
      * kill the thread and shoot the ball with best velocity
      */
     public synchronized void stop() {
-        System.out.println("stop");
+        this.running = false;
         if (this.shootBall) {
             shootBall();
         }
-        this.running = false;
-        notify();
-        System.out.println(this);
         try {
             this.thread.join();
         }
@@ -52,21 +52,20 @@ public abstract class Bot implements Runnable{
     }
 
     /**
-     * run shot simulations and update bestVelocity field
+     * run shot simulations and update bestVelocity
      */
     @Override
     public abstract void run();
 
     /**
-     * shoot the ball creating new Shot object with bestVelocity
+     * shoot the ball creating new Shot() object with bestVelocity
      */
-
     public void shootBall() {
         new Shot(this.universe, this.bestVelocity);
     }
 
     /**
-     * @return number of all shot simulations
+     * @return number of all bot simulations
      */
     public int getShotCounter() {
         return this.shotCounter;
@@ -83,4 +82,36 @@ public abstract class Bot implements Runnable{
     public Vector2D getBestVelocity() {
         return this.bestVelocity;
     }
+
+    public double getBestResult() {
+        return bestResult;
+    }
+
+    public double getTime() {
+        return (System.nanoTime() - this.start) * Math.pow(10, -9) ;
+    }
+
+
+    /**
+     * @return random Double between minimum and maximum value
+     */
+    public double getRandomDouble(double minimum, double maximum) {
+        Random random = new Random();
+        return random.nextDouble() * (maximum - minimum) + minimum;
+    }
+
+    /**
+     * @return random Double between in either range [a1, a2] or [b1, b2]
+     */
+    public double getRandomWithinTwoRanges(double a1, double a2, double b1, double b2) {
+        Random random = new Random();
+        double r = random.nextDouble();
+        if (r < 0.5) {
+            return getRandomDouble(a1, a2);
+        }
+        else {
+            return getRandomDouble(b1, b2);
+        }
+    }
+
 }
