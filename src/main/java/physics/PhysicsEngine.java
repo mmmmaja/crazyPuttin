@@ -11,8 +11,8 @@ import java.util.ArrayList;
 public class PhysicsEngine {
 
 	private static final double g = 9.81;
-	private static final double STEP = 0.005;
-	private static final double STOP = 0.005;
+	public static double STEP = 0.0174;
+	private static final double STOP = STEP;
 
 	private final double errorTolerance = 0.01;
 
@@ -40,6 +40,15 @@ public class PhysicsEngine {
 			return new Vector2D(0, 0);
 
 		}
+	}
+
+	public boolean isProbableWaterCollision(GameObject gameObject) {
+		double prevSlopeX = TerrainGenerator.getSlopeX(gameObject.getPreviousPosition());
+		double prevSlopeY = TerrainGenerator.getSlopeY(gameObject.getPreviousPosition());
+		double slopeX = TerrainGenerator.getSlopeX(gameObject.getPosition());
+		double slopeY = TerrainGenerator.getSlopeY(gameObject.getPosition());
+
+		return Math.signum(prevSlopeX) != Math.signum(slopeX) || Math.signum(prevSlopeY) != Math.signum(slopeY);
 	}
 
 	public Vector2D calculateAcceleration(Vector2D position , Vector2D velocity) {
@@ -230,5 +239,42 @@ public class PhysicsEngine {
 		return STEP;
 	}
 	public double getSTOP() { return STOP; }
+
+
+	public Vector2D getWaterCollision(GameObject gameObject) {
+		double currPosX = gameObject.getPosition().getX();
+		double currPosY = gameObject.getPosition().getY();
+		double bisecBeginX = currPosX;
+		double bisecBeginY = currPosY;
+		double bisecEndX = gameObject.getPreviousPosition().getX();
+		double bisecEndY = gameObject.getPreviousPosition().getY();
+		double bisecMidX = (bisecBeginX + bisecEndX) / 2;
+		double bisecMidY = (bisecBeginY + bisecEndY) / 2;
+
+		// keep doing bisection until intersecting point is accurate enough
+		while (new Vector2D(bisecBeginX - bisecEndX, bisecBeginY - bisecEndY)
+				.getMagnitude() > errorTolerance) {
+			bisecMidX = (bisecBeginX + bisecEndX) / 2;
+			bisecMidY = (bisecBeginY + bisecEndY) / 2;
+			// height at middle point is less than  (0- error tolerance)
+			if (TerrainGenerator.getHeight(new Vector2D(bisecMidX, bisecMidY)) < -1.0 * errorTolerance) {
+				bisecEndX = bisecMidX;
+				bisecEndY = bisecMidY;
+			}
+			// height at middle point is more than
+			else if (TerrainGenerator.getHeight(new Vector2D(bisecMidX, bisecMidY)) > errorTolerance) {
+				bisecBeginX = bisecMidX;
+				bisecBeginY = bisecMidY;
+			}
+			// height at middle point of bisection is within the error tolerance
+			// from zero
+			else {
+				return new Vector2D(bisecMidX, bisecMidY);
+			}
+		}
+
+		return null;
+
+	}
 
 }

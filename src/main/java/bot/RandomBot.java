@@ -63,8 +63,8 @@ public class RandomBot extends Bot {
 
             // generate random velocity
             Vector2D initialVelocity = new Vector2D(
-                    getRandomDouble(-5.0, 5.0),
-                    getRandomDouble(-5.0, 5.0)
+                    getRandomDoubleBetween(-5.0, 5.0),
+                    getRandomDoubleBetween(-5.0, 5.0)
             );
 
             // Euclidean distance between the ball and the target

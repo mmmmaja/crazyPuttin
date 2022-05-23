@@ -1,15 +1,15 @@
-x0 = -3
-y0 = 0
-xt = 4
-yt = 1
-r = 0.15
-muk = 0.08
-mus = 0.2
-heightProfile = 0
-sandPitX = -5<x<-1
-sandPitY = 19<y<20
-muks = 0.08
-muss = 0.2
+x0 = 0
+y0 = 8
+xt = 1
+yt = 22
+r = 0.1
+muk = 0.05
+mus = 0.1
+heightProfile = 2/3 * sin(x/2)+0.7 + cos(y/6)
+sandPitX = -20<x<21
+sandPitY =25<y<30
+muks = 0.25
+muss = 0.3
 
 0.4*(0.9-e^((-x^2-y^2)/8))
 0.9*(Math.sin((x-y)/7)+0.9)

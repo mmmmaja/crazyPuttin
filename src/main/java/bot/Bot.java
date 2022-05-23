@@ -41,6 +41,7 @@ public abstract class Bot implements Runnable {
      * kill the thread and shoot the ball with best velocity
      */
     public synchronized void stop() {
+//        System.out.println(this);
         this.running = false;
         if (this.shootBall) {
             shootBall();
@@ -95,7 +96,7 @@ public abstract class Bot implements Runnable {
     /**
      * @return random Double between minimum and maximum value
      */
-    public double getRandomDouble(double minimum, double maximum) {
+    public double getRandomDoubleBetween(double minimum, double maximum) {
         Random random = new Random();
         return random.nextDouble() * (maximum - minimum) + minimum;
     }
@@ -107,10 +108,10 @@ public abstract class Bot implements Runnable {
         Random random = new Random();
         double r = random.nextDouble();
         if (r < 0.5) {
-            return getRandomDouble(a1, a2);
+            return getRandomDoubleBetween(a1, a2);
         }
         else {
-            return getRandomDouble(b1, b2);
+            return getRandomDoubleBetween(b1, b2);
         }
     }
 

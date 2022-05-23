@@ -17,8 +17,8 @@ public class Main {
     public static void main(String[] args) {
 
         universe = new Universe(new FileReader());
-        Application.launch(Display.class);
-//        new BotExperiments();
+//        Application.launch(Display.class);
+        new BotExperiments();
 
     }
 

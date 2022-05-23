@@ -1,6 +1,5 @@
 package bot;
 
-import objects.TerrainGenerator;
 import physics.Vector2D;
 
 
@@ -77,7 +76,7 @@ public class ImprovedRandomBot extends Bot {
             this.shotCounter++;
 
             Vector2D velocity = direction.
-                    multiply(getRandomDouble(0.1, 5)).
+                    multiply(getRandomDoubleBetween(0.1, 5)).
                     rotate(getRandomWithinTwoRanges(-range - 1, -range, range, range + 1));
 
             // Euclidean distance between the ball and the target
