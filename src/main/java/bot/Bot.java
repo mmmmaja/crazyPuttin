@@ -31,7 +31,7 @@ public abstract class Bot implements Runnable {
      * starts the new Thread that runs the shot simulations
      */
     public synchronized void start() {
-        this.start = System.nanoTime();
+        this.start = System.nanoTime(); // used to measure the performance of the bot
         this.running = true;
         this.thread = new Thread(this);
         this.thread.start();
@@ -42,9 +42,10 @@ public abstract class Bot implements Runnable {
      */
     public synchronized void stop() {
 //        System.out.println(this);
+
         this.running = false;
         if (this.shootBall) {
-            shootBall();
+            shootBall(); // show an animation and update the position of the Ball object
         }
         try {
             this.thread.join();
@@ -80,18 +81,26 @@ public abstract class Bot implements Runnable {
                 "\nshotCounter: " + this.shotCounter;
     }
 
+    /**
+     * @return final velocity to shoot the ball
+     */
     public Vector2D getBestVelocity() {
         return this.bestVelocity;
     }
 
+    /**
+     * @return distance from the ball to the target when shot with bestVelocity
+     */
     public double getBestResult() {
         return bestResult;
     }
 
+    /**
+     * @return time in seconds needed for simulation
+     */
     public double getTime() {
         return (System.nanoTime() - this.start) * Math.pow(10, -9) ;
     }
-
 
     /**
      * @return random Double between minimum and maximum value
@@ -107,12 +116,14 @@ public abstract class Bot implements Runnable {
     public double getRandomWithinTwoRanges(double a1, double a2, double b1, double b2) {
         Random random = new Random();
         double r = random.nextDouble();
+        double rand;
         if (r < 0.5) {
-            return getRandomDoubleBetween(a1, a2);
+            rand = getRandomDoubleBetween(a1,a2);
         }
         else {
-            return getRandomDoubleBetween(b1, b2);
+            rand = getRandomDoubleBetween(b1,b2);
         }
+        return rand;
     }
 
 }

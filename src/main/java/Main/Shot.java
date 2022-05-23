@@ -12,6 +12,8 @@ import physics.Vector2D;
  */
 public class Shot extends Display implements Runnable {
 
+    public static int SPEED = 60; // speed for the ball animation
+
     private final Ball ball;
     private final Universe universe;
     private boolean running;
@@ -56,9 +58,9 @@ public class Shot extends Display implements Runnable {
 
     @Override
     public void run() {
+
         ball.setWillMove(true);
 
-        int SPEED = 120;
         double delta = 0;
         long lastTime = System.nanoTime();
         final double nanos = Math.pow(10, 9) / SPEED ;

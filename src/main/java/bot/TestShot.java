@@ -3,6 +3,7 @@ package bot;
 import Main.Universe;
 import objects.Ball;
 import objects.TerrainGenerator;
+import physics.PhysicsEngine;
 import physics.Vector2D;
 
 
@@ -10,6 +11,8 @@ import physics.Vector2D;
  * this is the class that performs the testShots for the initial velocity
  * once the shot is done we can extract the fitness function,
  * which is the distance between the target and the ball
+ *
+ * It doesn't affect the Ball object from the universe, but makes it's copy
  */
 public class TestShot implements Comparable<TestShot>{
 
@@ -18,7 +21,8 @@ public class TestShot implements Comparable<TestShot>{
     private final Vector2D targetPosition;
 
     private double testResult = Integer.MAX_VALUE;
-    private static final double WATER_PUNISHMENT = 5.8; // subtract the score when the ball is hit
+    private static final double WATER_PUNISHMENT = 10; // subtract the score when the ball is hit
+    private static final double OBSTACLE_PUNISHMENT = 2; // subtract the score when the obstacle is hit
 
 
     public TestShot(Universe universe, Vector2D velocity, Vector2D targetPosition) {
@@ -36,16 +40,21 @@ public class TestShot implements Comparable<TestShot>{
 
 
     private void start() {
+
+        // while ball is moving do
         while (true) {
 
             universe.getSolver().nextStep(ball);
             double distance = ball.getPosition().getEuclideanDistance(this.targetPosition);
 
-            // subtract points if ball hit the water
+//             subtract points if ball hit the water
             if (TerrainGenerator.getHeight(ball.getPosition()) < 0) {
                 distance+= WATER_PUNISHMENT;
             }
-
+            // subtract the points if ball hit the obstacle
+            if (universe.getSolver().PHYSICS.getCollisionCoordinates(ball) != null ) {
+                distance += OBSTACLE_PUNISHMENT;
+            }
             if (distance < this.testResult) {
                 this.testResult = distance;
             }

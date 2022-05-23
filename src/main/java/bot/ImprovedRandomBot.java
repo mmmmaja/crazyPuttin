@@ -5,8 +5,8 @@ import physics.Vector2D;
 
 public class ImprovedRandomBot extends Bot {
 
-    private int testNumber = 1500;
-    private double range = 1; // the range we can rotate the angle of the velocity vector in each iteration
+    private int testNumber = 3600;
+    private double range = 0; // the range we can rotate the angle of the velocity vector in each iteration
 
 
     public ImprovedRandomBot() {
@@ -44,6 +44,15 @@ public class ImprovedRandomBot extends Bot {
     }
 
     /**
+     * @param shootBall true if at the end shot should be display and Ball() object modified
+     */
+    public ImprovedRandomBot(boolean shootBall) {
+        this.shootBall = shootBall;
+        this.name = "Improved Random Bot";
+        start();
+    }
+
+    /**
      * @return initial velocity to start random shots (direction from ball to the target)
      */
     private Vector2D analiseCourse() {
@@ -60,17 +69,18 @@ public class ImprovedRandomBot extends Bot {
         // direction from ball to target
         Vector2D direction = analiseCourse();
 
-        this.bestVelocity = direction;
+        this.bestVelocity = direction.multiply(5);
         this.bestResult = new TestShot(this.universe, bestVelocity, this.targetPosition).getTestResult();
+        this.shotCounter++;
 
         // target was hit
         if (this.bestResult == 0) {
             stop();
         }
-
+        int rangeToSearch = 90;
         for (int i = 0; i < testNumber; i++) {
             // widen the range of the rotation angle
-            if (range < 50 && i % 40 == 0 ) {
+            if (range < rangeToSearch && i % 40 == 0 ) {
                 range++;
             }
             this.shotCounter++;

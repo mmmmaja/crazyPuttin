@@ -11,7 +11,7 @@ import java.util.ArrayList;
 public class PhysicsEngine {
 
 	private static final double g = 9.81;
-	public static double STEP = 0.0174;
+	public static double STEP = 0.004;
 	private static final double STOP = STEP;
 
 	private final double errorTolerance = 0.01;
@@ -72,8 +72,7 @@ public class PhysicsEngine {
 			return new Vector2D(aX, aY);
 
 		}
-		else
-		if ( slope > mu_S) {
+		else if ( slope > mu_S) {
 
 			double aX = -mu_K * g * partialX / partials.getMagnitude();
 			double aY = -mu_K * g * partialY / partials.getMagnitude();
