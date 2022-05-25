@@ -276,4 +276,7 @@ public class PhysicsEngine {
 
 	}
 
+    public void setSTEP(double step) {
+		STEP = step;
+    }
 }
