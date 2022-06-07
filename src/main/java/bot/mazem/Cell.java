@@ -9,12 +9,12 @@ public class Cell {
     private int x;
     private int y;
     private double costToTarget;
-    private double costToPos;
+    private double costFromStart;
     private double changeDir ;
-    private double cost;
-    ArrayList<Cell> neighbors;
-    Cell previous;
-    NodeDescription nodeDescription = NodeDescription.grass;
+    private double totalCost;
+    private ArrayList<Cell> neighbors;
+    private Cell previous;
+    private NodeDescription nodeDescription = NodeDescription.grass;
     private boolean visited = false ;
 
 
@@ -23,31 +23,31 @@ public class Cell {
         this.x = x;
         this.y = y;
 
-        costToPos = 0; // the cost of the movement from the start cell to the current cell
+        costFromStart = 0; // the cost of the movement from the start cell to the current cell
         costToTarget = 0; // the distance from the target's cell to the current cell
         changeDir = 0; //Favor lines that follow as fewer lines as possible (fewer shots)
-        cost = 0; // g + h + l
+        totalCost = 0; // g + h + l
         this.neighbors = new ArrayList<>();
 
     }
     public void setAllCosts(Vector2D target , Vector2D position){
-        this.costToTarget = distance(target);
-        this.costToPos = distance(position);
-        this.cost = this.costToPos + this.costToTarget;
+        this.costToTarget = distanceTo(target);
+        this.costFromStart = distanceTo(position);
+        this.totalCost = this.costFromStart + this.costToTarget;
     }
     public void setAllCosts(Cell target , Cell position){
-        this.costToTarget = distance(target);
-        this.costToPos = distance(position);
-        this.cost = this.costToPos + this.costToTarget;
+        this.costToTarget = distanceTo(target);
+        this.costFromStart = distanceTo(position);
+        this.totalCost = this.costFromStart + this.costToTarget;
     }
 
-    public double distance(Cell myCell) {
+    public double distanceTo(Cell myCell) {
         return Math.sqrt(Math.pow(this.x - myCell.x, 2) + Math.pow(this.y - myCell.y, 2));
     }
-    public double distance(Vector2D vector2D) {
+    public double distanceTo(Vector2D vector2D) {
         return Math.sqrt(Math.pow(this.x - vector2D.getX(), 2) + Math.pow(this.y - vector2D.getY(), 2));
     }
-    public double distance(double x , double y ) {
+    public double distanceTo(double x , double y ) {
         return Math.sqrt(Math.pow(this.x - x , 2) + Math.pow(this.y - y, 2));
     }
 
@@ -84,20 +84,21 @@ public class Cell {
         this.costToTarget = costToTarget;
     }
 
-    public double getCostToPos() {
-        return costToPos;
+    public double getCostFromStart() {
+        return costFromStart;
     }
 
-    public void setCostToPos(double costToPos) {
-        this.costToPos = costToPos;
+    public void setCostFromStart(double costFromStart) {
+        this.costFromStart = costFromStart;
+        this.totalCost = costFromStart + costToTarget;
     }
 
-    public double getCost() {
-        return cost;
+    public double getTotalCost() {
+        return totalCost;
     }
 
-    public void setCost(double cost) {
-        this.cost = cost;
+    public void setTotalCost(double totalCost) {
+        this.totalCost = totalCost;
     }
 
 
@@ -128,6 +129,11 @@ public class Cell {
         this.visited = visited;
     }
 
+    public double getChangeDir() {
+        return changeDir;
+    }
 
-
+    public void setChangeDir(double changeDir) {
+        this.changeDir = changeDir;
+    }
 }

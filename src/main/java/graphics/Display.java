@@ -4,6 +4,8 @@ import Main.Main;
 import Main.Shot;
 import bot.*;
 import bot.maze.AStarBot;
+import bot.mazem.Cell;
+import bot.mazem.MazeBot;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -379,9 +381,13 @@ public class Display extends Application {
 
 
     private void aStarTest() {
-        ArrayList<Vector2D> positions = new AStarBot().getNextPosition();
-        System.out.println(positions.size());
-        for (Vector2D p : positions) {
+        MazeBot mazeBot = new MazeBot();
+        mazeBot.findPath();
+        ArrayList<Cell> cells = mazeBot.getPath();
+        System.out.println(cells.size());
+
+        for (Cell cell : cells) {
+            Vector2D p = new Vector2D(cell.getX() , cell.getY());
             //System.out.println(p);
             Sphere sphere = new Sphere();
             sphere.setRadius(0.05);

@@ -17,7 +17,7 @@ import java.util.Random;
 public class Obstacle {
 
     private final Vector2D position;
-    public double SIDE_LENGTH = 0.7;
+    public double SIDE_LENGTH = 1;
     private final Box box;
 
     /**
