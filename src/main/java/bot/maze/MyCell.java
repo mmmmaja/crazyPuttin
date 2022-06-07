@@ -102,7 +102,11 @@ public class MyCell {
         return distance;
     }
 
-//    public double dist (MyCell from, MyCell to){
+    @Override
+    public String toString() {
+        return "h=" + h ;
+    }
+    //    public double dist (MyCell from, MyCell to){
 //
 //        Point2D p1 = new Point2D(from.location.getX(), from.location.getY());
 //        return p1.distance(to.location.getX(),to.location.getY());

@@ -16,6 +16,7 @@ public class Vector2D implements Vector {
     }
 
 
+
     public double getX() {
         return this.x;
     }

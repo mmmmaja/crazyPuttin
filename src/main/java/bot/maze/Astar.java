@@ -1,9 +1,10 @@
 package bot.maze;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
-import Main.Main;
-//import Main.Universe;
+import Main.*;
+import objects.FileReader;
 import objects.Terrain;
 import objects.TerrainGenerator;
 import physics.Vector2D;
@@ -23,13 +24,14 @@ public class Astar {
     MyCell end;
     ArrayList<MyCell> path;
     boolean solutionFound;
-
+    Universe universe = new Universe(new FileReader());
 
     public Astar() {
         cols = 2*Terrain.TERRAIN_WIDTH/STEP;
         rows = 2*Terrain.TERRAIN_HEIGHT/STEP;
-        targetPosition=Main.getUniverse().getTarget().getPosition();
-        startPosition=Main.getUniverse().getFileReader().getInitialPosition();
+
+        targetPosition=universe.getTarget().getPosition();
+        startPosition=universe.getFileReader().getInitialPosition();
         grid = new MyCell[cols][rows];
         toVisit = new ArrayList<>(cols * rows);
         visited = new ArrayList<>(cols * rows);
@@ -68,13 +70,11 @@ public class Astar {
     }
 
     public boolean addObstacles(MyCell cell){
-        for (int k=0; k<Main.getUniverse().getObstacles().size();k++) {
-            if (cell.x == (int) Math.round((Main.getUniverse().getObstacles().get(k).getPosition().getX()+Terrain.TERRAIN_WIDTH)/STEP) &&
-                    cell.y == (int) Math.round((Main.getUniverse().getObstacles().get(k).getPosition().getY()+Terrain.TERRAIN_HEIGHT))/STEP) {
+        for (int k=0; k<universe.getObstacles().size();k++) {
+            if (cell.x == (int) Math.round((universe.getObstacles().get(k).getPosition().getX()+Terrain.TERRAIN_WIDTH)/STEP) &&
+                    cell.y == (int) Math.round((universe.getObstacles().get(k).getPosition().getY()+Terrain.TERRAIN_HEIGHT))/STEP) {
                 return true;
             }
-
-
         }
         return false;
     }
@@ -177,6 +177,12 @@ public class Astar {
 
         throw new RuntimeException("couldn't find a solution");
 
+    }
+
+    public static void main(String[] args) {
+        Astar astar = new Astar();
+
+        astar.findPath();
     }
 
 

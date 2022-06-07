@@ -358,6 +358,7 @@ public class Display extends Application {
                 "randomBot" ,
                 "improvedRandomBot",
                 "hillClimbingBot",
+                "mazeBot"
         };
         ComboBox<String> botComboBox = new ComboBox(FXCollections.observableArrayList(botList));
         botComboBox.setValue("randomBot");

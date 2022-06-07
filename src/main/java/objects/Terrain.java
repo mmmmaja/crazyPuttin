@@ -16,11 +16,11 @@ public class Terrain extends TerrainGenerator {
     private final Vector2D sandPitX;
     private final Vector2D sandPitY;
 
-    public static final int TERRAIN_WIDTH = 50;
-    public static final int TERRAIN_HEIGHT = 50;
+    public static final int TERRAIN_WIDTH = 10;
+    public static final int TERRAIN_HEIGHT = 10;
 
     // the size of each polygon in the mesh
-    public static final double STEP = 0.25;
+    public static final double STEP = 0.5;
 
 
     public Terrain(FileReader fileReader) {
@@ -38,7 +38,7 @@ public class Terrain extends TerrainGenerator {
      * @return array of points consisting of their coordinates and height
      */
     private float[] addPoints() {
-        float[] points = new float[(int) ((1 / STEP) * 2 * TERRAIN_HEIGHT * (1 / STEP) * 2 * TERRAIN_WIDTH) * 3];
+        float[] points = new float[(int) ((1 / STEP) * 2 * (TERRAIN_HEIGHT) * (1 / STEP) * 2 * TERRAIN_WIDTH) * 3];
 
         int counter = -1;
         for (double i = -TERRAIN_HEIGHT; i < TERRAIN_HEIGHT; i+= STEP) {

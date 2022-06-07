@@ -21,6 +21,10 @@ public class TerrainGenerator {
     public static double getHeight(Vector2D position) {
         return fileReader.calculator(position.getX() , position.getY()) ;
     }
+    public static double getHeight(double x , double y) {
+        return getHeight(new Vector2D(x , y));
+    }
+
     public static double f(double x, double y ) {
         return fileReader.calculator(x , y) ;
     }

@@ -64,8 +64,8 @@ public class AStarBot {
             if (counter < path.size() - 1) {
                 x2 = path.get(counter + 1).x;
                 y2 = path.get(counter + 1).y;
-                prevSlope = (y1 - y0) / (x1 - x0);
-                nextSlope = (y2 - y1) / (x2 - x1);
+                prevSlope = (y1 - y0) / (double)(x1 - x0);
+                nextSlope = (y2 - y1) / (double)(x2 - x1);
                 if (prevSlope == nextSlope) {
                     x0 = path.get(counter + 2).x;
                     y0 = path.get(counter + 2).y;
@@ -79,8 +79,8 @@ public class AStarBot {
             else {
                 x2 = path.get(counter - 2).x;
                 y2 = path.get(counter - 2).y;
-                prevSlope = (y1 - y0) / (x1 - x0);
-                nextSlope = (y2 - y1) / (x2 - x1);
+                prevSlope = (y1 - y0) / (double)(x1 - x0);
+                nextSlope = (y2 - y1) / (double)(x2 - x1);
                 if (prevSlope == nextSlope) {
                     x0 = path.get(counter + 1).x;
                     y0 = path.get(counter + 1).y;

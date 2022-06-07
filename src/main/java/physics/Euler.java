@@ -12,7 +12,6 @@ public class Euler extends Solver {
 		double denominator = Arrays.stream(c).sum();
 
 		Vector2D k1a = PHYSICS.calculateAcceleration(position, velocity);
-
 		Vector2D k2V = new Vector2D(velocity.getX() + a[0] * H * k1a.getX() , velocity.getY() + b[0] * H * k1a.getY()); // change in speed ( a * Δh  = ΔV)
 		Vector2D k2p = new Vector2D(position.getX() + a[0] * H * velocity.getX() , position.getY() + b[0] * H * velocity.getY() ) ; // change in speed ( V * Δh  = Δx)
 
