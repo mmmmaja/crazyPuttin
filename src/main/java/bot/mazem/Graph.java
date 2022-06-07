@@ -2,10 +2,7 @@ package bot.mazem;
 
 
 import Main.*;
-import javafx.scene.Node;
-import objects.FileReader;
-import objects.Terrain;
-import objects.TerrainGenerator;
+import objects.*;
 import physics.Vector2D;
 
 public class Graph {
@@ -15,9 +12,11 @@ public class Graph {
     private final int TERRAIN_HEIGHT= Terrain.TERRAIN_HEIGHT;
     private final int WIDTH = (int)(Terrain.TERRAIN_WIDTH/STEP * 2);
     private final int HEIGHT =(int)(Terrain.TERRAIN_HEIGHT/STEP * 2);
-    private final Universe universe =  new Universe(new FileReader());
     private Vector2D position ;
     private Vector2D target ;
+    private Universe universe = new Universe(new FileReader());
+    private Cell startingCell;
+    private Cell targetCell;
 
     public Graph(){
         this.position = universe.getBall().getPosition();
@@ -25,12 +24,17 @@ public class Graph {
         createGraph();
         connectNeighbors();
     }
+
     public void createGraph(){
         graph = new Cell[WIDTH][HEIGHT];
         for(int i = 0 , x = -TERRAIN_WIDTH ; i< WIDTH ; i++ ,x+=STEP){
             for (int j = 0, y = -TERRAIN_HEIGHT; j < HEIGHT; j++ , y+=STEP) {
                 Cell cell = new Cell(x,y);
                 NodeDescription nodeDescription = nodeDescription(x,y);
+                if( x == position.getX() && y == position.getY() )
+                    startingCell = cell;
+                if( x == target.getX()   && y == target.getY())
+                    targetCell = cell;
                 cell.setNodeDescription(nodeDescription);
                 cell.setAllCosts(target,position);
                 graph[i][j] = cell ;
@@ -54,18 +58,45 @@ public class Graph {
                         if (i != x || j != y) {
                             cell.addNeighbors( graph[x][y] );
                         }
-
                     }
                 }
             }
         }
     }
     public NodeDescription nodeDescription(double x , double y ){
-        Universe universe = Main.getUniverse();
+
         if(TerrainGenerator.getHeight(x,y)<0){return NodeDescription.water;}
         if(TerrainGenerator.isSand(x,y)){ return NodeDescription.sand;}
+        if(isInObstacle(x,y)) return NodeDescription.obstacle;
+        if(isInTree(x,y)) return NodeDescription.tree;
+        if(position.getX() == x && position.getY() == y )return NodeDescription.start;
+        if(target.getX() == x && position.getY() == y) return NodeDescription.target;
 
         return NodeDescription.grass;
+    }
+
+    public boolean isInTree(double x , double y){
+        for (Tree tree : universe.getTrees()) {
+            double treeXPos = tree.getPosition().getX();
+            double treeYPos = tree.getPosition().getY();
+            double r = tree.getCylinder().getRadius() * 2;
+            if ((new Vector2D(x - treeXPos, y - treeYPos)).getMagnitude() < r)  return true;
+        }
+        return false ;
+    }
+
+    public boolean isInObstacle(double x , double y ){
+        double rBall = universe.getBall().getRADIUS();
+        for (Obstacle obstacle : universe.getObstacles()) {
+            double obstXPos = obstacle.getPosition().getX();
+            double obstYPos = obstacle.getPosition().getY();
+            double obstDim = obstacle.getDimension();
+            if((x <= obstXPos+obstDim/2+rBall && x >= obstXPos-obstDim/2-rBall) &&
+                    (y <= obstYPos+obstDim/2+rBall && y >= obstYPos-obstDim/2-rBall)) {
+                return true;
+            }
+        }
+        return false;
     }
 
 
@@ -75,6 +106,58 @@ public class Graph {
 
     public void setGraph(Cell[][] graph) {
         this.graph = graph;
+    }
+
+    public double getSTEP() {
+        return STEP;
+    }
+
+    public int getTERRAIN_WIDTH() {
+        return TERRAIN_WIDTH;
+    }
+
+    public int getTERRAIN_HEIGHT() {
+        return TERRAIN_HEIGHT;
+    }
+
+    public int getWIDTH() {
+        return WIDTH;
+    }
+
+    public int getHEIGHT() {
+        return HEIGHT;
+    }
+
+    public Vector2D getPosition() {
+        return position;
+    }
+
+    public void setPosition(Vector2D position) {
+        this.position = position;
+    }
+
+    public Vector2D getTarget() {
+        return target;
+    }
+
+    public void setTarget(Vector2D target) {
+        this.target = target;
+    }
+
+    public Cell getStartingCell() {
+        return startingCell;
+    }
+
+    public void setStartingCell(Cell startingCell) {
+        this.startingCell = startingCell;
+    }
+
+    public Cell getTargetCell() {
+        return targetCell;
+    }
+
+    public void setTargetCell(Cell targetCell) {
+        this.targetCell = targetCell;
     }
 
     public static void main(String[] args) {

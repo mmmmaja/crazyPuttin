@@ -13,7 +13,7 @@ public class MyCell {
     int y;
     int f;
     int g;
-    // int l;
+    int l;
     int h;
     ArrayList<MyCell> neighbors;
     MyCell previous;
@@ -38,7 +38,7 @@ public class MyCell {
         g = 0; // the cost of the movement from the start cell to the current cell
         h = 0; // the distance from the target's cell to the current cell
         f = 0; // g + h + l
-        //l = 0; //Favor lines that follow as fewer lines as possible (fewer shots)
+        l = 0; //Favor lines that follow as fewer lines as possible (fewer shots)
         // this.width = Astar.WIDTH/Astar.cols;
         //this.height = Astar.HEIGHT/Astar.rows;
         this.neighbors = new ArrayList<>(Astar.cols*Astar.rows);

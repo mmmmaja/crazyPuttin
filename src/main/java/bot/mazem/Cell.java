@@ -10,10 +10,13 @@ public class Cell {
     private int y;
     private double costToTarget;
     private double costToPos;
+    private double changeDir ;
     private double cost;
     ArrayList<Cell> neighbors;
     Cell previous;
     NodeDescription nodeDescription = NodeDescription.grass;
+    private boolean visited = false ;
+
 
 
     Cell(int x, int y){
@@ -22,8 +25,8 @@ public class Cell {
 
         costToPos = 0; // the cost of the movement from the start cell to the current cell
         costToTarget = 0; // the distance from the target's cell to the current cell
+        changeDir = 0; //Favor lines that follow as fewer lines as possible (fewer shots)
         cost = 0; // g + h + l
-        //l = 0; //Favor lines that follow as fewer lines as possible (fewer shots)
         this.neighbors = new ArrayList<>();
 
     }
@@ -117,6 +120,14 @@ public class Cell {
     public void setPrevious(Cell previous) {
         this.previous = previous;
     }
+    public boolean isVisited() {
+        return visited;
+    }
+
+    public void setVisited(boolean visited) {
+        this.visited = visited;
+    }
+
 
 
 }
