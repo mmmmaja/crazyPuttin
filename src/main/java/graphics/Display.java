@@ -395,7 +395,7 @@ public class Display extends Application {
             sphere.setTranslateY(p.getY());
             sphere.setTranslateZ((-TerrainGenerator.getHeight(p) - 1));
             PhongMaterial material = new PhongMaterial();
-            material.setDiffuseColor(Color.SILVER);
+            material.setDiffuseColor(Color.RED);
             sphere.setMaterial(material);
             this.group.getChildren().add(sphere);
         }

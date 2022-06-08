@@ -14,15 +14,14 @@ public class Graph {
     private final int HEIGHT =(int)(Terrain.TERRAIN_HEIGHT/STEP * 2);
     private Vector2D position ;
     private Vector2D target ;
-    private Universe universe = new Universe(new FileReader());
+    private Universe universe = Main.getUniverse();
     private Cell startingCell;
     private Cell targetCell;
 
     public Graph(){
         this.position = universe.getBall().getPosition();
         this.target = universe.getTarget().getPosition();
-        createGraph();
-        connectNeighbors();
+
     }
 
     public void createGraph(){
@@ -65,10 +64,10 @@ public class Graph {
     }
     public NodeDescription nodeDescription(double x , double y ){
 
-        if(TerrainGenerator.getHeight(x,y)<0){return NodeDescription.water;}
-        if(TerrainGenerator.isSand(x,y)){ return NodeDescription.sand;}
         if(isInObstacle(x,y)) return NodeDescription.obstacle;
         if(isInTree(x,y)) return NodeDescription.tree;
+        if(TerrainGenerator.getHeight(x,y)<0){return NodeDescription.water;}
+        if(TerrainGenerator.isSand(x,y)){ return NodeDescription.sand;}
         if(position.getX() == x && position.getY() == y )return NodeDescription.start;
         if(target.getX() == x && position.getY() == y) return NodeDescription.target;
 

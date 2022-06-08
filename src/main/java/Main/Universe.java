@@ -118,6 +118,9 @@ public class Universe {
         Tree tree1 = new Tree(3.7, 0.1, new Vector2D(10, 10));
         Tree tree2 = new Tree(4.1, 0.1, new Vector2D(-10, 5));
         Tree tree3 = new Tree(4.5, 0.1, new Vector2D(-25, -40));
+        this.obstacles = new ArrayList<>();
+        Obstacle obstacle = new Obstacle(new Vector2D(0,0));
+        this.obstacles.add(obstacle);
         this.trees.add(tree1);
         this.trees.add(tree2);
         this.trees.add(tree3);

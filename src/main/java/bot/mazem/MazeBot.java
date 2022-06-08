@@ -13,7 +13,12 @@ public class MazeBot extends Bot {
     private Cell target;
     private Cell currentCell ;
     public MazeBot(){
+
+    }
+    public ArrayList<Cell> findPath(){
         graph = new Graph();
+        graph.createGraph();
+        graph.connectNeighbors();
         start = graph.getStartingCell();
         target= graph.getTargetCell();
         currentCell = start ;
@@ -21,14 +26,12 @@ public class MazeBot extends Bot {
 //        visited.add(start);
 //        toVisit.addAll(start.neighbors);
         toVisit.add(start);
-    }
-    public ArrayList<Cell> findPath(){
-
         //FIXME NodeDescriptions.OBSTACLE
         while( !toVisit.isEmpty() && !isTarget(currentCell)){
             int indexOfWinner = 0 ;
             for (int i = 0 ; i < toVisit.size() ; i++) {
-                if( toVisit.get(i).getTotalCost() < toVisit.get(indexOfWinner).getTotalCost() )
+                if( toVisit.get(i).getTotalCost() < toVisit.get(indexOfWinner).getTotalCost()  )
+
                     indexOfWinner = i ;
             }
             Cell winner = toVisit.get(indexOfWinner) ;
@@ -41,10 +44,10 @@ public class MazeBot extends Bot {
 
             for (Cell neighbor : winner.getNeighbors()) {
                 if( !neighbor.isVisited() &&
-                        ((neighbor.getNodeDescription() == NodeDescription.grass) || (neighbor.getNodeDescription() == NodeDescription.sand))){
+                        ((neighbor.getNodeDescription() != NodeDescription.water) && (neighbor.getNodeDescription() != NodeDescription.obstacle))){
                     double tempScore = currentCell.getCostFromStart() + currentCell.distanceTo(neighbor);
                     neighbor.setCostFromStart( tempScore );
-                    if (!toVisit.contains(neighbor) || !(tempScore > neighbor.getTotalCost())) {
+                    if (!toVisit.contains(neighbor) || (tempScore <= neighbor.getTotalCost())) {
                         toVisit.add(neighbor);
                     }
                     neighbor.setPrevious(currentCell);
@@ -58,6 +61,8 @@ public class MazeBot extends Bot {
         while(currentCell.getPrevious() != null){
             path.add(0,currentCell.getPrevious() );
             currentCell = currentCell.getPrevious();
+            System.out.println(currentCell.getNodeDescription());
+
         }
         return this.path;
     }

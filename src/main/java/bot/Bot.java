@@ -3,6 +3,7 @@ package bot;
 import Main.Main;
 import Main.Shot;
 import Main.Universe;
+import objects.FileReader;
 import physics.Vector2D;
 import java.util.Random;
 
@@ -11,7 +12,13 @@ import java.util.Random;
  * template for the bots, using Threads when simulating shots
  */
 public abstract class Bot implements Runnable {
-
+    //TODO
+    //TODO
+    //TODO
+    //TODO
+    //TODO
+    //TODO
+    //TODO CHANGE IT TO Main.getUniverse();
     final Universe universe = Main.getUniverse();
 
     Vector2D targetPosition = universe.getTarget().getPosition();

@@ -17,7 +17,7 @@ public class Cell {
     private NodeDescription nodeDescription = NodeDescription.grass;
     private boolean visited = false ;
 
-
+    
 
     Cell(int x, int y){
         this.x = x;

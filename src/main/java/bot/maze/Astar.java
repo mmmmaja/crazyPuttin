@@ -24,7 +24,7 @@ public class Astar {
     MyCell end;
     ArrayList<MyCell> path;
     boolean solutionFound;
-    Universe universe = new Universe(new FileReader());
+    Universe universe = Main.getUniverse();
 
     public Astar() {
         cols = 2*Terrain.TERRAIN_WIDTH/STEP;
