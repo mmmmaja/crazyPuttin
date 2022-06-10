@@ -20,6 +20,7 @@ public class FileReader {
     private Vector2D sandPitX, sandPitY;
     private double muks, muss;
     private Expression expression;
+    private long seed;
 
 
     public FileReader() {
@@ -66,6 +67,7 @@ public class FileReader {
                         }
                         case "muks" -> muks = Double.parseDouble(next[1]);
                         case "muss" -> muss = Double.parseDouble(next[1]);
+                        case "seed" -> seed = Long.parseLong(next[1]);
                     }
                 }
             }

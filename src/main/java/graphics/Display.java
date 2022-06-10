@@ -12,10 +12,7 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.geometry.Pos;
 import javafx.scene.*;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -132,7 +129,6 @@ public class Display extends Application {
 
         addLight(); // add lighting to the scene
         addTerrainMeshes(); // add three types of meshes from the display that represent the terrain
-        addTrees();
         addFlag(); // add the flag to the display (pole and the material)
         addPanel(); // adds panel at the right-hand side with the buttons to the frame
 
@@ -153,24 +149,6 @@ public class Display extends Application {
         universe.getFlag().getBox().setMaterial(flagMaterial);
         this.group.getChildren().add(universe.getPole().getCylinder());
         this.group.getChildren().add(universe.getFlag().getBox());
-    }
-
-
-    /**
-     * add the default trees to the display: the root (cylinder) and the leafs (sphere)
-     */
-    private void addTrees() {
-        for (Tree tree : this.universe.getTrees()) {
-
-            Cylinder cylinder = tree.getCylinder();
-            Image cylinderImage = new Image("file:src/main/java/resources/Bark Dark_3D_p.png", 0.3, 0.01, false, false);
-            PhongMaterial cylinderMaterial = new PhongMaterial();
-            cylinderMaterial.setDiffuseMap(cylinderImage);
-            cylinder.setMaterial(cylinderMaterial);
-
-            group.getChildren().add(cylinder);
-            group.getChildren().add(tree.getSphere());
-        }
     }
 
 
@@ -263,6 +241,22 @@ public class Display extends Application {
         position = addBallShootingOptions(position);
         position = addBotButtons(position);
         position = addCheckBoxes(position);
+        position = addMaze(position);
+    }
+
+
+    int level = 5;
+    private int addMaze(int position) {
+        // level: (+) (-)
+        Slider slider = new Slider(0, 10, 1);
+        slider.setShowTickMarks(true);
+        slider.setShowTickLabels(true);
+        slider.setMajorTickUnit(5);
+        slider.setBlockIncrement(1);
+
+        this.gridPane.add(slider, 0, position+=2);
+
+        return position;
     }
 
 
@@ -396,9 +390,6 @@ public class Display extends Application {
             Vector2D p = new Vector2D( cell.getX() , cell.getY()) ;
             Color color = Color.hsb(h, s,b );
             h+=step;
-//            g+=step;
-//            b+=step;
-            //System.out.println(p);
             Sphere sphere = new Sphere();
             sphere.setRadius(0.05);
             sphere.setTranslateX(p.getX());

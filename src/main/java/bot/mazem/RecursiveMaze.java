@@ -14,7 +14,7 @@ public class RecursiveMaze {
     private final static int STEP = 2; // how thick the walls are
     private final static int BORDER = 2; // border of the map without the maze
     private final Graph graph;
-    private final Random random = new Random();
+    private final Random random = new Random(1);
     private final ArrayList<Cell> path; // list of all the cells visited, used for backtracking
     private Vector2D newTargetPosition = new Vector2D(Terrain.TERRAIN_WIDTH, Terrain.TERRAIN_HEIGHT);
 
