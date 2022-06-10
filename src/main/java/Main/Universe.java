@@ -24,7 +24,7 @@ public class Universe {
     private Flag flag;
 
     private MeshView[] meshViews;
-    private ArrayList<Tree> trees;
+    private ArrayList<Tree> trees = new ArrayList<>();
     private ArrayList<Obstacle> obstacles = new ArrayList<>();
 
 
@@ -35,7 +35,6 @@ public class Universe {
         createTarget();
         createPole();
         createFlag();
-        createTrees();
     }
 
 
@@ -110,22 +109,6 @@ public class Universe {
         this.flag = new Flag(this.fileReader.getTargetPosition());
     }
 
-    /**
-     * create an ArrayList of trees that are the obstacles on the course
-     */
-    private void createTrees() {
-        this.trees = new ArrayList<>();
-        Tree tree1 = new Tree(3.7, 0.1, new Vector2D(10, 10));
-        Tree tree2 = new Tree(4.1, 0.1, new Vector2D(-10, 5));
-        Tree tree3 = new Tree(4.5, 0.1, new Vector2D(-25, -40));
-        this.obstacles = new ArrayList<>();
-        Obstacle obstacle = new Obstacle(new Vector2D(0,0));
-        this.obstacles.add(obstacle);
-        this.trees.add(tree1);
-        this.trees.add(tree2);
-        this.trees.add(tree3);
-    }
-
 
     public Solver getSolver(){
         if (solver == null) {
@@ -193,6 +176,10 @@ public class Universe {
 
     public void addObstacle(Obstacle obstacle) {
         this.obstacles.add(obstacle);
+    }
+
+    public void deleteObstacles() {
+        this.obstacles = new ArrayList<>();
     }
 
     public void addTree(Tree tree) {

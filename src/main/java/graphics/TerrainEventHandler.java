@@ -2,15 +2,20 @@ package graphics;
 
 import Main.Main;
 import Main.Universe;
+import bot.mazem.RecursiveMaze;
+import javafx.scene.Camera;
+import javafx.scene.Scene;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.PickResult;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.shape.Cylinder;
-import javafx.scene.shape.Sphere;
 import objects.Obstacle;
 import objects.Tree;
 import physics.Vector2D;
+
+import java.util.ArrayList;
 
 
 /**
@@ -33,6 +38,34 @@ public class TerrainEventHandler {
         mousePressed();
         mouseDragged();
         mouseReleased();
+    }
+
+    public void handleCamera(Scene scene, Camera camera) {
+        // add movement of the camera when keys are pressed
+        scene.addEventHandler(KeyEvent.KEY_PRESSED, e -> {
+            switch (e.getCode()) {
+                case W -> camera.setTranslateY(camera.getTranslateY() + 1);
+                case S -> camera.setTranslateY(camera.getTranslateY() - 1);
+                case D -> camera.setTranslateX(camera.getTranslateX() + 1);
+                case A -> camera.setTranslateX(camera.getTranslateX() - 1);
+                case M -> {
+                    RecursiveMaze recursiveMaze = new RecursiveMaze();
+                    ArrayList<Obstacle> obstacles = recursiveMaze.getObstacles();
+                    for (Obstacle obstacle : obstacles) {
+                        universe.addObstacle(obstacle);
+                        Box box = obstacle.getBox();
+                        box.setMaterial(rockMaterial);
+                        this.group.getChildren().add(box);
+                    }
+                }
+                case C -> {
+                    for (Obstacle obstacle : universe.getObstacles()) {
+                        this.group.getChildren().remove(obstacle.getBox());
+                    }
+                    universe.deleteObstacles();
+                }
+            }
+        });
     }
 
 

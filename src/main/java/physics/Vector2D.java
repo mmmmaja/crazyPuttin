@@ -129,10 +129,8 @@ public class Vector2D implements Vector {
 
 
     public Vector2D convertToNormalVectorObstacles(){
-        if(Math.abs(this.x) > Math.abs(this.y) ){
+        if(Math.abs(this.x) >= Math.abs(this.y) ){
             return new Vector2D(1 , 0 );
-        }else if(Math.abs(this.x) == Math.abs(this.y)){
-            return new Vector2D(1,1);
         }else
             return new Vector2D(0 , 1);
     }

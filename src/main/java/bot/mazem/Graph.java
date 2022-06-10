@@ -21,6 +21,7 @@ public class Graph {
     public Graph(){
         this.position = universe.getBall().getPosition();
         this.target = universe.getTarget().getPosition();
+        createGraph();
 
     }
 
@@ -30,13 +31,19 @@ public class Graph {
             for (int j = 0, y = -TERRAIN_HEIGHT; j < HEIGHT; j++ , y+=STEP) {
                 Cell cell = new Cell(x,y);
                 NodeDescription nodeDescription = nodeDescription(x,y);
-                if( x == position.getX() && y == position.getY() )
+
+
+                if (x == Math.round(position.getX()) && y == Math.round(position.getY())) {
+
                     startingCell = cell;
-                if( x == target.getX()   && y == target.getY())
+                }
+                if( x == (int)target.getX()   && y == (int)target.getY())
                     targetCell = cell;
                 cell.setNodeDescription(nodeDescription);
                 cell.setAllCosts(target,position);
+                cell.setIndex(i,j);
                 graph[i][j] = cell ;
+
             }
         }
 
@@ -159,9 +166,5 @@ public class Graph {
         this.targetCell = targetCell;
     }
 
-    public static void main(String[] args) {
-        Graph graph = new Graph();
-        graph.getGraph();
-    }
 
 }

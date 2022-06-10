@@ -35,6 +35,7 @@ public class MazeBot extends Bot {
                     indexOfWinner = i ;
             }
             Cell winner = toVisit.get(indexOfWinner) ;
+            System.out.println(winner.getX() + " // " + winner.getY());
             currentCell= winner;
             if( winner.equals(target) ) break;
 
@@ -53,15 +54,15 @@ public class MazeBot extends Bot {
                     neighbor.setPrevious(currentCell);
 
                 }
+                neighbor.setVisited(true);
             }
 
 
         }
-
+        System.out.println(currentCell.getNodeDescription());
         while(currentCell.getPrevious() != null){
             path.add(0,currentCell.getPrevious() );
             currentCell = currentCell.getPrevious();
-            System.out.println(currentCell.getNodeDescription());
 
         }
         return this.path;
@@ -134,5 +135,6 @@ public class MazeBot extends Bot {
     public static void main(String[] args) {
         MazeBot mazeBot = new MazeBot();
         mazeBot.findPath();
+
     }
 }

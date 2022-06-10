@@ -140,6 +140,7 @@ public class PhysicsEngine {
 		}
 
 		ArrayList<Obstacle> obstacles = Main.getUniverse().getObstacles();
+
 		for (Obstacle obstacle : obstacles) {
 
 			double obstXPos = obstacle.getPosition().getX();
@@ -221,11 +222,13 @@ public class PhysicsEngine {
 //				System.out.println(2);
 //				System.out.println("X ---> " + (bisecMidX) + " " + (bisecMidX)  + " " +  (obstXPos-obstDim/2) + " " + (obstXPos+obstDim/2));
 
-
-				Vector2D normal_vector = new Vector2D(-(obstXPos - bisecMidX) , -(obstYPos - bisecMidY)).convertToNormalVectorObstacles();
-				Vector2D velocity = gameObject.getVelocity();
-				velocity.reverseVector();
-				Vector2D reflectedVelocity = velocity.reflectAroundVector(normal_vector);
+//				Vector2D reflectedVelocity = gameObject.getVelocity().multiply(-1);
+				Vector2D normal_vector = new Vector2D(-(obstXPos - bisecMidX) , -(obstYPos - bisecMidY)).convertToNormalVectorObstacles().getUnitVector();
+//				if(normal_vector.getMagnitude() == 1 ) {
+					Vector2D velocity = gameObject.getVelocity();
+					velocity.reverseVector();
+					Vector2D reflectedVelocity = velocity.reflectAroundVector(normal_vector);
+//				}
 
 				return new Vector2D[]{new Vector2D(bisecMidX, bisecMidY), reflectedVelocity};
 

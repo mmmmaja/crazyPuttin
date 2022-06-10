@@ -16,6 +16,8 @@ public class Cell {
     private Cell previous;
     private NodeDescription nodeDescription = NodeDescription.grass;
     private boolean visited = false ;
+    private Vector2D index ;
+    private boolean wall = true ;
 
     
 
@@ -135,5 +137,25 @@ public class Cell {
 
     public void setChangeDir(double changeDir) {
         this.changeDir = changeDir;
+    }
+
+    public Vector2D getIndex() {
+        return index;
+    }
+
+    public void setIndex(Vector2D index) {
+        this.index = index;
+    }
+
+    public void setIndex(double i , double j) {
+        this.index = new Vector2D(i,j);
+    }
+
+    public boolean isWall() {
+        return wall;
+    }
+
+    public void setWall(boolean wall) {
+        this.wall = wall;
     }
 }

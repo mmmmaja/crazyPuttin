@@ -24,7 +24,13 @@ public class Shot extends Display implements Runnable {
         this.universe = universe;
         this.ball = universe.getBall();
         this.ball.setVelocity(velocity);
-
+//        if(Math.abs(velocity.getX()) == Math.abs(velocity.getY())){
+//            double random = Math.random()*0.01 - 0.02;
+//            if( random > 0.5){
+//                velocity.add( random , 0 );
+//            }else
+//                velocity.add( 0 , random );
+//        }
         if (velocity.getMagnitude() > 5) {
             Vector2D unit_vector = velocity.getUnitVector();
             this.ball.setVelocity(new Vector2D(unit_vector.getX() * 5, unit_vector.getY() * 5)) ;

@@ -40,6 +40,10 @@ public class Target implements GameObject {
     @Override
     public void setPosition(Vector2D position) {
         this.position = position;
+
+        this.cylinder.setTranslateX(this.position.getX());
+        this.cylinder.setTranslateY(this.position.getY());
+        this.cylinder.setTranslateZ((-TerrainGenerator.getHeight(position) - cylinder.getHeight()*2));
     }
 
     @Override

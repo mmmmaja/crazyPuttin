@@ -41,6 +41,9 @@ public class Flag implements GameObject {
     @Override
     public void setPosition(Vector2D position) {
         this.position = position;
+        this.flag.setTranslateX(this.position.getX()-flag.getWidth()/2);
+        this.flag.setTranslateY(this.position.getY());
+        this.flag.setTranslateZ(-TerrainGenerator.getHeight(position)-2  );
     }
 
     @Override

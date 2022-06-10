@@ -45,6 +45,10 @@ public class Pole implements GameObject {
     @Override
     public void setPosition(Vector2D position) {
         this.position = position;
+
+        this.pole.setTranslateX(this.position.getX());
+        this.pole.setTranslateY(this.position.getY());
+        this.pole.setTranslateZ( -TerrainGenerator.getHeight(position) - pole.getHeight()/2 );
     }
 
     @Override

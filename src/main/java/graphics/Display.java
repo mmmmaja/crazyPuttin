@@ -6,6 +6,7 @@ import bot.*;
 import bot.maze.AStarBot;
 import bot.mazem.Cell;
 import bot.mazem.MazeBot;
+import bot.mazem.RecursiveMaze;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -24,6 +25,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
+import javafx.scene.shape.Box;
 import javafx.scene.shape.Cylinder;
 import javafx.scene.shape.MeshView;
 import javafx.scene.shape.Sphere;
@@ -32,6 +34,7 @@ import javafx.scene.text.Text;
 
 import javafx.stage.Stage;
 import Main.Universe;
+import objects.Obstacle;
 import objects.TerrainGenerator;
 import objects.Tree;
 import physics.*;
@@ -56,13 +59,15 @@ public class Display extends Application {
     private SmartGroup group;
     private GridPane gridPane;
 
+    public SmartGroup getGroup() {
+        return group;
+    }
 
     @Override
     public void start(Stage stage) {
 
         // all the objects are added to smartGroup (rotation built-in)
         group = new SmartGroup();
-
         // displayPane holds all other panes of the frame
         Pane displayPane = new Pane();
         displayPane.setPrefSize(FRAME_WIDTH, FRAME_HEIGHT);
@@ -98,15 +103,11 @@ public class Display extends Application {
         // zoomIn, zoomOut added on scroll event
         scene.addEventHandler(ScrollEvent.SCROLL, event -> camera.setTranslateZ(camera.getTranslateZ() + event.getDeltaY()/5));
 
-        // add movement of the camera when keys are pressed
-        scene.addEventHandler(KeyEvent.KEY_PRESSED, e -> {
-            switch (e.getCode()) {
-                case W -> camera.setTranslateY(camera.getTranslateY() + 1);
-                case S -> camera.setTranslateY(camera.getTranslateY() - 1);
-                case D -> camera.setTranslateX(camera.getTranslateX() + 1);
-                case A -> camera.setTranslateX(camera.getTranslateX() - 1);
-            }
-        });
+        Image rockImage = new Image("file:src/main/java/resources/rockTexture.jpg");
+        PhongMaterial rockMaterial = new PhongMaterial();
+        rockMaterial.setDiffuseMap(rockImage);
+
+
 
         // exit the application when the window is closed by the user
         stage.setOnCloseRequest(t -> {
@@ -117,7 +118,12 @@ public class Display extends Application {
         stage.setScene(scene);
         stage.show();
         addComponents();
+
+        // enable adding the obstacles when the terrain is pressed by the mouse
+        TerrainEventHandler eventHandler = new TerrainEventHandler(this.group);
+        eventHandler.handleCamera(scene, camera);
     }
+
 
     /**
      * add all the objects from the universe to the Display
@@ -257,9 +263,6 @@ public class Display extends Application {
         position = addBallShootingOptions(position);
         position = addBotButtons(position);
         position = addCheckBoxes(position);
-
-        // enable adding the obstacles when the terrain is pressed by the mouse
-        new TerrainEventHandler(this.group);
     }
 
 
@@ -363,7 +366,7 @@ public class Display extends Application {
                 "mazeBot"
         };
         ComboBox<String> botComboBox = new ComboBox(FXCollections.observableArrayList(botList));
-        botComboBox.setValue("randomBot");
+        botComboBox.setValue("mazeBot");
         gridPane.add(new HBox(30, botComboBox), 0, position++);
 
            botButton.setOnMouseClicked(mouseEvent -> {
@@ -385,9 +388,16 @@ public class Display extends Application {
         mazeBot.findPath();
         ArrayList<Cell> cells = mazeBot.getPath();
         System.out.println(cells.size());
-
+        int h  = 60 ;
+        int s  = 1 ;
+        int b  = 1 ;
+        int step = 5;
         for (Cell cell : cells) {
-            Vector2D p = new Vector2D(cell.getX() , cell.getY());
+            Vector2D p = new Vector2D( cell.getX() , cell.getY()) ;
+            Color color = Color.hsb(h, s,b );
+            h+=step;
+//            g+=step;
+//            b+=step;
             //System.out.println(p);
             Sphere sphere = new Sphere();
             sphere.setRadius(0.05);
@@ -395,7 +405,7 @@ public class Display extends Application {
             sphere.setTranslateY(p.getY());
             sphere.setTranslateZ((-TerrainGenerator.getHeight(p) - 1));
             PhongMaterial material = new PhongMaterial();
-            material.setDiffuseColor(Color.RED);
+            material.setDiffuseColor(color);
             sphere.setMaterial(material);
             this.group.getChildren().add(sphere);
         }
