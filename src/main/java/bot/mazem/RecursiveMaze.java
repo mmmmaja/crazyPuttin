@@ -11,17 +11,24 @@ import java.util.Random;
 
 public class RecursiveMaze {
 
-    private final static int STEP = 2; // how thick the walls are
-    private final static int BORDER = 2; // border of the map without the maze
+    public static int step = 8; // how thick the walls are, to be changed by the EventHandler
+
     private final Graph graph;
-    private final Random random = new Random(1);
-    private final ArrayList<Cell> path; // list of all the cells visited, used for backtracking
+    private final Random random = new Random();
+
+    // list of all the cells visited, used for backtracking
+    private final ArrayList<Cell> path;
+    // target will change its position to make sure there is always a path from the ball to the target
     private Vector2D newTargetPosition = new Vector2D(Terrain.TERRAIN_WIDTH, Terrain.TERRAIN_HEIGHT);
 
     public RecursiveMaze() {
         this.graph = new Graph();
         this.path = new ArrayList<>();
+
+        // dig the way through the walls
         dig();
+
+        // change the position of the target and update objects on the Display
         Main.getUniverse().getTarget().setPosition(newTargetPosition);
         Main.getUniverse().getPole().setPosition(newTargetPosition);
         Main.getUniverse().getFlag().setPosition(newTargetPosition);
@@ -38,11 +45,13 @@ public class RecursiveMaze {
         for (Cell[] line : cellGraph) {
             for (Cell cell : line) {
 
-                // if this is an obstacle set the wall to false (!do not let it be covered)
+                // if this is an obstacle set the wall to false (do not let it be covered)
                 switch (cell.getNodeDescription()) {
                     case tree, obstacle, water -> cell.setWall(false);
                 }
                 // disable the borders of the map to be covered with walls
+                // border of the map without the maze
+                int BORDER = 2;
                 if (
                         cell.getIndex().getY() < BORDER
                         || cell.getIndex().getY() > this.graph.getGraph()[0].length - 2 * BORDER
@@ -165,10 +174,10 @@ public class RecursiveMaze {
     private ArrayList<Cell> findNeighbours(Cell cell) {
         ArrayList<Cell> neighbours = new ArrayList<>();
         Vector2D index = cell.getIndex();
-        int minX = (int) (index.getX() - STEP);
-        int minY = (int) (index.getY() - STEP);
-        int maxX = (int) (index.getX() + STEP);
-        int maxY = (int) (index.getY() + STEP);
+        int minX = (int) (index.getX() - step);
+        int minY = (int) (index.getY() - step);
+        int maxX = (int) (index.getX() + step);
+        int maxY = (int) (index.getY() + step);
 
         if (minX >= 0) {
             neighbours.add(graph.getGraph()[minX][(int) index.getY()]);

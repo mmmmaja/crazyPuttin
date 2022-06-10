@@ -24,13 +24,13 @@ import java.util.ArrayList;
  *      adding trees
  *      is supposed to work with splines later as well (dragging the mouse)
  */
-public class TerrainEventHandler {
+public class EventHandler {
 
     private final Universe universe;
     private final SmartGroup group;
     private final PhongMaterial rockMaterial;
 
-    public TerrainEventHandler(SmartGroup group) {
+    public EventHandler(SmartGroup group) {
         this.universe = Main.getUniverse();
         this.group = group;
         this.rockMaterial = createRockMaterial();
@@ -43,6 +43,7 @@ public class TerrainEventHandler {
     public void handleCamera(Scene scene, Camera camera) {
         // add movement of the camera when keys are pressed
         scene.addEventHandler(KeyEvent.KEY_PRESSED, e -> {
+            System.out.println(e.getCode());
             switch (e.getCode()) {
                 case W -> camera.setTranslateY(camera.getTranslateY() + 1);
                 case S -> camera.setTranslateY(camera.getTranslateY() - 1);
@@ -64,6 +65,15 @@ public class TerrainEventHandler {
                     }
                     universe.deleteObstacles();
                 }
+
+                // set the level of the maze when pressing numbers on the keyboard
+                case DIGIT1 -> RecursiveMaze.step = 2;
+                case DIGIT2 -> RecursiveMaze.step = 3;
+                case DIGIT3 -> RecursiveMaze.step = 4;
+                case DIGIT4 -> RecursiveMaze.step = 5;
+                case DIGIT5 -> RecursiveMaze.step = 6;
+                case DIGIT6 -> RecursiveMaze.step = 7;
+                case DIGIT7,DIGIT8, DIGIT9 -> RecursiveMaze.step = 8;
             }
         });
     }

@@ -3,10 +3,8 @@ package graphics;
 import Main.Main;
 import Main.Shot;
 import bot.*;
-import bot.maze.AStarBot;
 import bot.mazem.Cell;
 import bot.mazem.MazeBot;
-import bot.mazem.RecursiveMaze;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -14,7 +12,6 @@ import javafx.geometry.Pos;
 import javafx.scene.*;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.GridPane;
@@ -22,8 +19,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
-import javafx.scene.shape.Box;
-import javafx.scene.shape.Cylinder;
 import javafx.scene.shape.MeshView;
 import javafx.scene.shape.Sphere;
 import javafx.scene.text.Font;
@@ -31,9 +26,7 @@ import javafx.scene.text.Text;
 
 import javafx.stage.Stage;
 import Main.Universe;
-import objects.Obstacle;
 import objects.TerrainGenerator;
-import objects.Tree;
 import physics.*;
 
 import java.util.ArrayList;
@@ -117,7 +110,7 @@ public class Display extends Application {
         addComponents();
 
         // enable adding the obstacles when the terrain is pressed by the mouse
-        TerrainEventHandler eventHandler = new TerrainEventHandler(this.group);
+        EventHandler eventHandler = new EventHandler(this.group);
         eventHandler.handleCamera(scene, camera);
     }
 
@@ -241,22 +234,6 @@ public class Display extends Application {
         position = addBallShootingOptions(position);
         position = addBotButtons(position);
         position = addCheckBoxes(position);
-        position = addMaze(position);
-    }
-
-
-    int level = 5;
-    private int addMaze(int position) {
-        // level: (+) (-)
-        Slider slider = new Slider(0, 10, 1);
-        slider.setShowTickMarks(true);
-        slider.setShowTickLabels(true);
-        slider.setMajorTickUnit(5);
-        slider.setBlockIncrement(1);
-
-        this.gridPane.add(slider, 0, position+=2);
-
-        return position;
     }
 
 
