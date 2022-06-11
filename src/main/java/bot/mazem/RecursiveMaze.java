@@ -29,6 +29,7 @@ public class RecursiveMaze {
         dig();
 
         // change the position of the target and update objects on the Display
+
         Main.getUniverse().getTarget().setPosition(newTargetPosition);
         Main.getUniverse().getPole().setPosition(newTargetPosition);
         Main.getUniverse().getFlag().setPosition(newTargetPosition);

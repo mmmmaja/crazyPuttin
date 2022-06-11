@@ -4,6 +4,7 @@ import Main.Main;
 import Main.Shot;
 import bot.*;
 import bot.mazem.Cell;
+import bot.mazem.MajaMazeBot;
 import bot.mazem.MazeBot;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -343,7 +344,7 @@ public class Display extends Application {
            botButton.setOnMouseClicked(mouseEvent -> {
                switch (botComboBox.getValue()) {
                    case "randomBot" -> new RandomBot();
-                   case "ruleBasedBot" -> new RuleBasedBot();
+                   case "ruleBasedBot" -> new ImprovedRuleBasedBot();
                    case "improvedRandomBot" -> new ImprovedRandomBot();
                    case "gradientDescentBot" -> new GradientDescentBot();
                    case "hillClimbingBot" -> new HillClimbingBot();
@@ -355,9 +356,9 @@ public class Display extends Application {
 
 
     private void aStarTest() {
-        MazeBot mazeBot = new MazeBot();
-        mazeBot.findPath();
-        ArrayList<Cell> cells = mazeBot.getPath();
+
+        MajaMazeBot mazeBot = new MajaMazeBot();
+        ArrayList<Cell> cells = mazeBot.findPath();
         System.out.println(cells.size());
         int h  = 60 ;
         int s  = 1 ;
@@ -368,7 +369,7 @@ public class Display extends Application {
             Color color = Color.hsb(h, s,b );
             h+=step;
             Sphere sphere = new Sphere();
-            sphere.setRadius(0.05);
+            sphere.setRadius(0.15);
             sphere.setTranslateX(p.getX());
             sphere.setTranslateY(p.getY());
             sphere.setTranslateZ((-TerrainGenerator.getHeight(p) - 1));
@@ -404,7 +405,7 @@ public class Display extends Application {
 
             // no more shots left in the file shot.txt
             if (velocity != null) {
-                new Shot(universe, velocity);
+                new Shot(velocity);
                 shotCounter++;
             }
             // subtract the points of the water was hit

@@ -1,10 +1,14 @@
 package bot.mazem;
 
 import bot.Bot;
+import bot.Heuristics;
 
 import java.util.ArrayList;
 
 public class MazeBot extends Bot {
+
+    // use constructor with heuristics! for the testShot
+
     private Graph graph ;
     private ArrayList<Cell> path = new ArrayList<>();
     private ArrayList<Cell> visited = new ArrayList<>();
@@ -13,8 +17,10 @@ public class MazeBot extends Bot {
     private Cell target;
     private Cell currentCell ;
     public MazeBot(){
-
+        this.setHeuristics(Heuristics.finalPosition);
     }
+
+
     public ArrayList<Cell> findPath(){
         graph = new Graph();
         graph.createGraph();

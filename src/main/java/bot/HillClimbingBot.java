@@ -27,6 +27,12 @@ public class HillClimbingBot extends Bot {
         start();
     }
 
+    public HillClimbingBot(boolean shootBall, Vector2D targetPosition) {
+        this.targetPosition = targetPosition;
+        this.shootBall = shootBall;
+        start();
+    }
+
     @Override
     public void run() {
 
@@ -39,10 +45,14 @@ public class HillClimbingBot extends Bot {
         this.bestVelocity = direction.getUnitVector();
         this.bestResult = new TestShot(this.universe, this.bestVelocity, this.targetPosition).getTestResult();
         double[][] stepArray = {
+                {step, -step},
+                {-step, +step},
+                {step, +step},
+                {-step, -step},
                 {step, 0},
                 {-step, 0},
                 {0, step},
-                {0, -step}
+                {0, -step},
         };
         boolean play = true;
         while (play && running) {
@@ -74,7 +84,7 @@ public class HillClimbingBot extends Bot {
 
     @Override
     public void shootBall() {
-        new Shot(this.universe, this.bestVelocity);
+        new Shot(this.bestVelocity);
         System.out.println(this);
     }
 }

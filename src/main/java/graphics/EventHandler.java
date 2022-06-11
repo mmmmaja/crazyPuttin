@@ -43,7 +43,6 @@ public class EventHandler {
     public void handleCamera(Scene scene, Camera camera) {
         // add movement of the camera when keys are pressed
         scene.addEventHandler(KeyEvent.KEY_PRESSED, e -> {
-            System.out.println(e.getCode());
             switch (e.getCode()) {
                 case W -> camera.setTranslateY(camera.getTranslateY() + 1);
                 case S -> camera.setTranslateY(camera.getTranslateY() - 1);

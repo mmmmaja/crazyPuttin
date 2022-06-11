@@ -6,15 +6,16 @@ import objects.*;
 import physics.Vector2D;
 
 public class Graph {
+
     Cell[][] graph ;
     private final double STEP = Terrain.STEP;
     private final int TERRAIN_WIDTH = Terrain.TERRAIN_WIDTH ;
     private final int TERRAIN_HEIGHT= Terrain.TERRAIN_HEIGHT;
     private final int WIDTH = (int)(Terrain.TERRAIN_WIDTH/STEP * 2);
-    private final int HEIGHT =(int)(Terrain.TERRAIN_HEIGHT/STEP * 2);
+    private final int HEIGHT = (int)(Terrain.TERRAIN_HEIGHT/STEP * 2);
     private Vector2D position ;
     private Vector2D target ;
-    private Universe universe = Main.getUniverse();
+    private final Universe universe = Main.getUniverse();
     private Cell startingCell;
     private Cell targetCell;
 
@@ -22,7 +23,6 @@ public class Graph {
         this.position = universe.getBall().getPosition();
         this.target = universe.getTarget().getPosition();
         createGraph();
-
     }
 
     public void createGraph(){
@@ -69,6 +69,7 @@ public class Graph {
             }
         }
     }
+
     public NodeDescription nodeDescription(double x , double y ){
 
         if(isInObstacle(x,y)) return NodeDescription.obstacle;

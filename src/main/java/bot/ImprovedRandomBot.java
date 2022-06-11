@@ -17,7 +17,8 @@ public class ImprovedRandomBot extends Bot {
     /**
      * @param targetPosition to be specified for the maze bot
      */
-    public ImprovedRandomBot(Vector2D targetPosition) {
+    public ImprovedRandomBot(boolean shootBall, Vector2D targetPosition) {
+        this.shootBall = shootBall;
         this.targetPosition = targetPosition;
         this.name = "Improved Random Bot";
         start();

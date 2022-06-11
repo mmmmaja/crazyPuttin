@@ -15,22 +15,14 @@ public class Shot extends Display implements Runnable {
     public static int SPEED = 60; // speed for the ball animation
 
     private final Ball ball;
-    private final Universe universe;
+    private final Universe universe = Main.getUniverse();
     private boolean running;
     private Thread thread;
 
 
-    public Shot(Universe universe, Vector2D velocity) {
-        this.universe = universe;
+    public Shot(Vector2D velocity) {
         this.ball = universe.getBall();
         this.ball.setVelocity(velocity);
-//        if(Math.abs(velocity.getX()) == Math.abs(velocity.getY())){
-//            double random = Math.random()*0.01 - 0.02;
-//            if( random > 0.5){
-//                velocity.add( random , 0 );
-//            }else
-//                velocity.add( 0 , random );
-//        }
         if (velocity.getMagnitude() > 5) {
             Vector2D unit_vector = velocity.getUnitVector();
             this.ball.setVelocity(new Vector2D(unit_vector.getX() * 5, unit_vector.getY() * 5)) ;

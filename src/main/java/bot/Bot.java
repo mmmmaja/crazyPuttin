@@ -12,13 +12,7 @@ import java.util.Random;
  * template for the bots, using Threads when simulating shots
  */
 public abstract class Bot implements Runnable {
-    //TODO
-    //TODO
-    //TODO
-    //TODO
-    //TODO
-    //TODO
-    //TODO CHANGE IT TO Main.getUniverse();
+
     final Universe universe = Main.getUniverse();
 
     Vector2D targetPosition = universe.getTarget().getPosition();
@@ -29,9 +23,11 @@ public abstract class Bot implements Runnable {
     double bestResult = Integer.MAX_VALUE; // distance between the target and the ball
     int shotCounter = 0; // number of simulations run
 
-    long start; // start of the simulations
+    protected long start; // start of the simulations
     public boolean running;
     public Thread thread;
+
+    public Heuristics heuristics = Heuristics.allPositions;
 
 
     /**
@@ -70,7 +66,7 @@ public abstract class Bot implements Runnable {
      * shoot the ball creating new Shot() object with bestVelocity
      */
     public void shootBall() {
-        new Shot(this.universe, this.bestVelocity);
+        new Shot(this.bestVelocity);
     }
 
     /**
@@ -133,4 +129,11 @@ public abstract class Bot implements Runnable {
         return rand;
     }
 
+    public void setHeuristics(Heuristics heuristics) {
+        this.heuristics = heuristics;
+    }
+
+    public Heuristics getHeuristics() {
+        return heuristics;
+    }
 }

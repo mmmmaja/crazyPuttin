@@ -19,18 +19,32 @@ public class TestShot implements Comparable<TestShot>{
     private final Ball ball;
     private final Universe universe;
     private final Vector2D targetPosition;
+    private Heuristics heuristics = Heuristics.allPositions;
 
     private double testResult = Integer.MAX_VALUE;
     private static final double WATER_PUNISHMENT = 10; // subtract the score when the ball is hit
-    private static final double OBSTACLE_PUNISHMENT = 2; // subtract the score when the obstacle is hit
-
+    private static final double OBSTACLE_PUNISHMENT = 0; // subtract the score when the obstacle is hit
+    private double tolerance = 0.1;
 
     public TestShot(Universe universe, Vector2D velocity, Vector2D targetPosition) {
         this.ball = universe.getBall().copyOf();
         this.universe = universe;
         this.ball.setVelocity(velocity);
         this.targetPosition = targetPosition;
+        this.tolerance = universe.getTarget().getCylinder().getRadius();
+        initiate(velocity);
+    }
 
+    public TestShot(Universe universe, Vector2D velocity, Vector2D targetPosition, Heuristics heuristics) {
+        this.ball = universe.getBall().copyOf();
+        this.universe = universe;
+        this.ball.setVelocity(velocity);
+        this.targetPosition = targetPosition;
+        this.heuristics = heuristics;;
+        initiate(velocity);
+    }
+
+    private void initiate(Vector2D velocity) {
         if (velocity.getMagnitude() > 5) {
             Vector2D unit_vector = velocity.getUnitVector();
             this.ball.setVelocity(new Vector2D(unit_vector.getX() * 5, unit_vector.getY() * 5)) ;
@@ -55,23 +69,40 @@ public class TestShot implements Comparable<TestShot>{
             if (universe.getSolver().PHYSICS.getCollisionCoordinates(ball) != null ) {
                 distance += OBSTACLE_PUNISHMENT;
             }
-            if (distance < this.testResult) {
+            if (distance < this.testResult && this.heuristics == Heuristics.allPositions) {
                 this.testResult = distance;
             }
 
             // target was hit
-            if (ball.isOnTarget(universe.getTarget()) || ball.isOnTarget(this.targetPosition, this.universe.getFileReader().getTargetRadius())) {
+
+            if (ball.isOnTarget(this.targetPosition,tolerance)) {
                 ball.setVelocity(new Vector2D(0, 0));
                 ball.setWillMove(false);
-                this.testResult =  0;
-                break;
+                if (this.heuristics == Heuristics.allPositions) {
+                    this.testResult = 0;
+                    break;
+                }
             }
 
             // ball is in the resting position: target was not hit
             if ((!ball.isMoving() && !ball.getWillMove())) {
+                if (this.heuristics == Heuristics.finalPosition) {
+                    this.testResult = distance;
+                }
+                else if (distance < this.testResult && this.heuristics == Heuristics.allPositions) {
+                    this.testResult = distance;
+                }
                 break;
             }
         }
+    }
+
+    public double getTolerance() {
+        return tolerance;
+    }
+
+    public void setTolerance(double tolerance) {
+        this.tolerance = tolerance;
     }
 
 
