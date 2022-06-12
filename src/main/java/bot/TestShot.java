@@ -1,5 +1,6 @@
 package bot;
 
+import Main.Main;
 import Main.Universe;
 import objects.Ball;
 import objects.TerrainGenerator;
@@ -17,7 +18,7 @@ import physics.Vector2D;
 public class TestShot implements Comparable<TestShot>{
 
     private final Ball ball;
-    private final Universe universe;
+    private final Universe universe = Main.getUniverse();
     private final Vector2D targetPosition;
     private Heuristics heuristics = Heuristics.allPositions;
 
@@ -27,18 +28,16 @@ public class TestShot implements Comparable<TestShot>{
 
     private double tolerance = 0.025;
 
-    public TestShot(Universe universe, Vector2D velocity, Vector2D targetPosition) {
+    public TestShot(Vector2D velocity, Vector2D targetPosition) {
         this.ball = universe.getBall().copyOf();
-        this.universe = universe;
         this.ball.setVelocity(velocity);
         this.targetPosition = targetPosition;
         this.tolerance = universe.getTarget().getCylinder().getRadius();
         initiate(velocity);
     }
 
-    public TestShot(Universe universe, Vector2D velocity, Vector2D targetPosition, Heuristics heuristics) {
+    public TestShot(Vector2D velocity, Vector2D targetPosition, Heuristics heuristics) {
         this.ball = universe.getBall().copyOf();
-        this.universe = universe;
         this.ball.setVelocity(velocity);
         this.targetPosition = targetPosition;
         this.heuristics = heuristics;;

@@ -48,7 +48,7 @@ public class GradientDescentBot extends Bot {
         velocity = velocity.getUnitVector();
         this.shotCounter++;
         this.bestVelocity = velocity;
-        this.bestResult = new TestShot(this.universe, velocity, this.targetPosition).getTestResult();
+        this.bestResult = new TestShot(velocity, this.targetPosition).getTestResult();
         boolean play = true;
         ArrayList<Vector2D> testVelocities = new ArrayList<>();
         testVelocities.add(0, velocity);
@@ -67,7 +67,7 @@ public class GradientDescentBot extends Bot {
                     velocity.getY() - derivativeY
             );
             testVelocities.add(0, testVelocity);
-            double testResult = new TestShot(this.universe, testVelocity, this.targetPosition).getTestResult();
+            double testResult = new TestShot(testVelocity, this.targetPosition).getTestResult();
 
             // target was hit
             if (testResult == 0) {
@@ -91,7 +91,7 @@ public class GradientDescentBot extends Bot {
                 play = true ;
             }
         }
-        bestResult = new TestShot(this.universe, bestVelocity, this.targetPosition).getTestResult();
+        bestResult = new TestShot(bestVelocity, this.targetPosition).getTestResult();
         stop();
     }
 
@@ -99,16 +99,16 @@ public class GradientDescentBot extends Bot {
     public double derivativeX(Vector2D velocity , double step){
         Vector2D velocityPlus = velocity.add(step , 0 );
         Vector2D velocityMinus = velocity.add(-1 * step , 0 );
-        double testShotPlus = new TestShot(this.universe, velocityPlus, this.targetPosition).getTestResult();
-        double testShotMinus = new TestShot(this.universe, velocityMinus, this.targetPosition).getTestResult();
+        double testShotPlus = new TestShot(velocityPlus, this.targetPosition).getTestResult();
+        double testShotMinus = new TestShot(velocityMinus, this.targetPosition).getTestResult();
         return (testShotPlus - testShotMinus) / ( 2 * step) ;
     }
 
     public double derivativeY(Vector2D velocity, double step){
         Vector2D velocityPlus = velocity.add(0 , step );
         Vector2D velocityMinus = velocity.add( 0 , -1.d * step );
-        double testShotPlus = new TestShot(this.universe, velocityPlus, this.targetPosition).getTestResult();
-        double testShotMinus = new TestShot(this.universe, velocityMinus, this.targetPosition).getTestResult();
+        double testShotPlus = new TestShot(velocityPlus, this.targetPosition).getTestResult();
+        double testShotMinus = new TestShot(velocityMinus, this.targetPosition).getTestResult();
         return (testShotPlus - testShotMinus) / ( 2 * step) ;
     }
 

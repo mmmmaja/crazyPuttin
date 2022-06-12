@@ -6,36 +6,42 @@ import objects.TerrainGenerator;
 import physics.Vector2D;
 
 import java.util.ArrayList;
+import java.util.concurrent.CountDownLatch;
 
 
 /**
  * instance of this class is created each time the movement of the ball is triggered
  * performs an animation of the ball movement in the new thread
+ * updates the position of the ball in the Universe!
  */
 public class Shot extends Display implements Runnable {
 
-    public static int SPEED = 60; // speed for the ball animation
+    // used to inform other users of the Thread that the action is finished
+    private CountDownLatch latch = null;
 
-    private final Ball ball;
+    public static int SPEED = 120; // speed for the ball animation
+
     private final Universe universe = Main.getUniverse();
+    private final Ball ball;
     public boolean running;
     private Thread thread;
-
-    private ArrayList<Vector2D> velocities;
-
-
-    public Shot(ArrayList<Vector2D> velocities) {
-        this.ball = universe.getBall();
-        this.velocities = velocities;
-        start();
-    }
 
 
     public Shot(Vector2D velocity) {
         this.ball = universe.getBall();
-//        this.ball.setVelocity(velocity);
-        this.velocities = new ArrayList<>();
-        this.velocities.add(velocity);
+        this.ball.setVelocity(velocity);
+
+        if (velocity.getMagnitude() > 5) {
+            Vector2D unit_vector = velocity.getUnitVector();
+            this.ball.setVelocity(new Vector2D(unit_vector.getX() * 5, unit_vector.getY() * 5)) ;
+        }
+        start();
+    }
+
+    public Shot(Vector2D velocity, CountDownLatch latch) {
+        this.latch = latch;
+        this.ball = universe.getBall();
+        this.ball.setVelocity(velocity);
 
         if (velocity.getMagnitude() > 5) {
             Vector2D unit_vector = velocity.getUnitVector();
@@ -49,6 +55,7 @@ public class Shot extends Display implements Runnable {
      * starts the animation and creates a new Thread object
      */
     public synchronized void start() {
+
         running = true;
         this.thread = new Thread(this);
         this.thread.start();
@@ -58,9 +65,13 @@ public class Shot extends Display implements Runnable {
      * kills the thread when the ball is in the resting position
      */
     public synchronized void stop() {
-        Display.updatePanel(ball.getPosition().getX(), ball.getPosition().getY());
+        Display.updatePanel( ball.getPosition().getX(), ball.getPosition().getY());
         this.ball.setWillMove(false);
         this.running = false;
+
+        if (this.latch != null) {
+            latch.countDown();
+        }
         try {
             this.thread.join();
         }
@@ -71,8 +82,6 @@ public class Shot extends Display implements Runnable {
     @Override
     public void run() {
 
-        int index = 0;
-        this.ball.setVelocity(this.velocities.get(index));
         this.ball.setWillMove(true);
 
         double delta = 0;
@@ -91,17 +100,10 @@ public class Shot extends Display implements Runnable {
 
                 // when ball is in the resting position
                 if ((!ball.isMoving() && !ball.getWillMove()) ) {
-                    index++;
-                    if (index == this.velocities.size()) {
-                        stop();
-                    }
-                    else {
-                        this.ball.setVelocity(this.velocities.get(index));
-                        this.ball.setWillMove(true);
-                    }
+                    stop();
                 }
 
-                // target was hit FIXME
+                // target was hit
                 if(ball.isOnTarget(universe.getTarget())) {
                     Display.pointCounter++;
                     ball.setVelocity(new Vector2D(0,0));

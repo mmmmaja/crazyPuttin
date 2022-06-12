@@ -2,7 +2,7 @@ package graphics;
 
 import Main.Main;
 import Main.Universe;
-import bot.mazem.RecursiveMaze;
+import bot.maze.RecursiveMaze;
 import javafx.scene.Camera;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;

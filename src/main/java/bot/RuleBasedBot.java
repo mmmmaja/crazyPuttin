@@ -1,13 +1,11 @@
 package bot;
 
 import Main.Main;
-import Main.Universe;
 import physics.Vector2D;
 
 
 public class RuleBasedBot extends Bot {
 
-    private Vector2D ballPosition = this.universe.getBall().getPosition();
 
     public RuleBasedBot() {
         this.name = "RuleBasedBot";
@@ -21,13 +19,6 @@ public class RuleBasedBot extends Bot {
         initiate();
     }
 
-    public RuleBasedBot(boolean shootBall, Vector2D targetPosition, Vector2D ballPosition) {
-        this.targetPosition = targetPosition;
-        this.shootBall = shootBall;
-        this.ballPosition = ballPosition;
-        this.name = "RuleBasedBot";
-        initiate();
-    }
 
     public RuleBasedBot(boolean shootBall) {
         this.shootBall = shootBall;
@@ -40,8 +31,8 @@ public class RuleBasedBot extends Bot {
      */
     private Vector2D getDirection() {
         Vector2D direction =  new Vector2D(
-                this.targetPosition.getX() - this.ballPosition.getX(),
-                this.targetPosition.getY() - this.ballPosition.getY()
+                this.targetPosition.getX() - Main.getUniverse().getBall().getPosition().getX(),
+                this.targetPosition.getY() - Main.getUniverse().getBall().getPosition().getY()
         );
         direction = direction.getUnitVector();
         return direction;
@@ -59,7 +50,7 @@ public class RuleBasedBot extends Bot {
         double c = Math.sqrt(2 * g * universe.getFileReader().getKineticFriction() * distance);
 
         this.bestVelocity = direction.multiply(c);
-        this.bestResult = new TestShot(this.universe, this.bestVelocity, this.targetPosition, Heuristics.finalPosition).getTestResult();
+        this.bestResult = new TestShot(this.bestVelocity, this.targetPosition, Heuristics.finalPosition).getTestResult();
         this.shotCounter = 1;
 
         if (this.shootBall) {

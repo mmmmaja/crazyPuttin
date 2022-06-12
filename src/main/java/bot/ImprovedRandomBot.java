@@ -71,7 +71,7 @@ public class ImprovedRandomBot extends Bot {
         Vector2D direction = analiseCourse();
 
         this.bestVelocity = direction.multiply(5);
-        this.bestResult = new TestShot(this.universe, bestVelocity, this.targetPosition).getTestResult();
+        this.bestResult = new TestShot(bestVelocity, this.targetPosition).getTestResult();
         this.shotCounter++;
 
         // target was hit
@@ -91,7 +91,7 @@ public class ImprovedRandomBot extends Bot {
                     rotate(getRandomWithinTwoRanges(-range - 1, -range, range, range + 1));
 
             // Euclidean distance between the ball and the target
-            double result = new TestShot(this.universe, velocity, this.targetPosition).getTestResult();
+            double result = new TestShot(velocity, this.targetPosition).getTestResult();
             if (result < this.bestResult) {
                 this.bestResult = result;
                 this.bestVelocity = velocity;

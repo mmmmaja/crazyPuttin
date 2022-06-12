@@ -43,7 +43,7 @@ public class HillClimbingBot extends Bot {
                 this.universe.getTarget().getPosition().getY() - this.universe.getBall().getPosition().getY()
         );
         this.bestVelocity = direction.getUnitVector();
-        this.bestResult = new TestShot(this.universe, this.bestVelocity, this.targetPosition).getTestResult();
+        this.bestResult = new TestShot(this.bestVelocity, this.targetPosition).getTestResult();
         double[][] stepArray = {
                 {step, -step},
                 {-step, +step},
@@ -61,7 +61,7 @@ public class HillClimbingBot extends Bot {
             for (double[] stepCase : stepArray) {
 
                 Vector2D testVelocity = new Vector2D(this.bestVelocity.getX() + stepCase[0], this.bestVelocity.getY() + stepCase[1]);
-                double testResult = new TestShot(this.universe, testVelocity, this.targetPosition).getTestResult();
+                double testResult = new TestShot(testVelocity, this.targetPosition).getTestResult();
 
                 // target was reached: break all
                 if (testResult == 0) {

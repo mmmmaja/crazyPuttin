@@ -1,25 +1,26 @@
-package bot.mazem;
+package bot.maze;
 
 import Main.Main;
 import Main.Shot;
 import bot.*;
 import physics.Vector2D;
 import java.util.ArrayList;
+import java.util.concurrent.CountDownLatch;
 
 
-public class MajaMazeBot extends Bot {
+public class MazeBot extends Bot {
 
+    // list of positions that will lead to the target
     private final ArrayList<Cell> path;
-    private final double TOLERANCE = 0.025;
-    Vector2D ballPosition = Main.getUniverse().getBall().getPosition();
 
-    public MajaMazeBot() {
+    public MazeBot() {
         this.path = findPath();
         start();
     }
 
     @Override
     public void run() {
+
         Vector2D velocity = new Vector2D();
 
         for (int i = 0; i < path.size(); i++) {
@@ -29,6 +30,7 @@ public class MajaMazeBot extends Bot {
             Vector2D temp = new Vector2D(cell.getX(), cell.getY());
             RuleBasedBot bot = new RuleBasedBot(false, temp);
 
+            double TOLERANCE = 0.025;
             // target was hit!
             if (bot.getBestResult() < TOLERANCE) {
                 velocity = bot.getBestVelocity();
@@ -36,17 +38,21 @@ public class MajaMazeBot extends Bot {
 
             // not possible to reach this point, shoot the ball to the previous point
             else {
-                Shot shot = new Shot(velocity);
-                while (shot.running) {
-                    System.out.print(".");
-                }
+                // latch is used to wait for the Thread from the Shot class to stop before going further in this class
+                CountDownLatch latch = new CountDownLatch(1);
+                new Shot(velocity, latch);
+                try {
+                    // wait for the response from the Thread
+                    latch.await();
+                } catch (InterruptedException ignored) {}
                 i--;
             }
         }
-        Shot shot = new Shot(velocity);
-        while (shot.running) {
-            System.out.print(".");
-        }
+        CountDownLatch latch = new CountDownLatch(1);
+        new Shot(velocity, latch);
+        try {
+            latch.await();
+        } catch (InterruptedException ignored) {}
         stop();
     }
 
@@ -78,7 +84,7 @@ public class MajaMazeBot extends Bot {
             }
             Cell winner = toVisit.get(indexOfWinner) ;
             currentCell= winner;
-            if( winner.equals(target) ) {
+            if ( winner.equals(target) ) {
                 break;
             }
 
@@ -86,8 +92,11 @@ public class MajaMazeBot extends Bot {
             toVisit.remove(winner);
 
             for (Cell neighbor : winner.getNeighbors()) {
-                if( !neighbor.isVisited() &&
-                        ((neighbor.getNodeDescription() != NodeDescription.water) && (neighbor.getNodeDescription() != NodeDescription.obstacle))){
+                if (
+                        !neighbor.isVisited() &&
+                        ((neighbor.getNodeDescription() != NodeDescription.water) && (neighbor.getNodeDescription() != NodeDescription.obstacle))
+                )
+                {
                     double tempScore = currentCell.getCostFromStart() + currentCell.distanceTo(neighbor);
                     neighbor.setCostFromStart( tempScore );
                     if (!toVisit.contains(neighbor) || (tempScore <= neighbor.getTotalCost())) {
@@ -98,18 +107,20 @@ public class MajaMazeBot extends Bot {
                 }
                 neighbor.setVisited(true);
             }
-
-
         }
-        while(currentCell.getPrevious() != null){
-            path.add(0,currentCell.getPrevious() );
-            currentCell = currentCell.getPrevious();
 
+        while (currentCell.getPrevious() != null) {
+            path.add(0, currentCell.getPrevious() );
+            currentCell = currentCell.getPrevious();
         }
 
         path.remove(0);
-        Cell targetPosition = new Cell((int) this.targetPosition.getX(), (int) this.targetPosition.getY());
+        Cell targetPosition = new Cell(
+                (int) this.targetPosition.getX(),
+                (int) this.targetPosition.getY()
+        );
         path.add(targetPosition);
         return path;
     }
+
 }

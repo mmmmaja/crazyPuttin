@@ -3,8 +3,8 @@ package graphics;
 import Main.Main;
 import Main.Shot;
 import bot.*;
-import bot.mazem.Cell;
-import bot.mazem.MajaMazeBot;
+import bot.maze.Cell;
+import bot.maze.MazeBot;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -356,7 +356,7 @@ public class Display extends Application {
 
     private void aStarVisualization() {
 
-        MajaMazeBot mazeBot = new MajaMazeBot();
+        MazeBot mazeBot = new MazeBot();
         ArrayList<Cell> cells = mazeBot.findPath();
 
         int h  = 60 ;

@@ -1,4 +1,4 @@
-package bot.mazem;
+package bot.maze;
 
 import physics.Vector2D;
 
@@ -32,11 +32,13 @@ public class Cell {
         this.neighbors = new ArrayList<>();
 
     }
+
     public void setAllCosts(Vector2D target , Vector2D position){
         this.costToTarget = distanceTo(target);
         this.costFromStart = distanceTo(position);
         this.totalCost = this.costFromStart + this.costToTarget;
     }
+
     public void setAllCosts(Cell target , Cell position){
         this.costToTarget = distanceTo(target);
         this.costFromStart = distanceTo(position);
@@ -46,9 +48,11 @@ public class Cell {
     public double distanceTo(Cell myCell) {
         return Math.sqrt(Math.pow(this.x - myCell.x, 2) + Math.pow(this.y - myCell.y, 2));
     }
+
     public double distanceTo(Vector2D vector2D) {
         return Math.sqrt(Math.pow(this.x - vector2D.getX(), 2) + Math.pow(this.y - vector2D.getY(), 2));
     }
+
     public double distanceTo(double x , double y ) {
         return Math.sqrt(Math.pow(this.x - x , 2) + Math.pow(this.y - y, 2));
     }
@@ -78,14 +82,6 @@ public class Cell {
         this.y = y;
     }
 
-    public double getCostToTarget() {
-        return costToTarget;
-    }
-
-    public void setCostToTarget(double costToTarget) {
-        this.costToTarget = costToTarget;
-    }
-
     public double getCostFromStart() {
         return costFromStart;
     }
@@ -97,10 +93,6 @@ public class Cell {
 
     public double getTotalCost() {
         return totalCost;
-    }
-
-    public void setTotalCost(double totalCost) {
-        this.totalCost = totalCost;
     }
 
 

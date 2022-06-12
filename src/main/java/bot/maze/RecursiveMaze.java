@@ -1,23 +1,26 @@
-package bot.mazem;
+package bot.maze;
 
 import Main.Main;
 import objects.Obstacle;
-import objects.Target;
 import objects.Terrain;
 import physics.Vector2D;
 import java.util.ArrayList;
 import java.util.Random;
 
 
+/**
+ * creates the maze with the given difficulty for the MazeBot
+ */
 public class RecursiveMaze {
 
-    public static int step = 8; // how thick the walls are, to be changed by the EventHandler
+    public static int step = 4; // how thick the walls are, to be changed by the EventHandler in order to adjust levels
 
     private final Graph graph;
     private final Random random = new Random();
 
     // list of all the cells visited, used for backtracking
     private final ArrayList<Cell> path;
+
     // target will change its position to make sure there is always a path from the ball to the target
     private Vector2D newTargetPosition = new Vector2D(Terrain.TERRAIN_WIDTH, Terrain.TERRAIN_HEIGHT);
 
@@ -42,7 +45,7 @@ public class RecursiveMaze {
     private void dig() {
 
         // for all the cells boolean wall is set to true at the beginning
-        Cell[][] cellGraph = this.graph.getGraph();
+        Cell[][] cellGraph = this.graph.getGraphMatrix();
         for (Cell[] line : cellGraph) {
             for (Cell cell : line) {
 
@@ -55,9 +58,9 @@ public class RecursiveMaze {
                 int BORDER = 2;
                 if (
                         cell.getIndex().getY() < BORDER
-                        || cell.getIndex().getY() > this.graph.getGraph()[0].length - 2 * BORDER
+                        || cell.getIndex().getY() > this.graph.getGraphMatrix()[0].length - 2 * BORDER
                         || cell.getIndex().getX() < BORDER
-                        || cell.getIndex().getX() > this.graph.getGraph().length - 2 * BORDER
+                        || cell.getIndex().getX() > this.graph.getGraphMatrix().length - 2 * BORDER
                 ) {
                     cell.setWall(false);
                 }
@@ -125,7 +128,7 @@ public class RecursiveMaze {
     private void connectPoints(Cell target, Cell start) {
         for (double i = start.getIndex().getX(); i <= target.getIndex().getX(); i++) {
             for (double j = start.getIndex().getY(); j <= target.getIndex().getY(); j++) {
-                graph.getGraph()[(int) i][(int) j].setWall(false);
+                graph.getGraphMatrix()[(int) i][(int) j].setWall(false);
             }
         }
     }
@@ -137,9 +140,9 @@ public class RecursiveMaze {
         double SIDE_LENGTH = 0.5; // side of each obstacle
 
         ArrayList<Obstacle> obstacles = new ArrayList<>();
-        for (int i = 0; i < graph.getGraph().length; i++) {
-            for (int j = 0; j < graph.getGraph()[0].length; j++) {
-                Cell cell = graph.getGraph()[i][j];
+        for (int i = 0; i < graph.getGraphMatrix().length; i++) {
+            for (int j = 0; j < graph.getGraphMatrix()[0].length; j++) {
+                Cell cell = graph.getGraphMatrix()[i][j];
                 if (cell.isWall()) {
                     double x = cell.getX();
                     double y = cell.getY();
@@ -147,16 +150,16 @@ public class RecursiveMaze {
                     obstacles.add(new Obstacle(new Vector2D(x, y), SIDE_LENGTH));
 
                     // connect this obstacle with the one on the right
-                    if (i < graph.getGraph().length - 1) {
-                        if (graph.getGraph()[i + 1][j].isWall()) {
+                    if (i < graph.getGraphMatrix().length - 1) {
+                        if (graph.getGraphMatrix()[i + 1][j].isWall()) {
                             for (double addition = SIDE_LENGTH; addition <= 1; addition += SIDE_LENGTH) {
                                 obstacles.add(new Obstacle(new Vector2D(x + addition, y), SIDE_LENGTH));
                             }
                         }
                     }
                     // connect this obstacle with the one on the bottom
-                    if (j < graph.getGraph()[0].length - 1) {
-                        if (graph.getGraph()[i][j + 1].isWall()) {
+                    if (j < graph.getGraphMatrix()[0].length - 1) {
+                        if (graph.getGraphMatrix()[i][j + 1].isWall()) {
                             for (double addition = SIDE_LENGTH; addition <= 1; addition += SIDE_LENGTH) {
                                 obstacles.add(new Obstacle(new Vector2D(x, y + addition), SIDE_LENGTH));
                             }
@@ -170,7 +173,7 @@ public class RecursiveMaze {
 
     /**
      * @param cell current cell
-     * @return array of the neighbours of the cell (not the diagonal ones!)
+     * @return array of the neighbours of the cell (excluding diagonal ones)
      */
     private ArrayList<Cell> findNeighbours(Cell cell) {
         ArrayList<Cell> neighbours = new ArrayList<>();
@@ -181,16 +184,16 @@ public class RecursiveMaze {
         int maxY = (int) (index.getY() + step);
 
         if (minX >= 0) {
-            neighbours.add(graph.getGraph()[minX][(int) index.getY()]);
+            neighbours.add(graph.getGraphMatrix()[minX][(int) index.getY()]);
         }
         if (minY >= 0) {
-            neighbours.add(graph.getGraph()[(int) index.getX()][minY]);
+            neighbours.add(graph.getGraphMatrix()[(int) index.getX()][minY]);
         }
-        if (maxX < graph.getGraph().length) {
-            neighbours.add(graph.getGraph()[maxX][(int) index.getY()]);
+        if (maxX < graph.getGraphMatrix().length) {
+            neighbours.add(graph.getGraphMatrix()[maxX][(int) index.getY()]);
         }
-        if (maxY < graph.getGraph()[0].length) {
-            neighbours.add(graph.getGraph()[(int) index.getX()][maxY]);
+        if (maxY < graph.getGraphMatrix()[0].length) {
+            neighbours.add(graph.getGraphMatrix()[(int) index.getX()][maxY]);
         }
         return neighbours;
     }
