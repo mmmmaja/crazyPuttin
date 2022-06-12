@@ -8,9 +8,7 @@ import java.util.ArrayList;
 
 public class MajaMazeBot extends Bot {
 
-    private final ArrayList<Cell> path;
-    private final ArrayList<Vector2D> velocities = new ArrayList<>();
-
+    private ArrayList<Cell> path;
 
     public MajaMazeBot() {
         this.path = findPath();
@@ -24,36 +22,31 @@ public class MajaMazeBot extends Bot {
         for (int i = 0; i < path.size(); i++) {
 
             Cell cell = path.get(i);
+
             Vector2D temp = new Vector2D(cell.getX(), cell.getY());
-            ImprovedRuleBasedBot bot = new ImprovedRuleBasedBot(false, temp);
-            System.out.println("result: "+bot.getBestResult());
+            RuleBasedBot bot = new RuleBasedBot(false, temp);
+            System.out.println("result: " + bot.getBestResult());
 
             // target was hit!
             double TOLERANCE = 0.025;
             if (bot.getBestResult() < TOLERANCE) {
                 System.out.println("hit!");
                 velocity = bot.getBestVelocity();
-            }
-            else {
+            } else {
                 System.out.println("shot");
-                this.velocities.add(velocity);
+                Shot shot = new Shot(velocity);
+                while (shot.running) {
+                    System.out.print(".");
+                }
+                i++;
+                //path=findPath();
             }
         }
-        this.velocities.add(velocity);
+        Shot shot = new Shot(velocity);
+        while (shot.running) {
+            System.out.print(".");
+        }
         stop();
-    }
-
-    public synchronized void stop() {
-        this.running = false;
-        System.out.println("shoot now!");
-        for (Vector2D velocity : this.velocities) {
-            System.out.println(velocity);
-            new Shot(velocity);
-        }
-        try {
-            this.thread.join();
-        }
-        catch (InterruptedException ignored) {}
     }
 
 

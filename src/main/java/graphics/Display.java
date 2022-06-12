@@ -344,7 +344,7 @@ public class Display extends Application {
            botButton.setOnMouseClicked(mouseEvent -> {
                switch (botComboBox.getValue()) {
                    case "randomBot" -> new RandomBot();
-                   case "ruleBasedBot" -> new ImprovedRuleBasedBot();
+                   case "ruleBasedBot" -> new RuleBasedBot();
                    case "improvedRandomBot" -> new ImprovedRandomBot();
                    case "gradientDescentBot" -> new GradientDescentBot();
                    case "hillClimbingBot" -> new HillClimbingBot();

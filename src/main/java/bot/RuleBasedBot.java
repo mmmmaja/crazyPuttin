@@ -40,12 +40,15 @@ public class RuleBasedBot extends Bot {
     }
 
     private void initiate() {
-        double GOLDEN_RATIO = 0.001812234337731409;
+
 
         Vector2D direction = getDirection();
-        double distance = this.targetPosition.getEuclideanDistance(universe.getBall().getPosition());
 
-        double c = distance / GOLDEN_RATIO;
+        double distance = this.targetPosition.getEuclideanDistance(universe.getBall().getPosition());
+        double g = 9.81;
+        double c = Math.sqrt(2 * g * universe.getFileReader().getKineticFriction() * distance);
+        System.out.println(c);
+
         this.bestVelocity = direction.multiply(c);
         this.bestResult = new TestShot(this.universe, this.bestVelocity, this.targetPosition, Heuristics.finalPosition).getTestResult();
         this.shotCounter = 1;

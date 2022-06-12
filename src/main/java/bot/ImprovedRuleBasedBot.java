@@ -45,7 +45,7 @@ public class ImprovedRuleBasedBot extends Bot{
         this.bestVelocity = new Vector2D(direction.getX(), direction.getY());
 
         double step = 0.01;
-        double c = 0.01;
+        double c = 0.1;
         while (true){
             Vector2D newVelocity = direction.multiply(c);
             if (newVelocity.getMagnitude() > 5) {
@@ -65,16 +65,18 @@ public class ImprovedRuleBasedBot extends Bot{
 
         // looking for : C
         // having direction
-        double distance = this.bestResult;
-        double goldenRation =distance / c;
-        // c = distance / goldenRatio
+        double distance = this.targetPosition.getEuclideanDistance(this.universe.getBall().getPosition());
+//        System.out.println("distance: "+distance);
+//        System.out.println("c: "+c);
+//        double goldenRation = c / (distance * 10);
+        // c = (distance * sth) / goldenRatio THE BIGGER THE DISTANCE THE BIGGER C IS
 
         if (this.shootBall) {
             shootBall();
         }
 
-        System.out.println("GR: "+goldenRation);
-        System.out.println(this.bestResult);
+//        System.out.println("GR: "+goldenRation);
+//        System.out.println(this.bestResult);
     }
 
     @Override

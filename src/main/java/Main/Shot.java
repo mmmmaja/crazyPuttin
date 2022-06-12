@@ -14,22 +14,29 @@ import java.util.ArrayList;
  */
 public class Shot extends Display implements Runnable {
 
-    public static int SPEED = 40; // speed for the ball animation
+    public static int SPEED = 60; // speed for the ball animation
 
     private final Ball ball;
     private final Universe universe = Main.getUniverse();
     public boolean running;
     private Thread thread;
 
+    private ArrayList<Vector2D> velocities;
 
-//    public Shot(ArrayList<Vector2D> velocities) {
-//
-//    }
+
+    public Shot(ArrayList<Vector2D> velocities) {
+        this.ball = universe.getBall();
+        this.velocities = velocities;
+        start();
+    }
 
 
     public Shot(Vector2D velocity) {
         this.ball = universe.getBall();
-        this.ball.setVelocity(velocity);
+//        this.ball.setVelocity(velocity);
+        this.velocities = new ArrayList<>();
+        this.velocities.add(velocity);
+
         if (velocity.getMagnitude() > 5) {
             Vector2D unit_vector = velocity.getUnitVector();
             this.ball.setVelocity(new Vector2D(unit_vector.getX() * 5, unit_vector.getY() * 5)) ;
@@ -64,7 +71,9 @@ public class Shot extends Display implements Runnable {
     @Override
     public void run() {
 
-        ball.setWillMove(true);
+        int index = 0;
+        this.ball.setVelocity(this.velocities.get(index));
+        this.ball.setWillMove(true);
 
         double delta = 0;
         long lastTime = System.nanoTime();
@@ -82,7 +91,14 @@ public class Shot extends Display implements Runnable {
 
                 // when ball is in the resting position
                 if ((!ball.isMoving() && !ball.getWillMove()) ) {
-                    stop();
+                    index++;
+                    if (index == this.velocities.size()) {
+                        stop();
+                    }
+                    else {
+                        this.ball.setVelocity(this.velocities.get(index));
+                        this.ball.setWillMove(true);
+                    }
                 }
 
                 // target was hit FIXME
