@@ -5,6 +5,7 @@ import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.CullFace;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.shape.MeshView;
+import javafx.scene.shape.Sphere;
 import objects.*;
 import physics.*;
 import java.util.ArrayList;
@@ -24,8 +25,9 @@ public class Universe {
     private Flag flag;
 
     private MeshView[] meshViews;
-    private ArrayList<Tree> trees = new ArrayList<>();
+    private final ArrayList<Tree> trees = new ArrayList<>();
     private ArrayList<Obstacle> obstacles = new ArrayList<>();
+    private ArrayList<Sphere> pathVisualizations = new ArrayList<>();
 
 
     public Universe(FileReader fileReader) {
@@ -186,4 +188,15 @@ public class Universe {
         this.trees.add(tree);
     }
 
+    public ArrayList<Sphere> getPathVisualizations() {
+        return pathVisualizations;
+    }
+
+    public void addPathVisualization(Sphere sphere) {
+        this.pathVisualizations.add(sphere);
+    }
+
+    public void deletePathVisualizations() {
+        this.pathVisualizations = new ArrayList<>();
+    }
 }

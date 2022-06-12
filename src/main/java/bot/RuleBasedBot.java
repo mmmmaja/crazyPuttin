@@ -7,6 +7,7 @@ import physics.Vector2D;
 
 public class RuleBasedBot extends Bot {
 
+    private Vector2D ballPosition = this.universe.getBall().getPosition();
 
     public RuleBasedBot() {
         this.name = "RuleBasedBot";
@@ -16,6 +17,14 @@ public class RuleBasedBot extends Bot {
     public RuleBasedBot(boolean shootBall, Vector2D targetPosition) {
         this.targetPosition = targetPosition;
         this.shootBall = shootBall;
+        this.name = "RuleBasedBot";
+        initiate();
+    }
+
+    public RuleBasedBot(boolean shootBall, Vector2D targetPosition, Vector2D ballPosition) {
+        this.targetPosition = targetPosition;
+        this.shootBall = shootBall;
+        this.ballPosition = ballPosition;
         this.name = "RuleBasedBot";
         initiate();
     }
@@ -31,8 +40,8 @@ public class RuleBasedBot extends Bot {
      */
     private Vector2D getDirection() {
         Vector2D direction =  new Vector2D(
-                this.targetPosition.getX() - this.universe.getBall().getPosition().getX(),
-                this.targetPosition.getY() - this.universe.getBall().getPosition().getY()
+                this.targetPosition.getX() - this.ballPosition.getX(),
+                this.targetPosition.getY() - this.ballPosition.getY()
         );
         direction = direction.getUnitVector();
         return direction;
@@ -44,15 +53,14 @@ public class RuleBasedBot extends Bot {
 
         Vector2D direction = getDirection();
 
+        // find the correct multiplier for the direction vector based on the distance
         double distance = this.targetPosition.getEuclideanDistance(universe.getBall().getPosition());
         double g = 9.81;
         double c = Math.sqrt(2 * g * universe.getFileReader().getKineticFriction() * distance);
-        System.out.println(c);
 
         this.bestVelocity = direction.multiply(c);
         this.bestResult = new TestShot(this.universe, this.bestVelocity, this.targetPosition, Heuristics.finalPosition).getTestResult();
         this.shotCounter = 1;
-        System.out.println("bestResult: "+this.bestResult);
 
         if (this.shootBall) {
             shootBall();

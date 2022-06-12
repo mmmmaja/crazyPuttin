@@ -11,6 +11,7 @@ import javafx.scene.input.PickResult;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.shape.Cylinder;
+import javafx.scene.shape.Sphere;
 import objects.Obstacle;
 import objects.Tree;
 import physics.Vector2D;
@@ -19,28 +20,31 @@ import java.util.ArrayList;
 
 
 /**
- * Handles the events when the mouse is clicked on the terrain
+ * Handles the events when the mouse is clicked on the terrain or the key is pressed
  *      adding obstacles
  *      adding trees
- *      is supposed to work with splines later as well (dragging the mouse)
+ *      adding mazes
+ *      clearing all obstacles
  */
 public class EventHandler {
 
-    private final Universe universe;
+    private final Universe universe = Main.getUniverse();
     private final SmartGroup group;
     private final PhongMaterial rockMaterial;
 
     public EventHandler(SmartGroup group) {
-        this.universe = Main.getUniverse();
         this.group = group;
         this.rockMaterial = createRockMaterial();
 
         mousePressed();
-        mouseDragged();
-        mouseReleased();
     }
 
+    /**
+     * @param scene current scene with all the objects added
+     * @param camera to be translated on the mouse press
+     */
     public void handleCamera(Scene scene, Camera camera) {
+
         // add movement of the camera when keys are pressed
         scene.addEventHandler(KeyEvent.KEY_PRESSED, e -> {
             switch (e.getCode()) {
@@ -48,6 +52,8 @@ public class EventHandler {
                 case S -> camera.setTranslateY(camera.getTranslateY() - 1);
                 case D -> camera.setTranslateX(camera.getTranslateX() + 1);
                 case A -> camera.setTranslateX(camera.getTranslateX() - 1);
+
+                // add a maze
                 case M -> {
                     RecursiveMaze recursiveMaze = new RecursiveMaze();
                     ArrayList<Obstacle> obstacles = recursiveMaze.getObstacles();
@@ -58,11 +64,17 @@ public class EventHandler {
                         this.group.getChildren().add(box);
                     }
                 }
+
+                // remove maze and visualizers for A*
                 case C -> {
                     for (Obstacle obstacle : universe.getObstacles()) {
                         this.group.getChildren().remove(obstacle.getBox());
                     }
+                    for (Sphere sphere : universe.getPathVisualizations()) {
+                        this.group.getChildren().remove(sphere);
+                    }
                     universe.deleteObstacles();
+                    universe.deletePathVisualizations();
                 }
 
                 // set the level of the maze when pressing numbers on the keyboard
@@ -93,7 +105,7 @@ public class EventHandler {
                     pickResult.getIntersectedPoint().getX(),
                     pickResult.getIntersectedPoint().getY()
             );
-            // OBSTACLE events
+            // add the OBSTACLE
             if (group.getObstaclesOn()) {
 
                 // if not a target or a ball
@@ -103,12 +115,13 @@ public class EventHandler {
                     System.out.println(clickPosition);
                     Box box = obstacle.getBox();
                     box.setMaterial(rockMaterial);
+
                     this.group.getChildren().add(box);
                     universe.addObstacle(obstacle);
                 }
             }
 
-            // OBSTACLE events
+            // add a TREE
             else if (group.getTreesOn()) {
                 // if not a target or a ball
                 if (!collides(clickPosition, 0.1)) {
@@ -121,8 +134,8 @@ public class EventHandler {
                     PhongMaterial cylinderMaterial = new PhongMaterial();
                     cylinderMaterial.setDiffuseMap(cylinderImage);
                     cylinder.setMaterial(cylinderMaterial);
-                    this.group.getChildren().add(cylinder);
 
+                    this.group.getChildren().add(cylinder);
                     universe.addTree(tree);
                 }
             }
@@ -131,24 +144,7 @@ public class EventHandler {
 
 
     /**
-     * create the splines
-     */
-    private void mouseDragged() {
-        universe.getMeshViews()[0].setOnMouseDragged(mouseEvent -> {});
-    }
-
-
-    /**
-     * does nothing for now
-     */
-    private void mouseReleased() {
-        universe.getMeshViews()[0].setOnMouseReleased(mouseEvent -> {});
-
-    }
-
-
-    /**
-     * creates the material for the obstacles
+     * @return the material for the obstacles
      */
     private PhongMaterial createRockMaterial() {
         Image rockImage = new Image("file:src/main/java/resources/rockTexture.jpg");
@@ -158,7 +154,6 @@ public class EventHandler {
     }
 
     /**
-     *
      * @param clickPosition position on the frame where the mouse was clicked
      * @return true if the obstacle would collide with the target or the ball
      */

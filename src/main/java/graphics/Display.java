@@ -5,7 +5,6 @@ import Main.Shot;
 import bot.*;
 import bot.mazem.Cell;
 import bot.mazem.MajaMazeBot;
-import bot.mazem.MazeBot;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -348,35 +347,36 @@ public class Display extends Application {
                    case "improvedRandomBot" -> new ImprovedRandomBot();
                    case "gradientDescentBot" -> new GradientDescentBot();
                    case "hillClimbingBot" -> new HillClimbingBot();
-                   case "mazeBot" -> aStarTest();
+                   case "mazeBot" -> aStarVisualization();
                }
         });
         return position;
     }
 
 
-    private void aStarTest() {
+    private void aStarVisualization() {
 
         MajaMazeBot mazeBot = new MajaMazeBot();
         ArrayList<Cell> cells = mazeBot.findPath();
-        System.out.println(cells.size());
+
         int h  = 60 ;
         int s  = 1 ;
         int b  = 1 ;
-        int step = 5;
+        int step = 10;
         for (Cell cell : cells) {
             Vector2D p = new Vector2D( cell.getX() , cell.getY()) ;
-            Color color = Color.hsb(h, s,b );
+            Color color = Color.hsb(h, s, b);
             h+=step;
             Sphere sphere = new Sphere();
             sphere.setRadius(0.15);
             sphere.setTranslateX(p.getX());
             sphere.setTranslateY(p.getY());
-            sphere.setTranslateZ((-TerrainGenerator.getHeight(p) - 1));
+            sphere.setTranslateZ((-TerrainGenerator.getHeight(p) - 0.5));
             PhongMaterial material = new PhongMaterial();
             material.setDiffuseColor(color);
             sphere.setMaterial(material);
             this.group.getChildren().add(sphere);
+            this.universe.addPathVisualization(sphere);
         }
     }
 

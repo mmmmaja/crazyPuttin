@@ -74,16 +74,15 @@ public class TestShot implements Comparable<TestShot>{
                 this.testResult = distance;
             }
 
-            // target was hit
-
-//            if (ball.isOnTarget(this.targetPosition,tolerance)) {
-//                ball.setVelocity(new Vector2D(0, 0));
-//                ball.setWillMove(false);
-//                if (this.heuristics == Heuristics.allPositions) {
-//                    this.testResult = 0;
-//                    break;
-//                }
-//            }
+            // REAL target was hit
+            if (ball.isOnTarget(this.universe.getTarget().getPosition(),tolerance)) {
+                ball.setVelocity(new Vector2D(0, 0));
+                ball.setWillMove(false);
+                if (this.heuristics == Heuristics.allPositions) {
+                    this.testResult = 0;
+                    break;
+                }
+            }
 
             // ball is in the resting position: target was not hit
             if ((!ball.isMoving() && !ball.getWillMove())) {
@@ -98,18 +97,9 @@ public class TestShot implements Comparable<TestShot>{
         }
     }
 
-    public double getTolerance() {
-        return tolerance;
-    }
-
-    public void setTolerance(double tolerance) {
-        this.tolerance = tolerance;
-    }
-
 
     /**
-     * @return 0 if the target was hit otherwise
-     * the distance between the ball and the target
+     * @return the distance between the ball and the target
      */
     public double getTestResult() {
         return this.testResult;

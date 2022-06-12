@@ -1,5 +1,6 @@
 package bot.mazem;
 
+import Main.Main;
 import Main.Shot;
 import bot.*;
 import physics.Vector2D;
@@ -8,7 +9,9 @@ import java.util.ArrayList;
 
 public class MajaMazeBot extends Bot {
 
-    private ArrayList<Cell> path;
+    private final ArrayList<Cell> path;
+    private final double TOLERANCE = 0.025;
+    Vector2D ballPosition = Main.getUniverse().getBall().getPosition();
 
     public MajaMazeBot() {
         this.path = findPath();
@@ -25,21 +28,19 @@ public class MajaMazeBot extends Bot {
 
             Vector2D temp = new Vector2D(cell.getX(), cell.getY());
             RuleBasedBot bot = new RuleBasedBot(false, temp);
-            System.out.println("result: " + bot.getBestResult());
 
             // target was hit!
-            double TOLERANCE = 0.025;
             if (bot.getBestResult() < TOLERANCE) {
-                System.out.println("hit!");
                 velocity = bot.getBestVelocity();
-            } else {
-                System.out.println("shot");
+            }
+
+            // not possible to reach this point, shoot the ball to the previous point
+            else {
                 Shot shot = new Shot(velocity);
                 while (shot.running) {
                     System.out.print(".");
                 }
-                i++;
-                //path=findPath();
+                i--;
             }
         }
         Shot shot = new Shot(velocity);
