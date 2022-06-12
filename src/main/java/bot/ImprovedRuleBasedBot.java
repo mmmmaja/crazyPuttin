@@ -41,30 +41,40 @@ public class ImprovedRuleBasedBot extends Bot{
     }
 
     private void initiate() {
-        this.setHeuristics(Heuristics.finalPosition);
         Vector2D direction = getDirection();
         this.bestVelocity = new Vector2D(direction.getX(), direction.getY());
 
-        double step = 0.1;
-        double c = 0.1;
+        double step = 0.01;
+        double c = 0.01;
         while (true){
             Vector2D newVelocity = direction.multiply(c);
             if (newVelocity.getMagnitude() > 5) {
                 break;
             }
-            double result = new TestShot(this.universe, newVelocity, this.targetPosition, this.heuristics).getTestResult();
+            double result = new TestShot(this.universe, newVelocity, this.targetPosition, Heuristics.finalPosition).getTestResult();
             if (result < this.bestResult) {
                 this.bestResult = result;
                 this.bestVelocity = newVelocity;
-                if (bestResult < 0.05) {
+                if (bestResult < 0.025) {
                     break;
                 }
             }
             c+= step;
         }
         this.shotCounter = 1;
-//        System.out.println(bestVelocity);
-//        System.out.println(bestVelocity.getMagnitude());
+
+        // looking for : C
+        // having direction
+        double distance = this.bestResult;
+        double goldenRation =distance / c;
+        // c = distance / goldenRatio
+
+        if (this.shootBall) {
+            shootBall();
+        }
+
+        System.out.println("GR: "+goldenRation);
+        System.out.println(this.bestResult);
     }
 
     @Override

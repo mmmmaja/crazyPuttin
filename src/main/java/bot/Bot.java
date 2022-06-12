@@ -15,7 +15,7 @@ public abstract class Bot implements Runnable {
 
     final Universe universe = Main.getUniverse();
 
-    Vector2D targetPosition = universe.getTarget().getPosition();
+    public Vector2D targetPosition = universe.getTarget().getPosition();
     boolean shootBall = true; // if shot is just simulation do not shoot the ball
 
     String name; // name to be set for each bot type

@@ -3,14 +3,13 @@ package bot.mazem;
 import Main.Shot;
 import bot.*;
 import physics.Vector2D;
-
 import java.util.ArrayList;
-import java.util.Random;
+
 
 public class MajaMazeBot extends Bot {
 
-    double tolerance = 0.1;
     private final ArrayList<Cell> path;
+    private final ArrayList<Vector2D> velocities = new ArrayList<>();
 
 
     public MajaMazeBot() {
@@ -22,7 +21,7 @@ public class MajaMazeBot extends Bot {
     public void run() {
         Vector2D velocity = new Vector2D();
 
-        for (int i = 1; i < path.size(); i++) {
+        for (int i = 0; i < path.size(); i++) {
 
             Cell cell = path.get(i);
             Vector2D temp = new Vector2D(cell.getX(), cell.getY());
@@ -30,17 +29,31 @@ public class MajaMazeBot extends Bot {
             System.out.println("result: "+bot.getBestResult());
 
             // target was hit!
-            if (bot.getBestResult() < tolerance) {
+            double TOLERANCE = 0.025;
+            if (bot.getBestResult() < TOLERANCE) {
                 System.out.println("hit!");
                 velocity = bot.getBestVelocity();
-
-
             }
             else {
                 System.out.println("shot");
-                new Shot(velocity);
+                this.velocities.add(velocity);
             }
         }
+        this.velocities.add(velocity);
+        stop();
+    }
+
+    public synchronized void stop() {
+        this.running = false;
+        System.out.println("shoot now!");
+        for (Vector2D velocity : this.velocities) {
+            System.out.println(velocity);
+            new Shot(velocity);
+        }
+        try {
+            this.thread.join();
+        }
+        catch (InterruptedException ignored) {}
     }
 
 
@@ -99,6 +112,10 @@ public class MajaMazeBot extends Bot {
             currentCell = currentCell.getPrevious();
 
         }
+
+        path.remove(0);
+        Cell targetPosition = new Cell((int) this.targetPosition.getX(), (int) this.targetPosition.getY());
+        path.add(targetPosition);
         return path;
     }
 }

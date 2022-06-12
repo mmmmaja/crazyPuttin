@@ -5,6 +5,8 @@ import objects.Ball;
 import objects.TerrainGenerator;
 import physics.Vector2D;
 
+import java.util.ArrayList;
+
 
 /**
  * instance of this class is created each time the movement of the ball is triggered
@@ -12,12 +14,17 @@ import physics.Vector2D;
  */
 public class Shot extends Display implements Runnable {
 
-    public static int SPEED = 60; // speed for the ball animation
+    public static int SPEED = 40; // speed for the ball animation
 
     private final Ball ball;
     private final Universe universe = Main.getUniverse();
-    private boolean running;
+    public boolean running;
     private Thread thread;
+
+
+//    public Shot(ArrayList<Vector2D> velocities) {
+//
+//    }
 
 
     public Shot(Vector2D velocity) {
@@ -78,7 +85,7 @@ public class Shot extends Display implements Runnable {
                     stop();
                 }
 
-                // target was hit
+                // target was hit FIXME
                 if(ball.isOnTarget(universe.getTarget())) {
                     Display.pointCounter++;
                     ball.setVelocity(new Vector2D(0,0));

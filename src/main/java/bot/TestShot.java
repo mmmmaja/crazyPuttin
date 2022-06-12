@@ -12,7 +12,7 @@ import physics.Vector2D;
  * once the shot is done we can extract the fitness function,
  * which is the distance between the target and the ball
  *
- * It doesn't affect the Ball object from the universe, but makes it's copy
+ * It doesn't affect the Ball object from the universe, but makes its copy
  */
 public class TestShot implements Comparable<TestShot>{
 
@@ -24,7 +24,8 @@ public class TestShot implements Comparable<TestShot>{
     private double testResult = Integer.MAX_VALUE;
     private static final double WATER_PUNISHMENT = 10; // subtract the score when the ball is hit
     private static final double OBSTACLE_PUNISHMENT = 0; // subtract the score when the obstacle is hit
-    private double tolerance = 0.1;
+
+    private double tolerance = 0.025;
 
     public TestShot(Universe universe, Vector2D velocity, Vector2D targetPosition) {
         this.ball = universe.getBall().copyOf();
@@ -75,14 +76,14 @@ public class TestShot implements Comparable<TestShot>{
 
             // target was hit
 
-            if (ball.isOnTarget(this.targetPosition,tolerance)) {
-                ball.setVelocity(new Vector2D(0, 0));
-                ball.setWillMove(false);
-                if (this.heuristics == Heuristics.allPositions) {
-                    this.testResult = 0;
-                    break;
-                }
-            }
+//            if (ball.isOnTarget(this.targetPosition,tolerance)) {
+//                ball.setVelocity(new Vector2D(0, 0));
+//                ball.setWillMove(false);
+//                if (this.heuristics == Heuristics.allPositions) {
+//                    this.testResult = 0;
+//                    break;
+//                }
+//            }
 
             // ball is in the resting position: target was not hit
             if ((!ball.isMoving() && !ball.getWillMove())) {
