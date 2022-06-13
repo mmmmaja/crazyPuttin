@@ -6,6 +6,7 @@ import Main.Universe;
 import objects.FileReader;
 import physics.Vector2D;
 import java.util.Random;
+import java.util.concurrent.CountDownLatch;
 
 
 /**
@@ -13,6 +14,7 @@ import java.util.Random;
  */
 public abstract class Bot implements Runnable {
 
+    CountDownLatch botLatch;
     final Universe universe = Main.getUniverse();
 
     public Vector2D targetPosition = universe.getTarget().getPosition();
@@ -34,6 +36,7 @@ public abstract class Bot implements Runnable {
      * starts the new Thread that runs the shot simulations
      */
     public synchronized void start() {
+        System.out.println("start!");
         this.start = System.nanoTime(); // used to measure the performance of the bot
         this.running = true;
         this.thread = new Thread(this);
@@ -44,11 +47,14 @@ public abstract class Bot implements Runnable {
      * kill the thread and shoot the ball with best velocity
      */
     public synchronized void stop() {
-//        System.out.println(this);
+        System.out.println("stop");
 
         this.running = false;
         if (this.shootBall) {
             shootBall(); // show an animation and update the position of the Ball object
+        }
+        if (this.botLatch != null) {
+            botLatch.countDown();
         }
         try {
             this.thread.join();

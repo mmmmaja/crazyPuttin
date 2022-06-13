@@ -3,6 +3,7 @@ package bot;
 
 import physics.Vector2D;
 import java.util.ArrayList;
+import java.util.concurrent.CountDownLatch;
 
 /**
  * not to be included in this phase
@@ -34,6 +35,14 @@ public class GradientDescentBot extends Bot {
         start();
     }
 
+    public GradientDescentBot(boolean shootBall, Vector2D targetPosition, CountDownLatch botLatch) {
+        this.botLatch = botLatch;
+        this.name = "Gradient Descent Bot";
+        this.targetPosition = targetPosition;
+        this.shootBall = shootBall;
+        start();
+    }
+
 
     @Override
     public void run() {
@@ -48,7 +57,7 @@ public class GradientDescentBot extends Bot {
         velocity = velocity.getUnitVector();
         this.shotCounter++;
         this.bestVelocity = velocity;
-        this.bestResult = new TestShot(velocity, this.targetPosition).getTestResult();
+        this.bestResult = new TestShot(velocity, this.targetPosition, Heuristics.finalPosition).getTestResult();
         boolean play = true;
         ArrayList<Vector2D> testVelocities = new ArrayList<>();
         testVelocities.add(0, velocity);

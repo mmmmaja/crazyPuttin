@@ -96,6 +96,9 @@ public class Ball extends PhysicsEngine implements GameObject {
         if (!willMove) {
             return false;
         }
+        if (this.getCollisionCoordinates(this) != null) {
+            return false;
+        }
         double slope = (Math.sqrt(Math.pow(TerrainGenerator.getSlopeX(position), 2) + Math.pow(TerrainGenerator.getSlopeY(getPosition()), 2)));
         this.willMove = TerrainGenerator.getStaticFrictionCoefficient(position) < slope;
         return willMove;

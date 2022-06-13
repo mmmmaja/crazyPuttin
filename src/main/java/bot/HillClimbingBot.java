@@ -3,11 +3,16 @@ package bot;
 import Main.Shot;
 import physics.Vector2D;
 
+import java.util.concurrent.CountDownLatch;
+
 
 /**
  * iterative algorithm: at each iteration we change the velocity and asses the change by the fitness value
  */
 public class HillClimbingBot extends Bot {
+
+    private int testNumber = 200;
+
 
     public HillClimbingBot() {
         this.targetPosition = universe.getTarget().getPosition();
@@ -33,17 +38,36 @@ public class HillClimbingBot extends Bot {
         start();
     }
 
+    public HillClimbingBot(boolean b, Vector2D temp, CountDownLatch botLatch) {
+        this.targetPosition = temp;
+        this.shootBall = b;
+        this.botLatch = botLatch;
+        start();
+    }
+
+    public HillClimbingBot(int testNumber, boolean b, Vector2D temp, CountDownLatch botLatch) {
+        this.targetPosition = temp;
+        this.testNumber = testNumber;
+        this.shootBall = b;
+        this.botLatch = botLatch;
+        start();
+    }
+
     @Override
     public void run() {
 
-        double step = 0.01;
+        double step = 0.1;
 
-        Vector2D direction =  new Vector2D(
-                this.universe.getTarget().getPosition().getX() - this.universe.getBall().getPosition().getX(),
-                this.universe.getTarget().getPosition().getY() - this.universe.getBall().getPosition().getY()
-        );
-        this.bestVelocity = direction.getUnitVector();
-        this.bestResult = new TestShot(this.bestVelocity, this.targetPosition).getTestResult();
+        CountDownLatch improvedBotLatch = new CountDownLatch(1);
+        Bot bot = new ImprovedRandomBot(this.testNumber, false, this.targetPosition, improvedBotLatch);
+        try {
+            // wait for the response from the Thread
+            improvedBotLatch.await();
+        } catch (InterruptedException ignored) {}
+
+        Vector2D direction =  bot.getBestVelocity();
+        this.bestVelocity = direction;
+        this.bestResult = new TestShot(this.bestVelocity, this.targetPosition, Heuristics.finalPosition).getTestResult();
         double[][] stepArray = {
                 {step, -step},
                 {-step, +step},

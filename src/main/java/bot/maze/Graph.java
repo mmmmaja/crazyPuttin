@@ -81,7 +81,7 @@ public class Graph {
 
                 for (int x = min_x; x <= max_x; x++) {
                     for (int y = min_y; y <= max_y; y++) {
-                        if (i != x || j != y) {
+                        if ((x==i || y==j) && ( i != x || j != y) ) {
                             cell.addNeighbors( graphMatrix[x][y] );
                         }
                     }

@@ -21,6 +21,7 @@ public class FileReader {
     private double muks, muss;
     private Expression expression;
     private long seed;
+    private String heightFunction;
 
 
     public FileReader() {
@@ -53,6 +54,7 @@ public class FileReader {
                         case "mus" -> mus = Double.parseDouble(next[1]);
                         case "heightProfile" -> {
                             String equation = next[1].replaceAll("Math.", "");
+                            this.heightFunction = equation;
                             expression = new ExpressionBuilder(equation)
                                     .variables("x", "y")
                                     .build();
@@ -154,6 +156,10 @@ public class FileReader {
                 .setVariable("y", y);
 
         return expression.evaluate();
+    }
+
+    public String getHeightFunction() {
+        return this.heightFunction;
     }
 
 }

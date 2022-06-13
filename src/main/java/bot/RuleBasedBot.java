@@ -3,27 +3,30 @@ package bot;
 import Main.Main;
 import physics.Vector2D;
 
+import java.util.concurrent.CountDownLatch;
+
 
 public class RuleBasedBot extends Bot {
 
 
     public RuleBasedBot() {
         this.name = "RuleBasedBot";
-        initiate();
+        start();
     }
 
-    public RuleBasedBot(boolean shootBall, Vector2D targetPosition) {
+    public  RuleBasedBot(boolean shootBall, Vector2D targetPosition, CountDownLatch botLatch) {
+        this.botLatch = botLatch;
         this.targetPosition = targetPosition;
         this.shootBall = shootBall;
         this.name = "RuleBasedBot";
-        initiate();
+        start();
     }
 
 
     public RuleBasedBot(boolean shootBall) {
         this.shootBall = shootBall;
         this.name = "RuleBasedBot";
-        initiate();
+        start();
     }
 
     /**
@@ -39,9 +42,9 @@ public class RuleBasedBot extends Bot {
 
     }
 
-    private void initiate() {
 
-
+    @Override
+    public void run() {
         Vector2D direction = getDirection();
 
         // find the correct multiplier for the direction vector based on the distance
@@ -56,8 +59,6 @@ public class RuleBasedBot extends Bot {
         if (this.shootBall) {
             shootBall();
         }
+        stop();
     }
-
-    @Override
-    public void run() {}
 }

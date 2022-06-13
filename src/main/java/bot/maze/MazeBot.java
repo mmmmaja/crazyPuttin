@@ -23,14 +23,29 @@ public class MazeBot extends Bot {
 
         Vector2D velocity = new Vector2D();
 
-        for (int i = 0; i < path.size(); i++) {
+        for (int i = 0; i<path.size(); i++) {
 
             Cell cell = path.get(i);
-
             Vector2D temp = new Vector2D(cell.getX(), cell.getY());
-            RuleBasedBot bot = new RuleBasedBot(false, temp);
 
-            double TOLERANCE = 0.025;
+            // choose a bot depending on the equation of the terrain
+            Bot bot;
+            CountDownLatch botLatch = new CountDownLatch(1);
+            String heightFunction = Main.getUniverse().getFileReader().getHeightFunction();
+            if (heightFunction.equals("0")) {
+                bot = new RuleBasedBot(false, temp, botLatch);
+            }
+            else {
+                bot = new HillClimbingBot(720,false, temp, botLatch);
+            }
+            try {
+                // wait for the response from the Thread
+                botLatch.await();
+            } catch (InterruptedException ignored) {}
+            double TOLERANCE = 0.25;
+            if(cell.getNodeDescription().equals(NodeDescription.target)){
+                TOLERANCE = 0.1;
+            }
             // target was hit!
             if (bot.getBestResult() < TOLERANCE) {
                 velocity = bot.getBestVelocity();

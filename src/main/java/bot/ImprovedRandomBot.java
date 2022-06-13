@@ -2,6 +2,8 @@ package bot;
 
 import physics.Vector2D;
 
+import java.util.concurrent.CountDownLatch;
+
 
 public class ImprovedRandomBot extends Bot {
 
@@ -53,6 +55,14 @@ public class ImprovedRandomBot extends Bot {
         start();
     }
 
+    public ImprovedRandomBot(int i, boolean b, Vector2D temp, CountDownLatch botLatch) {
+        this.targetPosition = temp;
+        this.shootBall = b;
+        this.botLatch = botLatch;
+        this.testNumber = i;
+        start();
+    }
+
     /**
      * @return initial velocity to start random shots (direction from ball to the target)
      */
@@ -70,18 +80,19 @@ public class ImprovedRandomBot extends Bot {
         // direction from ball to target
         Vector2D direction = analiseCourse();
 
-        this.bestVelocity = direction.multiply(5);
-        this.bestResult = new TestShot(bestVelocity, this.targetPosition).getTestResult();
+        this.bestVelocity = direction.multiply(2.5);
+        this.bestResult = new TestShot(bestVelocity, this.targetPosition, Heuristics.finalPosition).getTestResult();
         this.shotCounter++;
 
         // target was hit
         if (this.bestResult == 0) {
             stop();
         }
-        int rangeToSearch = 90;
+        int rangeToSearch = 360;
+        int amountOfShotEachAngle = testNumber/rangeToSearch;
         for (int i = 0; i < testNumber; i++) {
             // widen the range of the rotation angle
-            if (range < rangeToSearch && i % 40 == 0 ) {
+            if (range < rangeToSearch && i % amountOfShotEachAngle == 0 ) {
                 range++;
             }
             this.shotCounter++;
