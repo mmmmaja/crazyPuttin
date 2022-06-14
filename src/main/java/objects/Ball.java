@@ -179,4 +179,9 @@ public class Ball extends PhysicsEngine implements GameObject {
     public Ball copyOf() {
         return new Ball(this.position);
     }
+
+    public void setState(Vector2D[] state) {
+        setPosition(state[0]);
+        setVelocity(state[1]);
+    }
 }
