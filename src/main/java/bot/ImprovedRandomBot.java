@@ -39,7 +39,7 @@ public class ImprovedRandomBot extends Bot {
         if (this.bestResult == 0) {
             stop();
         }
-        int rangeToSearch = 360;
+        int rangeToSearch = 90;
         int amountOfShotEachAngle = testNumber/rangeToSearch;
         for (int i = 0; i < testNumber; i++) {
             // widen the range of the rotation angle
@@ -54,6 +54,8 @@ public class ImprovedRandomBot extends Bot {
 
             // Euclidean distance between the ball and the target
             double result = new TestShot(velocity, this.targetPosition).getTestResult();
+            System.out.println("Improved->  "   + result);
+
             if (result < this.bestResult) {
                 this.bestResult = result;
                 this.bestVelocity = velocity;

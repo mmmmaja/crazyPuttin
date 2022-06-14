@@ -25,7 +25,7 @@ public class MazeBot extends Bot {
 
         Vector2D velocity = new Vector2D();
 
-        for (int i = 0; i<path.size(); i++) {
+        for (int i = path.size()-1; i>0; i--) {
 
             Cell cell = path.get(i);
             Vector2D temp = new Vector2D(cell.getX(), cell.getY());
@@ -41,8 +41,8 @@ public class MazeBot extends Bot {
                 TOLERANCE = 0.025;
             }
             else {
-                bot = new HillClimbingBot();
-                bot.setTestNumber(720);
+                bot = new ImprovedRandomBot();
+                bot.setTestNumber(90);
             }
             bot.setShootBall(false);
             bot.setTargetPosition(temp);

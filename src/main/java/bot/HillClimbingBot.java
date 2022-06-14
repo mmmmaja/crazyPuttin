@@ -13,14 +13,14 @@ public class HillClimbingBot extends Bot {
 
 
     public HillClimbingBot() {
-        this.testNumber = 200;
+        this.testNumber = 50;
         this.name = "HillClimbingBot";
     }
 
     @Override
     public void run() {
 
-        double step = 0.1;
+        double step = 0.01;
 
         CountDownLatch improvedBotLatch = new CountDownLatch(1);
 
@@ -55,7 +55,7 @@ public class HillClimbingBot extends Bot {
 
                 Vector2D testVelocity = new Vector2D(this.bestVelocity.getX() + stepCase[0], this.bestVelocity.getY() + stepCase[1]);
                 double testResult = new TestShot(testVelocity, this.targetPosition).getTestResult();
-
+                System.out.println(testResult);
                 // target was reached: break all
                 if (testResult == 0) {
                     this.bestVelocity = testVelocity;
