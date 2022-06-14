@@ -46,34 +46,5 @@ public class RK4 extends Solver {
 		return new Vector2D[]{ newPosition , newVelocity };
 	}
 
-	public static void main(String[] args) {
-		PhysicsEngine physicsEngine = new PhysicsEngine();
 
-
-		Solver[] solvers = {new RK4() , new Heuns3() , new RK2() , new Euler()};
-
-		ArrayList<Double> errors = new ArrayList<>();
-
-		int[] iteration = { 2  , 4   , 5  , 10 , 20  , 50  , 100  , 200   , 500  , 1000 , 2000   };
-		double[] steps =  { 0.5, 0.25, 0.2, 0.1, 0.05, 0.02, 0.01 , 0.005 , 0.002, 0.001, 0.0005 };
-
-		for(int s = 0 ; s < solvers.length ; s++) {
-			Solver solver = solvers[s];
-			for (int i = 0; i < steps.length ; i++) {
-				Vector2D vel = new Vector2D(2, 0);
-				Vector2D pos = new Vector2D(0, 0);
-				physicsEngine.setSTEP(steps[i]);
-				Vector2D[] v4 = solver.calculateNext(pos, vel, steps[i]);
-				for (int j = 1; j < iteration[i]; j++) {
-					pos = v4[0];
-					vel = v4[1];
-					v4 = solver.calculateNext(pos, vel, steps[i]);
-				}
-				errors.add(0, Math.abs(v4[0].getX()));
-			}
-			System.out.println(solver.getClass().getName().substring(8) +"="+errors+";");
-			errors = new ArrayList<>();
-		}
-
-	}
 }

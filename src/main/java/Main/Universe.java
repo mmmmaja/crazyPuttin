@@ -37,6 +37,7 @@ public class Universe {
         createTarget();
         createPole();
         createFlag();
+
     }
 
 
@@ -114,7 +115,8 @@ public class Universe {
 
     public Solver getSolver(){
         if (solver == null) {
-            return new RK4();
+            solver = new Euler();
+            return solver;
         }
         return this.solver;
     }

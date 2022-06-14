@@ -6,7 +6,6 @@ import physics.Vector2D;
 
 public class RuleBasedBot extends Bot {
 
-
     public RuleBasedBot() {
         this.name = "RuleBasedBot";
     }

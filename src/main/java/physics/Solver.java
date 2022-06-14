@@ -4,14 +4,18 @@ import objects.Ball;
 import objects.GameObject;
 import objects.TerrainGenerator;
 
+import java.util.ArrayList;
+
 public abstract class Solver {
+	public ArrayList<Vector2D> positions = new ArrayList<>();
+	public ArrayList<Vector2D> velocities = new ArrayList<>();
+	public ArrayList<Vector2D> accelerations = new ArrayList<>();
 
 	public final PhysicsEngine PHYSICS = new PhysicsEngine();
 	public final double H = PHYSICS.getSTEP();
 
 	public void nextStep(GameObject gameObject) {
-		GameObject imaginary = new Ball( gameObject.getPosition()) ;
-		imaginary.setVelocity(gameObject.getVelocity());
+
 
 		Vector2D[] next = calculateNext(gameObject.getPosition() , gameObject.getVelocity(), H );
 		Vector2D nextPosition = next[0];
@@ -21,9 +25,11 @@ public abstract class Solver {
 		if (TerrainGenerator.getHeight(nextPosition) >= 0 ) {
 
 			if ( PHYSICS.getCollisionCoordinates(gameObject) != null){
+				clearPreviousSteps();
 				Vector2D[] collision_state = PHYSICS.getCollisionCoordinates(gameObject);
-
+				System.out.println(collision_state[1]);
 				gameObject.setState(collision_state[0] , collision_state[1]);
+
 				next = calculateNext(gameObject.getPosition() , gameObject.getVelocity(), H );
 				nextPosition = next[0];
 				nextVelocity = next[1];
@@ -51,6 +57,12 @@ public abstract class Solver {
 
 	public Vector2D[] calculateNext(Vector2D position , Vector2D velocity , double H) {
 		return null;
+	}
+
+	public void clearPreviousSteps(){
+		velocities = new ArrayList<>();
+		positions = new ArrayList<>();
+		accelerations = new ArrayList<>() ;
 	}
 
 }

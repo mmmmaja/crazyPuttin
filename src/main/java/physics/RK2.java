@@ -35,11 +35,6 @@ public class RK2 extends Solver {
 		Vector2D newPosition = new Vector2D(x , y);
 		Vector2D newVelocity = new Vector2D(vX,vY);
 
-		double hL_x = newPosition.getX()/position.getX() - 1 ;
-		double hL_y = newPosition.getX()/position.getX() - 1 ;
-
-		if (hL_x <= -2 || hL_y <= -2)
-			System.out.println("UNSTABLE !!!!!!!!!!!!!!!");
 
 		return new Vector2D[]{ newPosition , newVelocity };
 	}

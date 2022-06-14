@@ -294,7 +294,7 @@ public class Display extends Application {
         });
 
         // add the box with the solver options
-        String[] solverList = {"RK4" , "RK2" , "Euler","Heuns3"};
+        String[] solverList = {"RK4" , "RK2" , "Euler","Heuns3","AdamsMoulton3","AdamsBashforth3"};
         ComboBox<String> solverComboBox = new ComboBox(FXCollections.observableArrayList(solverList));
         solverComboBox.setValue("RK4");
         gridPane.add(new HBox(30, solverComboBox), 0, position++);
@@ -305,6 +305,8 @@ public class Display extends Application {
                 case "RK2" -> universe.setSolver(new RK2());
                 case "Euler" -> universe.setSolver(new Euler());
                 case "Heun3" -> universe.setSolver(new Heuns3());
+                case "AdamsMoulton3" -> universe.setSolver(new AdamsMoulton3());
+                case "AdamsBashforth"-> universe.setSolver(new AdamsBashforth3());
             }
             shootBall(xVel, yVel);
         });
