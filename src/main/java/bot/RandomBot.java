@@ -9,44 +9,12 @@ import physics.Vector2D;
  */
 public class RandomBot extends Bot {
 
-    private int testNumber = 1500;
-
 
     public RandomBot() {
+        this.testNumber = 1500;
         this.name = "Random Bot";
-        start();
     }
 
-
-    /**
-     * @param testNumber number of simulations to run the bot
-     */
-    public RandomBot(int testNumber) {
-        this.testNumber = testNumber;
-        this.name = "Random Bot";
-        start();
-    }
-
-    /**
-     * @param testNumber number of simulations to run the bot
-     * @param shootBall true if at the end shot should be display and Ball() object modified
-     */
-    public RandomBot(int testNumber, boolean shootBall) {
-        this.testNumber = testNumber;
-        this.shootBall = shootBall;
-        this.targetPosition = this.universe.getTarget().getPosition();
-        this.name = "Random Bot";
-        start();
-    }
-
-    /**
-     * @param targetPosition to be specified for the maze bot
-     */
-    public RandomBot(Vector2D targetPosition) {
-        this.targetPosition = targetPosition;
-        this.name = "Random Bot";
-        start();
-    }
 
     /**
      * simulate the shot and pick the best one of all
@@ -80,5 +48,4 @@ public class RandomBot extends Bot {
         }
         stop();
     }
-
 }

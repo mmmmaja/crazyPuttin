@@ -3,31 +3,14 @@ package bot;
 import Main.Main;
 import physics.Vector2D;
 
-import java.util.concurrent.CountDownLatch;
-
 
 public class RuleBasedBot extends Bot {
 
 
     public RuleBasedBot() {
         this.name = "RuleBasedBot";
-        start();
     }
 
-    public  RuleBasedBot(boolean shootBall, Vector2D targetPosition, CountDownLatch botLatch) {
-        this.botLatch = botLatch;
-        this.targetPosition = targetPosition;
-        this.shootBall = shootBall;
-        this.name = "RuleBasedBot";
-        start();
-    }
-
-
-    public RuleBasedBot(boolean shootBall) {
-        this.shootBall = shootBall;
-        this.name = "RuleBasedBot";
-        start();
-    }
 
     /**
      * @return initial velocity to start random shots, which is direction from ball to the target
