@@ -56,14 +56,14 @@ public class RecursiveMaze {
                 // disable the borders of the map to be covered with walls
                 // border of the map without the maze
                 int BORDER = 2;
-                if (
-                        cell.getIndex().getY() < BORDER
-                        || cell.getIndex().getY() > this.graph.getGraphMatrix()[0].length - 2 * BORDER
-                        || cell.getIndex().getX() < BORDER
-                        || cell.getIndex().getX() > this.graph.getGraphMatrix().length - 2 * BORDER
-                ) {
-                    cell.setWall(false);
-                }
+//                if (
+//                        cell.getIndex().getY() < BORDER
+//                        || cell.getIndex().getY() > this.graph.getGraphMatrix()[0].length - 2 * BORDER
+//                        || cell.getIndex().getX() < BORDER
+//                        || cell.getIndex().getX() > this.graph.getGraphMatrix().length - 2 * BORDER
+//                ) {
+//                    cell.setWall(false);
+//                }
             }
         }
         // start with the cell being the position of the ball
@@ -75,7 +75,7 @@ public class RecursiveMaze {
             do {
                 if (
                         (current.getX() != graph.getStartingCell().getX() || current.getY() != graph.getStartingCell().getY())
-                        && (graph.getStartingCell().distanceTo(current) > Terrain.TERRAIN_WIDTH * 0.3)
+                                && (graph.getStartingCell().distanceTo(current) > Terrain.TERRAIN_WIDTH * 0.3)
                 ) {
                     this.newTargetPosition = new Vector2D(current.getX(), current.getY());
                 }
@@ -184,17 +184,61 @@ public class RecursiveMaze {
         int maxY = (int) (index.getY() + step);
 
         if (minX >= 0) {
-            neighbours.add(graph.getGraphMatrix()[minX][(int) index.getY()]);
+            if (!isBorder(minX, (int) index.getY())) {
+                neighbours.add(graph.getGraphMatrix()[minX][(int) index.getY()]);
+            }
         }
         if (minY >= 0) {
-            neighbours.add(graph.getGraphMatrix()[(int) index.getX()][minY]);
+            if (!isBorder((int) index.getX(), minY)) {
+                neighbours.add(graph.getGraphMatrix()[(int) index.getX()][minY]);
+            }
         }
         if (maxX < graph.getGraphMatrix().length) {
-            neighbours.add(graph.getGraphMatrix()[maxX][(int) index.getY()]);
+            if (!isBorder(maxX, (int) index.getY())) {
+                neighbours.add(graph.getGraphMatrix()[maxX][(int) index.getY()]);
+            }
         }
         if (maxY < graph.getGraphMatrix()[0].length) {
-            neighbours.add(graph.getGraphMatrix()[(int) index.getX()][maxY]);
+            if (!isBorder((int) index.getX(), maxY)) {
+                neighbours.add(graph.getGraphMatrix()[(int) index.getX()][maxY]);
+            }
         }
         return neighbours;
+    }
+
+    private boolean isBorder(int i, int j) {
+        if (i - 1 >= 0) {
+            if (graph.getGraphMatrix()[i - 1][j].getNodeDescription().equals(NodeDescription.water)) {
+                return true;
+            }
+        }
+        else {
+            return true;
+        }
+        if (i + 1 < graph.getGraphMatrix().length) {
+            if (graph.getGraphMatrix()[i + 1][j].getNodeDescription().equals(NodeDescription.water)) {
+                return true;
+            }
+        }
+        else {
+            return true;
+        }
+        if (j - 1 >= 0) {
+            if (graph.getGraphMatrix()[i][j - 1].getNodeDescription().equals(NodeDescription.water)) {
+                return true;
+            }
+        }
+        else {
+            return true;
+        }
+        if (j + 1 < graph.getGraphMatrix()[0].length) {
+            if (graph.getGraphMatrix()[i][j + 1].getNodeDescription().equals(NodeDescription.water)) {
+                return true;
+            }
+        }
+        else {
+            return true;
+        }
+        return false;
     }
 }
