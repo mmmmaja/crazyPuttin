@@ -11,46 +11,10 @@ import java.util.concurrent.CountDownLatch;
  */
 public class HillClimbingBot extends Bot {
 
-    private int testNumber = 200;
-
 
     public HillClimbingBot() {
-        this.targetPosition = universe.getTarget().getPosition();
-        start();
-    }
-
-    /**
-     * extended to fit AStarBot properties (specify the target position)
-     */
-    public HillClimbingBot(Vector2D targetPosition) {
-        this.targetPosition = targetPosition;
-        start();
-    }
-
-    public HillClimbingBot(boolean shootBall) {
-        this.shootBall = shootBall;
-        start();
-    }
-
-    public HillClimbingBot(boolean shootBall, Vector2D targetPosition) {
-        this.targetPosition = targetPosition;
-        this.shootBall = shootBall;
-        start();
-    }
-
-    public HillClimbingBot(boolean b, Vector2D temp, CountDownLatch botLatch) {
-        this.targetPosition = temp;
-        this.shootBall = b;
-        this.botLatch = botLatch;
-        start();
-    }
-
-    public HillClimbingBot(int testNumber, boolean b, Vector2D temp, CountDownLatch botLatch) {
-        this.targetPosition = temp;
-        this.testNumber = testNumber;
-        this.shootBall = b;
-        this.botLatch = botLatch;
-        start();
+        this.testNumber = 200;
+        this.name = "HillClimbingBot";
     }
 
     @Override
@@ -59,14 +23,19 @@ public class HillClimbingBot extends Bot {
         double step = 0.1;
 
         CountDownLatch improvedBotLatch = new CountDownLatch(1);
-        Bot bot = new ImprovedRandomBot(this.testNumber, false, this.targetPosition, improvedBotLatch);
+
+        ImprovedRandomBot bot = new ImprovedRandomBot();
+        bot.setTestNumber(this.testNumber);
+        bot.setShootBall(false);
+        bot.setTargetPosition(this.targetPosition);
+        bot.setBotLatch(improvedBotLatch);
+
         try {
             // wait for the response from the Thread
             improvedBotLatch.await();
         } catch (InterruptedException ignored) {}
 
-        Vector2D direction =  bot.getBestVelocity();
-        this.bestVelocity = direction;
+        this.bestVelocity = bot.getBestVelocity();
         this.bestResult = new TestShot(this.bestVelocity, this.targetPosition, Heuristics.finalPosition).getTestResult();
         double[][] stepArray = {
                 {step, -step},
@@ -105,10 +74,4 @@ public class HillClimbingBot extends Bot {
         stop();
     }
 
-
-    @Override
-    public void shootBall() {
-        new Shot(this.bestVelocity);
-        System.out.println(this);
-    }
 }

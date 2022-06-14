@@ -16,6 +16,7 @@ public abstract class Bot implements Runnable {
 
     CountDownLatch botLatch;
     final Universe universe = Main.getUniverse();
+    int testNumber;
 
     public Vector2D targetPosition = universe.getTarget().getPosition();
     boolean shootBall = true; // if shot is just simulation do not shoot the ball
@@ -141,5 +142,21 @@ public abstract class Bot implements Runnable {
 
     public Heuristics getHeuristics() {
         return heuristics;
+    }
+
+    public void setBotLatch(CountDownLatch botLatch) {
+        this.botLatch = botLatch;
+    }
+
+    public void setTargetPosition(Vector2D targetPosition) {
+        this.targetPosition = targetPosition;
+    }
+
+    public void setShootBall(boolean shootBall) {
+        this.shootBall = shootBall;
+    }
+
+    public void setTestNumber(int testNumber) {
+        this.testNumber = testNumber;
     }
 }

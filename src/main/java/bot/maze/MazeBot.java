@@ -3,6 +3,7 @@ package bot.maze;
 import Main.Main;
 import Main.Shot;
 import bot.*;
+import graphics.Display;
 import physics.Vector2D;
 import java.util.ArrayList;
 import java.util.concurrent.CountDownLatch;
@@ -15,11 +16,12 @@ public class MazeBot extends Bot {
 
     public MazeBot() {
         this.path = findPath();
-        start();
     }
+
 
     @Override
     public void run() {
+        double TOLERANCE = 0.25;
 
         Vector2D velocity = new Vector2D();
 
@@ -32,21 +34,31 @@ public class MazeBot extends Bot {
             Bot bot;
             CountDownLatch botLatch = new CountDownLatch(1);
             String heightFunction = Main.getUniverse().getFileReader().getHeightFunction();
-            if (heightFunction.equals("0")) {
-                bot = new RuleBasedBot(false, temp, botLatch);
+
+            // for flat surface use Rule Based bot
+            if (!heightFunction.contains("x") && !heightFunction.contains("y")) {
+                bot = new RuleBasedBot();
+                TOLERANCE = 0.025;
             }
             else {
-                bot = new HillClimbingBot(720,false, temp, botLatch);
+                bot = new HillClimbingBot();
+                bot.setTestNumber(720);
             }
+            bot.setShootBall(false);
+            bot.setTargetPosition(temp);
+            bot.setBotLatch(botLatch);
+            bot.start();
+
             try {
                 // wait for the response from the Thread
                 botLatch.await();
             } catch (InterruptedException ignored) {}
-            double TOLERANCE = 0.25;
+
+
             if(cell.getNodeDescription().equals(NodeDescription.target)){
                 TOLERANCE = 0.1;
             }
-            // target was hit!
+            // target was hit
             if (bot.getBestResult() < TOLERANCE) {
                 velocity = bot.getBestVelocity();
             }
@@ -60,6 +72,8 @@ public class MazeBot extends Bot {
                     // wait for the response from the Thread
                     latch.await();
                 } catch (InterruptedException ignored) {}
+                Display.shotCounter++;
+                Display.updatePanel();
                 i--;
             }
         }
@@ -68,6 +82,8 @@ public class MazeBot extends Bot {
         try {
             latch.await();
         } catch (InterruptedException ignored) {}
+        Display.shotCounter++;
+        Display.updatePanel();
         stop();
     }
 

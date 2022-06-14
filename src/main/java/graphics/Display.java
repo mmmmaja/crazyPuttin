@@ -49,9 +49,6 @@ public class Display extends Application {
     private SmartGroup group;
     private GridPane gridPane;
 
-    public SmartGroup getGroup() {
-        return group;
-    }
 
     @Override
     public void start(Stage stage) {
@@ -92,12 +89,6 @@ public class Display extends Application {
 
         // zoomIn, zoomOut added on scroll event
         scene.addEventHandler(ScrollEvent.SCROLL, event -> camera.setTranslateZ(camera.getTranslateZ() + event.getDeltaY()/5));
-
-        Image rockImage = new Image("file:src/main/java/resources/rockTexture.jpg");
-        PhongMaterial rockMaterial = new PhongMaterial();
-        rockMaterial.setDiffuseMap(rockImage);
-
-
 
         // exit the application when the window is closed by the user
         stage.setOnCloseRequest(t -> {
@@ -242,7 +233,7 @@ public class Display extends Application {
      */
     private int addCheckBoxes(int position) {
 
-        CheckBox checkBoxObstacles = new CheckBox("add obstacles");
+        CheckBox checkBoxObstacles = new CheckBox("add obstacle");
         checkBoxObstacles.setSelected(false);
         this.gridPane.add(checkBoxObstacles, 0, position++);
         checkBoxObstacles.selectedProperty().addListener((observable, oldValue, newValue) -> {
@@ -263,10 +254,10 @@ public class Display extends Application {
     /**
      * updates x and y position of the ball on the panel
      * update counter of the shoots and point counter
-     * @param x position x of the ball
-     * @param y position y of the ball
      */
-    public static void updatePanel(double x, double y) {
+    public static void updatePanel() {
+        double x = Main.getUniverse().getBall().getPosition().getX();
+        double y = Main.getUniverse().getBall().getPosition().getY();
         textPosition.setText("Number of shots: " + shotCounter +
                 "\nNumber of points: " + pointCounter +
                 "\n\nX-position:  " + String.format("%.5f", x)  +
@@ -298,7 +289,7 @@ public class Display extends Application {
             if (!universe.getBall().isMoving()) {
                 universe.resetBall();
                 universe.updateBallPosition();
-                updatePanel(universe.getBall().getPosition().getX(),universe.getBall().getPosition().getY());
+                updatePanel();
             }
         });
 
@@ -342,11 +333,11 @@ public class Display extends Application {
 
            botButton.setOnMouseClicked(mouseEvent -> {
                switch (botComboBox.getValue()) {
-                   case "randomBot" -> new RandomBot();
-                   case "ruleBasedBot" -> new RuleBasedBot();
-                   case "improvedRandomBot" -> new ImprovedRandomBot();
-                   case "gradientDescentBot" -> new GradientDescentBot();
-                   case "hillClimbingBot" -> new HillClimbingBot();
+                   case "randomBot" -> new RandomBot().start();
+                   case "ruleBasedBot" -> new RuleBasedBot().start();
+                   case "improvedRandomBot" -> new ImprovedRandomBot().start();
+                   case "gradientDescentBot" -> new GradientDescentBot().start();
+                   case "hillClimbingBot" -> new HillClimbingBot().start();
                    case "mazeBot" -> aStarVisualization();
                }
         });
@@ -357,6 +348,7 @@ public class Display extends Application {
     private void aStarVisualization() {
 
         MazeBot mazeBot = new MazeBot();
+        mazeBot.start();
         ArrayList<Cell> cells = mazeBot.findPath();
 
         int h  = 60 ;
@@ -411,7 +403,7 @@ public class Display extends Application {
             // subtract the points of the water was hit
             if (TerrainGenerator.getHeight(this.universe.getBall().getPosition()) < 0) {
                 pointCounter--;
-                updatePanel(this.universe.getBall().getPosition().getX(),this.universe.getBall().getPosition().getY());
+                updatePanel();
             }
         }
     }
