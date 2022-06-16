@@ -21,11 +21,19 @@ public class MazeBot extends Bot {
 
     @Override
     public void run() {
-        double TOLERANCE = 0.25;
+        int index = Math.min(path.size()-1 ,10) ;
+        while(evaluate(index)){
+            index++;
+        }
+
+
+    }
+    public boolean evaluate(int index){
+        double TOLERANCE = 1;
 
         Vector2D velocity = new Vector2D();
 
-        for (int i = path.size()-1; i>0; i--) {
+        for (int i = index; i>=0; i--) {
 
             Cell cell = path.get(i);
             Vector2D temp = new Vector2D(cell.getX(), cell.getY());
@@ -36,14 +44,15 @@ public class MazeBot extends Bot {
             String heightFunction = Main.getUniverse().getFileReader().getHeightFunction();
 
             // for flat surface use Rule Based bot
-            if (!heightFunction.contains("x") && !heightFunction.contains("y")) {
-                bot = new RuleBasedBot();
-                TOLERANCE = 0.025;
-            }
-            else {
-                bot = new ImprovedRandomBot();
-                bot.setTestNumber(90);
-            }
+//            if (!heightFunction.contains("x") && !heightFunction.contains("y")) {
+//
+//                bot = new RuleBasedBot();
+//                TOLERANCE = Main.getUniverse().getTarget().getCylinder().getRadius();
+//            }
+//            else {
+                bot = new RandomBot();
+                bot.setTestNumber(1500);
+//            }
             bot.setShootBall(false);
             bot.setTargetPosition(temp);
             bot.setBotLatch(botLatch);
@@ -56,15 +65,15 @@ public class MazeBot extends Bot {
 
 
             if(cell.getNodeDescription().equals(NodeDescription.target)){
-                TOLERANCE = 0.1;
+                TOLERANCE = Main.getUniverse().getTarget().getCylinder().getRadius()/2.d;
             }
             // target was hit
             if (bot.getBestResult() < TOLERANCE) {
-                velocity = bot.getBestVelocity();
-            }
+                if(i == index && (index != path.size()-1))
+                    return true;
 
-            // not possible to reach this point, shoot the ball to the previous point
-            else {
+                velocity = bot.getBestVelocity();
+
                 // latch is used to wait for the Thread from the Shot class to stop before going further in this class
                 CountDownLatch latch = new CountDownLatch(1);
                 new Shot(velocity, latch);
@@ -74,17 +83,10 @@ public class MazeBot extends Bot {
                 } catch (InterruptedException ignored) {}
                 Display.shotCounter++;
                 Display.updatePanel();
-                i--;
+                return false;
             }
         }
-        CountDownLatch latch = new CountDownLatch(1);
-        new Shot(velocity, latch);
-        try {
-            latch.await();
-        } catch (InterruptedException ignored) {}
-        Display.shotCounter++;
-        Display.updatePanel();
-        stop();
+        return false ;
     }
 
 

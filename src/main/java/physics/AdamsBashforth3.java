@@ -4,9 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class AdamsBashforth3 extends Solver{
-    private ArrayList<Vector2D> positions = new ArrayList<>();
-    private ArrayList<Vector2D> velocities = new ArrayList<>();
-    private ArrayList<Vector2D> accelerations = new ArrayList<>();
     public AdamsBashforth3(){
         positions = new ArrayList<>();
         velocities = new ArrayList<>();

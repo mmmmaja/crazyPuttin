@@ -148,5 +148,15 @@ public class Vector2D implements Vector {
                 this.y + y
         );
     }
+    public Vector2D scaleDown(double scale){
+        double magnitude = this.getMagnitude();
+        if(this.getMagnitude()>scale){
+
+            x = x/magnitude*scale;
+            y = y/magnitude*scale;
+            return this;
+        }
+        return this;
+    }
 
 }

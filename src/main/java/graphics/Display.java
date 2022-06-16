@@ -327,10 +327,11 @@ public class Display extends Application {
                 "randomBot" ,
                 "improvedRandomBot",
                 "hillClimbingBot",
-                "mazeBot"
+                "mazeBot",
+                "GradientDescent"
         };
         ComboBox<String> botComboBox = new ComboBox(FXCollections.observableArrayList(botList));
-        botComboBox.setValue("mazeBot");
+        botComboBox.setValue("gradientDescentBot");
         gridPane.add(new HBox(30, botComboBox), 0, position++);
 
            botButton.setOnMouseClicked(mouseEvent -> {
@@ -341,6 +342,7 @@ public class Display extends Application {
                    case "gradientDescentBot" -> new GradientDescentBot().start();
                    case "hillClimbingBot" -> new HillClimbingBot().start();
                    case "mazeBot" -> aStarVisualization();
+
                }
         });
         return position;
@@ -352,7 +354,8 @@ public class Display extends Application {
         MazeBot mazeBot = new MazeBot();
         mazeBot.start();
         ArrayList<Cell> cells = mazeBot.findPath();
-
+        this.group.getChildren().removeAll(this.universe.getPathVisualizations());
+        this.universe.deletePathVisualizations();
         int h  = 60 ;
         int s  = 1 ;
         int b  = 1 ;

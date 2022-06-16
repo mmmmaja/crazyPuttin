@@ -66,6 +66,9 @@ public class Universe {
         // adding grass material
         PhongMaterial grassMaterial = new PhongMaterial();
         grassMaterial.setDiffuseColor(Color.PURPLE);
+    // adding grass material
+        PhongMaterial grass2Material = new PhongMaterial();
+        grass2Material.setDiffuseColor(Color.PURPLE);
 
         // adding water material
         PhongMaterial waterMaterial = new PhongMaterial();
@@ -87,7 +90,7 @@ public class Universe {
         meshViewWater.setCullFace(CullFace.NONE);
         meshViewWater.setDrawMode(DrawMode.FILL);
 
-        this.meshViews = new MeshView[] {meshViewGrass, meshViewWater,meshViewSandPit};
+        this.meshViews = new MeshView[] {meshViewGrass, meshViewWater , meshViewSandPit};
     }
 
 

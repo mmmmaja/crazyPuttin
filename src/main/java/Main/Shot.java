@@ -19,7 +19,7 @@ public class Shot extends Display implements Runnable {
     // used to inform other users of the Thread that the action is finished
     private CountDownLatch latch = null;
 
-    public static int SPEED = 120; // speed for the ball animation
+    public static int SPEED = 60; // speed for the ball animation
 
     private final Universe universe = Main.getUniverse();
     private final Ball ball;

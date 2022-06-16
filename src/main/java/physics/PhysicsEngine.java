@@ -11,7 +11,7 @@ import java.util.ArrayList;
 public class PhysicsEngine {
 
 	private static final double g = 9.81;
-	public static double STEP = 0.004;
+	public static double STEP = 0.016;
 	private static final double STOP = STEP;
 
 	private final double errorTolerance = 0.01;

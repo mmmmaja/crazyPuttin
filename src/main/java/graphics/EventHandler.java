@@ -102,14 +102,14 @@ public class EventHandler {
 
 
             Vector2D clickPosition = new Vector2D(
-                    pickResult.getIntersectedPoint().getX(),
-                    pickResult.getIntersectedPoint().getY()
+                    Math.ceil(pickResult.getIntersectedPoint().getX())-0.5,
+                    Math.ceil(pickResult.getIntersectedPoint().getY())-0.5
             );
             // add the OBSTACLE
             if (group.getObstaclesOn()) {
 
                 // if not a target or a ball
-                if (!collides(clickPosition, 0.6)) {
+                if (!collides(clickPosition, 0.5)) {
 
                     Obstacle obstacle = new Obstacle(clickPosition);
                     System.out.println(clickPosition);

@@ -23,7 +23,7 @@ public abstract class Bot implements Runnable {
 
     String name; // name to be set for each bot type
     Vector2D bestVelocity = new Vector2D(0, 0); // velocity that gives the closest position to the target
-    double bestResult = Integer.MAX_VALUE; // distance between the target and the ball
+    double bestResult = universe.getBall().getPosition().getEuclideanDistance(targetPosition); // distance between the target and the ball
     int shotCounter = 0; // number of simulations run
 
     protected long start; // start of the simulations
@@ -49,7 +49,7 @@ public abstract class Bot implements Runnable {
      */
     public synchronized void stop() {
         System.out.println("stop");
-
+        System.out.println(this);
         this.running = false;
         if (this.shootBall) {
             shootBall(); // show an animation and update the position of the Ball object
@@ -86,7 +86,7 @@ public abstract class Bot implements Runnable {
 
     public String toString() {
         return name + ": " +
-                "\nBest velocity: " + this.bestVelocity +
+                "\nBest velocity: " + this.bestVelocity +  " " + "Magnitude: " + this.bestVelocity.getMagnitude() +
                 "\nresult: " + this.bestResult +
                 "\nshotCounter: " + this.shotCounter;
     }

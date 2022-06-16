@@ -11,8 +11,8 @@ public abstract class Solver {
 	public ArrayList<Vector2D> velocities = new ArrayList<>();
 	public ArrayList<Vector2D> accelerations = new ArrayList<>();
 
-	public final PhysicsEngine PHYSICS = new PhysicsEngine();
-	public final double H = PHYSICS.getSTEP();
+	public PhysicsEngine PHYSICS = new PhysicsEngine();
+	public double H = PHYSICS.getSTEP();
 
 	public void nextStep(GameObject gameObject) {
 
@@ -27,7 +27,7 @@ public abstract class Solver {
 			if ( PHYSICS.getCollisionCoordinates(gameObject) != null){
 				clearPreviousSteps();
 				Vector2D[] collision_state = PHYSICS.getCollisionCoordinates(gameObject);
-				System.out.println(collision_state[1]);
+//				System.out.println(collision_state[1]);
 				gameObject.setState(collision_state[0] , collision_state[1]);
 
 				next = calculateNext(gameObject.getPosition() , gameObject.getVelocity(), H );
@@ -65,5 +65,12 @@ public abstract class Solver {
 		accelerations = new ArrayList<>() ;
 	}
 
+	public PhysicsEngine getPHYSICS() {
+		return PHYSICS;
+	}
+
+	public void setPHYSICS(PhysicsEngine PHYSICS) {
+		this.PHYSICS = PHYSICS;
+	}
 }
 

@@ -69,7 +69,7 @@ public class TestShot implements Comparable<TestShot>{
             if (universe.getSolver().PHYSICS.getCollisionCoordinates(ball) != null ) {
                 distance += OBSTACLE_PUNISHMENT;
             }
-            if (distance < this.testResult && this.heuristics == Heuristics.allPositions) {
+            if (this.heuristics.equals(Heuristics.allPositions) && distance < this.testResult ) {
                 this.testResult = distance;
             }
 

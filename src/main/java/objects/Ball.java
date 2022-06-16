@@ -10,9 +10,8 @@ import physics.Vector2D;
 
 public class Ball extends PhysicsEngine implements GameObject {
 
-    private double RADIUS = 0.05;
+    private double RADIUS = 0.1;
     private static final double MASS = 0.0459;
-
     private Vector2D position;
     private Vector2D previousPosition;
     private Vector2D velocity;
@@ -22,13 +21,12 @@ public class Ball extends PhysicsEngine implements GameObject {
 
 
     public Ball(Vector2D position) {
-        this.position = position;
+        this.position = position ;
         this.previousPosition = position ;
         this.velocity = new Vector2D(0,0);
         this.willMove = false;
         createSphere();
     }
-
 
     /**
      * create the Sphere object that will be added to the Display
@@ -39,7 +37,7 @@ public class Ball extends PhysicsEngine implements GameObject {
         this.sphere.setTranslateX(this.position.getX());
         this.sphere.setTranslateY(this.position.getY());
         this.sphere.setTranslateZ((-TerrainGenerator.getHeight(position) - 2 * RADIUS));
-        Material material = new PhongMaterial(Color.WHITESMOKE);
+        Material material = new PhongMaterial(Color.DARKRED);
         this.sphere.setMaterial(material);
     }
 

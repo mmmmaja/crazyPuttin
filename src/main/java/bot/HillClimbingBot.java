@@ -29,7 +29,7 @@ public class HillClimbingBot extends Bot {
         bot.setShootBall(false);
         bot.setTargetPosition(this.targetPosition);
         bot.setBotLatch(improvedBotLatch);
-
+        bot.start();
         try {
             // wait for the response from the Thread
             improvedBotLatch.await();
@@ -54,7 +54,7 @@ public class HillClimbingBot extends Bot {
             for (double[] stepCase : stepArray) {
 
                 Vector2D testVelocity = new Vector2D(this.bestVelocity.getX() + stepCase[0], this.bestVelocity.getY() + stepCase[1]);
-                double testResult = new TestShot(testVelocity, this.targetPosition).getTestResult();
+                double testResult = new TestShot(testVelocity, this.targetPosition,Heuristics.finalPosition).getTestResult();
                 System.out.println(testResult);
                 // target was reached: break all
                 if (testResult == 0) {
