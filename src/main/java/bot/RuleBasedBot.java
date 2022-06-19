@@ -7,7 +7,7 @@ import physics.Vector2D;
 public class RuleBasedBot extends Bot {
 
     public RuleBasedBot() {
-        this.name = "RuleBasedBot";
+        setName("RuleBasedBot");
     }
 
 
@@ -16,8 +16,8 @@ public class RuleBasedBot extends Bot {
      */
     private Vector2D getDirection() {
         Vector2D direction =  new Vector2D(
-                this.targetPosition.getX() - Main.getUniverse().getBall().getPosition().getX(),
-                this.targetPosition.getY() - Main.getUniverse().getBall().getPosition().getY()
+                this.getTargetPosition().getX() - Main.getUniverse().getBall().getPosition().getX(),
+                this.getTargetPosition().getY() - Main.getUniverse().getBall().getPosition().getY()
         );
         direction = direction.getUnitVector();
         return direction;
@@ -30,15 +30,15 @@ public class RuleBasedBot extends Bot {
         Vector2D direction = getDirection();
 
         // find the correct multiplier for the direction vector based on the distance
-        double distance = this.targetPosition.getEuclideanDistance(universe.getBall().getPosition());
+        double distance = this.getTargetPosition().getEuclideanDistance(universe.getBall().getPosition());
         double g = 9.81;
         double c = Math.sqrt(2 * g * universe.getFileReader().getKineticFriction() * distance);
 
-        this.bestVelocity = direction.multiply(c);
-        this.bestResult = new TestShot(this.bestVelocity, this.targetPosition, Heuristics.finalPosition).getTestResult();
-        this.shotCounter = 1;
+        setBestVelocity(direction.multiply(c));
+        setBestResult(new TestShot(getBestVelocity(), getTargetPosition(), Heuristics.finalPosition).getTestResult());
+        setShotCounter(1);
 
-        if (this.shootBall) {
+        if (getShootBall()) {
             shootBall();
         }
         stop();

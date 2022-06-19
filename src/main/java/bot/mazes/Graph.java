@@ -1,4 +1,4 @@
-package bot.maze;
+package bot.mazes;
 
 
 import Main.*;
@@ -6,8 +6,7 @@ import objects.*;
 import physics.Vector2D;
 
 /**
- * class that holds the graph consisting of cells
- * used for creating mazes and for the mazeBot
+ * class that holds the graph consisting of cells used for creating mazes and for the mazeBot and A* algorithm
  */
 public class Graph {
 
@@ -16,19 +15,22 @@ public class Graph {
     private final Universe universe = Main.getUniverse();
 
     private final double STEP = Terrain.STEP;
-    private final int WIDTH = (int)(Terrain.TERRAIN_WIDTH/STEP * 2);
-    private final int HEIGHT = (int)(Terrain.TERRAIN_HEIGHT/STEP * 2);
+    private final int WIDTH = (int) (Terrain.TERRAIN_WIDTH / STEP * 2 - 1);
+    private final int HEIGHT = (int) (Terrain.TERRAIN_HEIGHT / STEP * 2);
 
-    private Vector2D ballPosition;
-    private Vector2D target ;
+    private final Vector2D ballPosition;
+    private final Vector2D targetPosition;
 
+    // cell that is on the position where the ball is
     private Cell startingCell;
+
+    // cell that is on the position where the target is
     private Cell targetCell;
 
     public Graph() {
 
         this.ballPosition = universe.getBall().getPosition();
-        this.target = universe.getTarget().getPosition();
+        this.targetPosition = universe.getTarget().getPosition();
 
         createGraphMatrix();
     }
@@ -44,16 +46,8 @@ public class Graph {
             for (int j = 0, y = -Terrain.TERRAIN_HEIGHT ; j < HEIGHT; j++ , y+=STEP) {
                 Cell cell = new Cell(x, y);
 
-                if (x == Math.round(ballPosition.getX()) && y == Math.round(ballPosition.getY())) {
-                    this.startingCell = cell;
-                }
-
-                if ( x == (int)target.getX()  && y == (int)target.getY()) {
-                    targetCell = cell;
-                }
-
-                cell.setNodeDescription(nodeDescription(x, y));
-                cell.setAllCosts(target, ballPosition);
+                cell.setNodeDescription(nodeDescription(cell));
+                cell.setAllCosts(targetPosition, ballPosition);
                 cell.setIndex(i, j);
 
                 this.graphMatrix[i][j] = cell ;
@@ -61,6 +55,7 @@ public class Graph {
             }
         }
     }
+
 
     /**
      * adds the neighbours to each cell from this.graphMatrix
@@ -75,14 +70,14 @@ public class Graph {
 
                 Cell cell = graphMatrix[i][j];
                 int min_x = Math.max(0 , i - 1);
-                int max_x = Math.min(WIDTH - 1 , i + 1);
+                int max_x = Math.min(this.WIDTH - 1 , i + 1);
                 int min_y = Math.max(0 , j - 1);
-                int max_y = Math.min(HEIGHT - 1 , j + 1);
+                int max_y = Math.min(this.HEIGHT - 1 , j + 1);
 
                 for (int x = min_x; x <= max_x; x++) {
                     for (int y = min_y; y <= max_y; y++) {
                         if ( ( i != x || j != y) ) {
-                        if(x==i || y==j)
+                        if (x == i || y == j)
                             cell.addNeighbors( graphMatrix[x][y] );
                         }
                     }
@@ -92,22 +87,36 @@ public class Graph {
     }
 
     /**
-     *
-     * @param x position of the cell
-     * @param y position of the cell
      * @return enum describing type of the cell at position (x, y)
      */
-    public NodeDescription nodeDescription(double x , double y ){
+    public NodeDescription nodeDescription(Cell cell){
+        int x = cell.getX();
+        int y = cell.getY();
 
-        if (isInObstacle(x,y))                                      return NodeDescription.obstacle;
-        if (isInTree(x,y))                                          return NodeDescription.tree;
-        if (TerrainGenerator.getHeight(x,y)<0)                      return NodeDescription.water;
-        if (TerrainGenerator.isSand(x,y))                           return NodeDescription.sand;
-        if (ballPosition.getX() == x && ballPosition.getY() == y )  return NodeDescription.start;
-        if (target.getX() == x && ballPosition.getY() == y)         return NodeDescription.target;
+        if (isInObstacle(x, y)) {
+            return NodeDescription.obstacle;
+        }
+        if (isInTree(x, y)) {
+            return NodeDescription.tree;
+        }
+        if (TerrainGenerator.getHeight(x, y) < 0) {
+            return NodeDescription.water;
+        }
+        if (TerrainGenerator.isSand(x,y)) {
+            return NodeDescription.sand;
+        }
+        if (x == Math.round(ballPosition.getX()) && y == Math.round(ballPosition.getY())) {
+            this.startingCell = cell;
+            return NodeDescription.start;
+        }
+        if ( x == (int) targetPosition.getX()  && y == (int) targetPosition.getY()) {
+            targetCell = cell;
+            return NodeDescription.target;
+        }
 
         return NodeDescription.grass;
     }
+
 
     /**
      * @param x position of the cell
@@ -124,6 +133,7 @@ public class Graph {
         return false ;
     }
 
+
     /**
      * @param x position of the cell
      * @param y position of the cell
@@ -136,8 +146,8 @@ public class Graph {
             double obstYPos = obstacle.getPosition().getY();
             double obstDim = obstacle.getDimension();
             if(
-                    (x <= obstXPos+obstDim/2+rBall && x >= obstXPos-obstDim/2-rBall) &&
-                    (y <= obstYPos+obstDim/2+rBall && y >= obstYPos-obstDim/2-rBall)
+                    (x <= obstXPos+obstDim/2 + rBall && x >= obstXPos-obstDim/2 - rBall) &&
+                    (y <= obstYPos+obstDim/2 + rBall && y >= obstYPos-obstDim/2 - rBall)
             ) {
                 return true;
             }
@@ -145,39 +155,23 @@ public class Graph {
         return false;
     }
 
-
+    /**
+     * @return array filled with cells corresponding to actual terrain read from file
+     */
     public Cell[][] getGraphMatrix() {
         return graphMatrix;
     }
 
-    public void setGraphMatrix(Cell[][] graphMatrix) {
-        this.graphMatrix = graphMatrix;
-    }
-
-    public double getSTEP() {
-        return STEP;
-    }
-
-    public Vector2D getBallPosition() {
-        return ballPosition;
-    }
-
-    public void setBallPosition(Vector2D ballPosition) {
-        this.ballPosition = ballPosition;
-    }
-
-    public Vector2D getTarget() {
-        return target;
-    }
-
-    public void setTarget(Vector2D target) {
-        this.target = target;
-    }
-
+    /**
+     * @return cell that is on the position where the ball is
+     */
     public Cell getStartingCell() {
         return startingCell;
     }
 
+    /**
+     * @return cell that is on the position where the target is
+     */
     public Cell getTargetCell() {
         return targetCell;
     }

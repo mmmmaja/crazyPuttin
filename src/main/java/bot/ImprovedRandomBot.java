@@ -5,12 +5,13 @@ import physics.Vector2D;
 
 public class ImprovedRandomBot extends Bot {
 
-    private double range = 0; // the range we can rotate the angle of the velocity vector in each iteration
+    // the range we can rotate the angle of the velocity vector in each iteration
+    private double range = 0;
 
 
     public ImprovedRandomBot() {
-        this.testNumber = 360;
-        this.name = "Improved Random Bot";
+        setTestNumber(360);
+        setName("Improved Random Bot");
     }
 
 
@@ -28,43 +29,41 @@ public class ImprovedRandomBot extends Bot {
 
     @Override
     public void run() {
+
         // direction from ball to target
         Vector2D direction = analiseCourse();
 
-        this.bestVelocity = direction.multiply(5);
-        this.bestResult = new TestShot(bestVelocity, this.targetPosition, Heuristics.finalPosition).getTestResult();
-        this.shotCounter++;
+        setBestVelocity(direction.multiply(5));
+        setBestResult(new TestShot(getBestVelocity(), getTargetPosition(), Heuristics.finalPosition).getTestResult());
+        setShotCounter(getShotCounter() + 1);
 
         // target was hit
-        if (this.bestResult == 0) {
+        if (getBestResult() == 0) {
             stop();
         }
         int rangeToSearch = 88;
 
-        int amountOfShotEachAngle = testNumber/rangeToSearch;
+        int amountOfShotEachAngle = getTestNumber() / rangeToSearch;
         if(amountOfShotEachAngle < 1 ) amountOfShotEachAngle = 1;
 
-        for (int i = 0; i < testNumber; i++) {
+        for (int i = 0; i < getTestNumber(); i++) {
             // widen the range of the rotation angle
             if (range < rangeToSearch && i % amountOfShotEachAngle == 0 ) {
                 range++;
             }
-            this.shotCounter++;
+            setShotCounter(getShotCounter() + 1);
 
             Vector2D velocity = direction.
                     multiply(getRandomDoubleBetween(1, 5)).
                     rotate(getRandomWithinTwoRanges(-range, -range, range, range));
-//                    rotate(range);
-            // Euclidean distance between the ball and the target
-            double result = new TestShot(velocity, this.targetPosition,Heuristics.finalPosition).getTestResult();
-//            System.out.println("Improved->  "   + result);
+            double result = new TestShot(velocity, this.getTargetPosition(),Heuristics.finalPosition).getTestResult();
 
-            if (result < this.bestResult) {
-                this.bestResult = result;
-                this.bestVelocity = velocity;
+            if (result < getBestResult()) {
+                setBestResult(result);
+                setBestVelocity(velocity);
             }
             // ball was hit
-            if (this.bestResult == 0.0) {
+            if (getBestResult() == 0) {
                 stop();
             }
         }

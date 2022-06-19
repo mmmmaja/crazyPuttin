@@ -1,4 +1,4 @@
-package bot.maze;
+package bot.mazes;
 
 import Main.Main;
 import objects.Obstacle;
@@ -10,19 +10,26 @@ import java.util.Random;
 
 /**
  * creates the maze with the given difficulty for the MazeBot
+ * maze is random
+ * triggering the maze changes position of the target since we wanted to make sure each time path can be found
+ * levels from 1 to 7
  */
 public class RecursiveMaze {
 
-    public static int step = 4; // how thick the walls are, to be changed by the EventHandler in order to adjust levels
-
-    private final Graph graph;
     private final Random random = new Random();
+
+    // how thick the walls are, to be changed by the EventHandler in order to adjust levels
+    public static int step = 4;
+
+    // representation of the terrain
+    private final Graph graph;
 
     // list of all the cells visited, used for backtracking
     private final ArrayList<Cell> path;
 
     // target will change its position to make sure there is always a path from the ball to the target
     private Vector2D newTargetPosition = new Vector2D(Terrain.TERRAIN_WIDTH, Terrain.TERRAIN_HEIGHT);
+
 
     public RecursiveMaze() {
         this.graph = new Graph();
@@ -32,7 +39,6 @@ public class RecursiveMaze {
         dig();
 
         // change the position of the target and update objects on the Display
-
         Main.getUniverse().getTarget().setPosition(newTargetPosition);
         Main.getUniverse().getPole().setPosition(newTargetPosition);
         Main.getUniverse().getFlag().setPosition(newTargetPosition);
@@ -53,17 +59,6 @@ public class RecursiveMaze {
                 switch (cell.getNodeDescription()) {
                     case tree, obstacle, water -> cell.setWall(false);
                 }
-                // disable the borders of the map to be covered with walls
-                // border of the map without the maze
-                int BORDER = 2;
-//                if (
-//                        cell.getIndex().getY() < BORDER
-//                        || cell.getIndex().getY() > this.graph.getGraphMatrix()[0].length - 2 * BORDER
-//                        || cell.getIndex().getX() < BORDER
-//                        || cell.getIndex().getX() > this.graph.getGraphMatrix().length - 2 * BORDER
-//                ) {
-//                    cell.setWall(false);
-//                }
             }
         }
         // start with the cell being the position of the ball
@@ -79,13 +74,18 @@ public class RecursiveMaze {
                 ) {
                     this.newTargetPosition = new Vector2D(current.getX(), current.getY());
                 }
+
+                // find new cell and start digging again
                 current = nextStep(current);
             }
             while (current != null);
         }
     }
 
-
+    /**
+     * @param current cell that became the grass
+     * @return next Cell that from which we will look for next connections for the maze
+     */
     private Cell nextStep(Cell current) {
 
         ArrayList<Cell> neighbors = findNeighbours(current);
@@ -206,6 +206,10 @@ public class RecursiveMaze {
         return neighbours;
     }
 
+    /**
+     * @return true if Cell on the position (i, j) is a border of the map or water
+     * then it has to be covered with wall
+     */
     private boolean isBorder(int i, int j) {
         if (i - 1 >= 0) {
             if (graph.getGraphMatrix()[i - 1][j].getNodeDescription().equals(NodeDescription.water)) {
@@ -232,13 +236,10 @@ public class RecursiveMaze {
             return true;
         }
         if (j + 1 < graph.getGraphMatrix()[0].length) {
-            if (graph.getGraphMatrix()[i][j + 1].getNodeDescription().equals(NodeDescription.water)) {
-                return true;
-            }
+            return graph.getGraphMatrix()[i][j + 1].getNodeDescription().equals(NodeDescription.water);
         }
         else {
             return true;
         }
-        return false;
     }
 }

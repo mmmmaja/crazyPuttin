@@ -11,8 +11,8 @@ public class RandomBot extends Bot {
 
 
     public RandomBot() {
-        this.testNumber = 1500;
-        this.name = "Random Bot";
+        setTestNumber(1500);
+        setName("Random Bot");
     }
 
 
@@ -22,12 +22,9 @@ public class RandomBot extends Bot {
     @Override
     public void run() {
 
-        for (int i = 0; i < testNumber; i++) {
-            // Thread was killed
-            if (!running) {
-                stop();
-            }
-            this.shotCounter++;
+        for (int i = 0; i < this.getTestNumber(); i++) {
+
+            setShotCounter(getShotCounter() + 1);
 
             // generate random velocity
             Vector2D initialVelocity = new Vector2D(
@@ -36,13 +33,13 @@ public class RandomBot extends Bot {
             );
 
             // Euclidean distance between the ball and the target
-            double result = new TestShot(initialVelocity, this.targetPosition).getTestResult();
-            if (result < this.bestResult) {
-                this.bestResult = result;
-                this.bestVelocity = initialVelocity;
+            double result = new TestShot(initialVelocity, this.getTargetPosition()).getTestResult();
+            if (result < getBestResult()) {
+                setBestResult(result);
+                setBestVelocity(initialVelocity);
             }
             // ball was hit
-            if (this.bestResult == 0.0) {
+            if (getBestResult() == 0) {
                 stop();
             }
         }

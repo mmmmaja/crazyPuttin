@@ -1,4 +1,4 @@
-package bot.maze;
+package bot.mazes;
 
 import Main.Main;
 import Main.Shot;
@@ -8,7 +8,9 @@ import physics.Vector2D;
 import java.util.ArrayList;
 import java.util.concurrent.CountDownLatch;
 
-
+/**
+ * Bot that find the path in the maze
+ */
 public class MazeBot extends Bot {
 
     // list of positions that will lead to the target
@@ -21,19 +23,23 @@ public class MazeBot extends Bot {
 
     @Override
     public void run() {
-        int index = Math.min(path.size()-1 ,10) ;
-        while(evaluate(index)){
+
+        int index = Math.min(path.size() - 1, 10) ;
+        while (evaluate(index)) {
             index++;
         }
-
-
+        stop();
     }
-    public boolean evaluate(int index){
+
+
+    public boolean evaluate(int index) {
+
+        // how close the ball has to reach the target
         double TOLERANCE = 1;
 
-        Vector2D velocity = new Vector2D();
+        Vector2D velocity;
 
-        for (int i = index; i>=0; i--) {
+        for (int i = index; i >= 0; i--) {
 
             Cell cell = path.get(i);
             Vector2D temp = new Vector2D(cell.getX(), cell.getY());
@@ -45,12 +51,12 @@ public class MazeBot extends Bot {
 
             // for flat surface use Rule Based bot
 //            if (!heightFunction.contains("x") && !heightFunction.contains("y")) {
-//
 //                bot = new RuleBasedBot();
 //                TOLERANCE = Main.getUniverse().getTarget().getCylinder().getRadius();
 //            }
+            // for curved terrain choose advanced bot
 //            else {
-                bot = new RandomBot();
+                bot = new HillClimbingBot();
                 bot.setTestNumber(1500);
 //            }
             bot.setShootBall(false);
@@ -63,26 +69,28 @@ public class MazeBot extends Bot {
                 botLatch.await();
             } catch (InterruptedException ignored) {}
 
-
-            if(cell.getNodeDescription().equals(NodeDescription.target)){
-                TOLERANCE = Main.getUniverse().getTarget().getCylinder().getRadius()/2.d;
+            // make final shot more accurate
+            if (cell.getNodeDescription().equals(NodeDescription.target)){
+                TOLERANCE = Main.getUniverse().getTarget().getCylinder().getRadius() / 2.d;
             }
+
             // target was hit
             if (bot.getBestResult() < TOLERANCE) {
-                if(i == index && (index != path.size()-1))
+                if (i == index && (index != path.size() - 1)) {
                     return true;
-
+                }
                 velocity = bot.getBestVelocity();
 
                 // latch is used to wait for the Thread from the Shot class to stop before going further in this class
                 CountDownLatch latch = new CountDownLatch(1);
+                // shoot the ball with bestVelocity
                 new Shot(velocity, latch);
                 try {
                     // wait for the response from the Thread
                     latch.await();
                 } catch (InterruptedException ignored) {}
-                Display.shotCounter++;
-                Display.updatePanel();
+                //Display.shotCounter++;
+                //Display.updatePanel();
                 return false;
             }
         }
@@ -93,6 +101,7 @@ public class MazeBot extends Bot {
 
     /**
      * @return list of Cells on the way from the ball to target
+     * Uses A* algorithm to find the path
      */
     public ArrayList<Cell> findPath(){
 
@@ -103,7 +112,7 @@ public class MazeBot extends Bot {
         graph.connectNeighbors();
 
         Cell start = graph.getStartingCell();
-        Cell target= graph.getTargetCell();
+        Cell target = graph.getTargetCell();
 
         Cell currentCell = start ;
         toVisit.add(start);
@@ -111,10 +120,10 @@ public class MazeBot extends Bot {
         while( !toVisit.isEmpty() && !currentCell.equals(target)) {
             int indexOfWinner = 0 ;
             for (int i = 0 ; i < toVisit.size() ; i++) {
-                if( toVisit.get(i).getTotalCost() < toVisit.get(indexOfWinner).getTotalCost()  )
-
+                if ( toVisit.get(i).getTotalCost() < toVisit.get(indexOfWinner).getTotalCost()  )
                     indexOfWinner = i ;
             }
+
             Cell winner = toVisit.get(indexOfWinner) ;
             currentCell= winner;
             if ( winner.equals(target) ) {
@@ -149,8 +158,8 @@ public class MazeBot extends Bot {
 
         path.remove(0);
         Cell targetPosition = new Cell(
-                (int) this.targetPosition.getX(),
-                (int) this.targetPosition.getY()
+                (int) this.getTargetPosition().getX(),
+                (int) this.getTargetPosition().getY()
         );
         path.add(targetPosition);
         return path;

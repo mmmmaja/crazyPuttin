@@ -19,7 +19,7 @@ public class Shot extends Display implements Runnable {
     // used to inform other users of the Thread that the action is finished
     private CountDownLatch latch = null;
 
-    public static int SPEED = 60; // speed for the ball animation
+    public static int SPEED = 40; // speed for the ball animation
 
     private final Universe universe = Main.getUniverse();
     private final Ball ball;
@@ -65,7 +65,7 @@ public class Shot extends Display implements Runnable {
      * kills the thread when the ball is in the resting position
      */
     public synchronized void stop() {
-        Display.updatePanel();
+        //Display.updatePanel();
         this.ball.setWillMove(false);
         this.running = false;
 
@@ -105,7 +105,7 @@ public class Shot extends Display implements Runnable {
 
                 // target was hit
                 if(ball.isOnTarget(universe.getTarget())) {
-                    Display.pointCounter++;
+                    // Display.pointCounter++;
                     ball.setVelocity(new Vector2D(0,0));
                     ball.setWillMove(false);
                     stop();

@@ -3,8 +3,8 @@ package graphics;
 import Main.Main;
 import Main.Shot;
 import bot.*;
-import bot.maze.Cell;
-import bot.maze.MazeBot;
+import bot.mazes.Cell;
+import bot.mazes.MazeBot;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -55,6 +55,7 @@ public class Display extends Application {
 
         // all the objects are added to smartGroup (rotation built-in)
         group = new SmartGroup();
+
         // displayPane holds all other panes of the frame
         Pane displayPane = new Pane();
         displayPane.setPrefSize(FRAME_WIDTH, FRAME_HEIGHT);
@@ -313,6 +314,7 @@ public class Display extends Application {
         return position;
     }
 
+    Bot bot;
 
     /**
      * adds buttons that trigger the specific bot based on the comboBox
@@ -335,24 +337,33 @@ public class Display extends Application {
         gridPane.add(new HBox(30, botComboBox), 0, position++);
 
            botButton.setOnMouseClicked(mouseEvent -> {
-               switch (botComboBox.getValue()) {
-                   case "randomBot" -> new RandomBot().start();
-                   case "ruleBasedBot" -> new RuleBasedBot().start();
-                   case "improvedRandomBot" -> new ImprovedRandomBot().start();
-                   case "gradientDescentBot" -> new GradientDescentBot().start();
-                   case "hillClimbingBot" -> new HillClimbingBot().start();
-                   case "mazeBot" -> aStarVisualization();
+               if (bot != null) {
+                   if (bot.isRunning()) {
+                       bot.stop();
+                   }
+               }
 
+               switch (botComboBox.getValue()) {
+                   case "randomBot" -> bot = new RandomBot();
+                   case "ruleBasedBot" -> bot = new RuleBasedBot();
+                   case "improvedRandomBot" -> bot = new ImprovedRandomBot();
+                   case "gradientDescentBot" -> bot = new GradientDescentBot();
+                   case "hillClimbingBot" -> bot = new HillClimbingBot();
+                   case "mazeBot" -> bot = new MazeBot();
+               }
+
+               bot.start();
+
+               if (botComboBox.getValue().equals("mazeBot")) {
+                   aStarVisualization((MazeBot) bot);
                }
         });
         return position;
     }
 
 
-    private void aStarVisualization() {
+    private void aStarVisualization(MazeBot mazeBot) {
 
-        MazeBot mazeBot = new MazeBot();
-        mazeBot.start();
         ArrayList<Cell> cells = mazeBot.findPath();
         this.group.getChildren().removeAll(this.universe.getPathVisualizations());
         this.universe.deletePathVisualizations();

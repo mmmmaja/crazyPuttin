@@ -4,6 +4,7 @@ package Main;
 import graphics.Display;
 import javafx.application.Application;
 import objects.FileReader;
+import tests.MazeExperiments;
 
 
 public class Main {
