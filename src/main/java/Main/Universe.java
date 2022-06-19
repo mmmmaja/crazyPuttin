@@ -66,7 +66,8 @@ public class Universe {
         // adding grass material
         PhongMaterial grassMaterial = new PhongMaterial();
         grassMaterial.setDiffuseColor(Color.PURPLE);
-    // adding grass material
+
+        // adding grass material
         PhongMaterial grass2Material = new PhongMaterial();
         grass2Material.setDiffuseColor(Color.PURPLE);
 
@@ -115,7 +116,10 @@ public class Universe {
         this.flag = new Flag(this.fileReader.getTargetPosition());
     }
 
-
+    /**
+     *
+     * @return Euler solver is this.Solver is null otherwise solver that was assign to this universe
+     */
     public Solver getSolver(){
         if (solver == null) {
             solver = new Euler();
@@ -124,6 +128,9 @@ public class Universe {
         return this.solver;
     }
 
+    /**
+     * @param solver Euler solver is this.Solver is null otherwise solver that was assign to this universe
+     */
     public void setSolver(Solver solver){
         this.solver = solver;
     }

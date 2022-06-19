@@ -87,7 +87,7 @@ public class Ball extends PhysicsEngine implements GameObject {
     }
 
     /**
-     * @return true is ball is in movement, false otherwise
+     * @return true is ball is in movement in nextStep, false otherwise
      */
     @Override
     public boolean getWillMove() {
@@ -102,6 +102,9 @@ public class Ball extends PhysicsEngine implements GameObject {
         return willMove;
     }
 
+    /**
+     * @param willMove if ball is in movement in nextStep, false otherwise
+     */
     @Override
     public void setWillMove(boolean willMove){
         this.willMove = willMove;
@@ -124,6 +127,9 @@ public class Ball extends PhysicsEngine implements GameObject {
         return position;
     }
 
+    /**
+     * @param position of the ball
+     */
     @Override
     public void setPosition(Vector2D position) {
         this.position = position;
@@ -137,6 +143,9 @@ public class Ball extends PhysicsEngine implements GameObject {
         return new Vector2D(RADIUS, RADIUS);
     }
 
+    /**
+     * @param dimension of the ball (width and length)
+     */
     @Override
     public void setDimension(Vector2D dimension) {
         this.RADIUS = dimension.getX();
@@ -178,6 +187,9 @@ public class Ball extends PhysicsEngine implements GameObject {
         return new Ball(this.position);
     }
 
+    /**
+     * @param state array of vectors: position and velocity
+     */
     public void setState(Vector2D[] state) {
         setPosition(state[0]);
         setVelocity(state[1]);

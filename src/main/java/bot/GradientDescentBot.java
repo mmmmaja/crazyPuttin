@@ -8,6 +8,7 @@ import java.util.concurrent.CountDownLatch;
 
 public class GradientDescentBot extends Bot {
 
+    // how fast the bot adapts and changes velocity
     private double learningRate = 0.9;
 
 
@@ -15,15 +16,16 @@ public class GradientDescentBot extends Bot {
         setName("Gradient Descent Bot");
     }
 
+    /**
+     * @return initial velocity that was found using improvedRandomBot
+     * initial velocity will be used before triggering GradientDescent
+     */
+    private Vector2D findInitialVelocity() {
 
-    @Override
-    public void run() {
-
-        int power = -8;
-        double stepSize = 0.01;
-
+        // will inform about execution of the Thread
         CountDownLatch improvedBotLatch = new CountDownLatch(1);
 
+        // run improvedRandomBot to find initial velocity, wait for the response
         ImprovedRandomBot bot = new ImprovedRandomBot();
         bot.setTestNumber(getTestNumber());
         bot.setShootBall(false);
@@ -36,12 +38,22 @@ public class GradientDescentBot extends Bot {
             improvedBotLatch.await();
         } catch (InterruptedException ignored) {}
 
-        // bestVelocity was found
+        // initial velocity was found
         Vector2D velocity = bot.getBestVelocity();
         setShotCounter(getShotCounter() + 1);
         setBestVelocity(velocity);
         setBestResult(new TestShot(velocity, this.getTargetPosition(), Heuristics.finalPosition).getTestResult());
+        return velocity;
+    }
 
+
+    @Override
+    public void run() {
+
+        int power = -8;
+        double stepSize = 0.01;
+
+        Vector2D velocity = findInitialVelocity();
         boolean play = true;
         ArrayList<Vector2D> testVelocities = new ArrayList<>();
         testVelocities.add(0, velocity);
@@ -90,19 +102,29 @@ public class GradientDescentBot extends Bot {
             setBestVelocity(getBestVelocity().scaleDown(5));
         }
         setBestResult(new TestShot(getBestVelocity(), this.getTargetPosition(),Heuristics.finalPosition).getTestResult());
+
         stop();
     }
 
-
+    /**
+     * @param velocity to shoot the ball with
+     * @param step difference between adjacent velocities
+     * @return derivativeX of position of the ball
+     */
     public double derivativeX(Vector2D velocity , double step){
         Vector2D position = this.universe.getBall().getPosition();
         Vector2D velocityPlus = velocity.add(step , 0 );
         Vector2D velocityMinus = velocity.add(-1 * step , 0 );
-        double testShotMinus = this.universe.getSolver().calculateNext(position,velocityMinus,step)[0].getX();
-        double testShotPlus = this.universe.getSolver().calculateNext(position,velocityPlus,step)[0].getX();
+        double testShotMinus = this.universe.getSolver().calculateNext(position, velocityMinus, step)[0].getX();
+        double testShotPlus = this.universe.getSolver().calculateNext(position, velocityPlus, step)[0].getX();
         return (testShotPlus - testShotMinus) / ( 2 * step) ;
     }
 
+    /**
+     * @param velocity to shoot the ball with
+     * @param step difference between adjacent velocities
+     * @return derivativeY of position of the ball
+     */
     public double derivativeY(Vector2D velocity, double step){
         Vector2D position = this.universe.getBall().getPosition();
 
@@ -113,7 +135,5 @@ public class GradientDescentBot extends Bot {
 
         return (testShotPlus - testShotMinus) / ( 2 * step) ;
     }
-
-
 
 }

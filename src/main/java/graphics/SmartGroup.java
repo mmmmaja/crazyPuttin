@@ -16,17 +16,11 @@ public class SmartGroup extends Group {
 
     private static final double zoomFactor = 1.2;
 
-    // indicates whether scene can be rotated: rotation is disabled when arrow is drowned on canvas
-    private boolean arrowOn = false;
-
     // indicates whether we can draw the obstacles on the screen
     private boolean obstaclesOn = false;
 
     // indicates whether we can add the trees on the screen
     private boolean treesOn = false;
-
-    // indicates whether we can draw the obstacles on the screen
-    private boolean splineOn = false;
 
     // starting point for x and y
     private double anchorX, anchorY;
@@ -69,26 +63,24 @@ public class SmartGroup extends Group {
 
         scene.setOnMousePressed(mouseEvent -> {
             // rotate the scene
-            if (!this.arrowOn && !this.obstaclesOn) {
-                this.anchorX = mouseEvent.getSceneX();
-                this.anchorY = mouseEvent.getSceneY();
+            this.anchorX = mouseEvent.getSceneX();
+            this.anchorY = mouseEvent.getSceneY();
 
-                this.anchorAngleX = angleX.get();
-                this.anchorAngleY = angleZ.get();
-            }
+            this.anchorAngleX = angleX.get();
+            this.anchorAngleY = angleZ.get();
+
 
         });
 
         scene.setOnMouseDragged(mouseEvent -> {
-            if (!this.arrowOn && !this.obstaclesOn && !this.splineOn) {
-                // lock the X rotation, so we can see under the surface
-                if (this.anchorAngleX - (this.anchorY - mouseEvent.getSceneY()) > -68.0) {
-                    if (this.anchorAngleX - (this.anchorY - mouseEvent.getSceneY()) < 5) {
-                        this.angleX.set(this.anchorAngleX - (this.anchorY - mouseEvent.getSceneY()));
-                    }
-                }
-                this.angleZ.set(this.anchorAngleY + this.anchorX - mouseEvent.getSceneX());
+            // lock the X rotation, so we can see under the surface
+            if (this.anchorAngleX - (this.anchorY - mouseEvent.getSceneY()) > -68.0) {
+               if (this.anchorAngleX - (this.anchorY - mouseEvent.getSceneY()) < 5) {
+                    this.angleX.set(this.anchorAngleX - (this.anchorY - mouseEvent.getSceneY()));
+               }
             }
+            this.angleZ.set(this.anchorAngleY + this.anchorX - mouseEvent.getSceneX());
+
         });
     }
 

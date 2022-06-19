@@ -31,6 +31,7 @@ import physics.*;
 
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.concurrent.CountDownLatch;
 
 
 /**
@@ -314,7 +315,6 @@ public class Display extends Application {
         return position;
     }
 
-    Bot bot;
 
     /**
      * adds buttons that trigger the specific bot based on the comboBox
@@ -333,39 +333,31 @@ public class Display extends Application {
                 "GradientDescent"
         };
         ComboBox<String> botComboBox = new ComboBox(FXCollections.observableArrayList(botList));
-        botComboBox.setValue("gradientDescentBot");
+        botComboBox.setValue("mazeBot");
         gridPane.add(new HBox(30, botComboBox), 0, position++);
 
            botButton.setOnMouseClicked(mouseEvent -> {
-               if (bot != null) {
-                   if (bot.isRunning()) {
-                       bot.stop();
-                   }
-               }
 
                switch (botComboBox.getValue()) {
-                   case "randomBot" -> bot = new RandomBot();
-                   case "ruleBasedBot" -> bot = new RuleBasedBot();
-                   case "improvedRandomBot" -> bot = new ImprovedRandomBot();
-                   case "gradientDescentBot" -> bot = new GradientDescentBot();
-                   case "hillClimbingBot" -> bot = new HillClimbingBot();
-                   case "mazeBot" -> bot = new MazeBot();
-               }
-
-               bot.start();
-
-               if (botComboBox.getValue().equals("mazeBot")) {
-                   aStarVisualization((MazeBot) bot);
+                   case "ruleBasedBot" -> new RuleBasedBot().start();
+                   case  "randomBot" -> new RandomBot();
+                   case "improvedRandomBot" -> new ImprovedRandomBot().start();
+                   case "gradientDescentBot" -> new GradientDescentBot().start();
+                   case "hillClimbingBot" -> new HillClimbingBot().start();
+                   case "mazeBot" -> aStarVisualization(new MazeBot());
                }
         });
         return position;
     }
 
 
-    private void aStarVisualization(MazeBot mazeBot) {
-
-        ArrayList<Cell> cells = mazeBot.findPath();
-        this.group.getChildren().removeAll(this.universe.getPathVisualizations());
+    /**
+     * starts the maze bot and displays visualization of the path
+     */
+    public void aStarVisualization(MazeBot mazeBot) {
+        mazeBot.start();
+        ArrayList<Cell> cells = mazeBot.getPath();
+        group.getChildren().removeAll(this.universe.getPathVisualizations());
         this.universe.deletePathVisualizations();
         int h  = 60 ;
         int s  = 1 ;
@@ -383,10 +375,11 @@ public class Display extends Application {
             PhongMaterial material = new PhongMaterial();
             material.setDiffuseColor(color);
             sphere.setMaterial(material);
-            this.group.getChildren().add(sphere);
+            group.getChildren().add(sphere);
             this.universe.addPathVisualization(sphere);
         }
     }
+
 
 
     /**

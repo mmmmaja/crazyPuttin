@@ -7,14 +7,13 @@ public class Vector2D implements Vector {
     private double x;
     private double y;
 
-    public Vector2D() {
-    }
+    public Vector2D() {}
+
 
     public Vector2D(double x, double y) {
         this.x = x;
         this.y = y;
     }
-
 
 
     public double getX() {
@@ -33,10 +32,16 @@ public class Vector2D implements Vector {
         this.y = y;
     }
 
+    /**
+     * @return magnitude (length of this vector)
+     */
     public double getMagnitude(){
         return Math.sqrt( Math.pow(x,2)  + Math.pow(y,2));
     }
 
+    /**
+     * @return this vector of length 1
+     */
     public Vector2D getUnitVector(){
         return new Vector2D( x / getMagnitude() , y / getMagnitude() );
     }
@@ -45,6 +50,9 @@ public class Vector2D implements Vector {
         return new Vector2D( -1 * x / getMagnitude(), -1 * y / getMagnitude() );
     }
 
+    /**
+     * mutates this vector reversing it
+     */
     public void reverseVector(){
         setX(-x);
         setY(-y);
@@ -60,10 +68,16 @@ public class Vector2D implements Vector {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Vector2D vector2D = (Vector2D) o;
-        if(this.getMagnitude() == 0 || ((Vector2D) o).getMagnitude()==0) return false;
+        if (this.getMagnitude() == 0 || ((Vector2D) o).getMagnitude()==0) {
+            return false;
+        }
         return Double.compare(vector2D.x, x) == 0 && Double.compare(vector2D.y, y) == 0;
     }
 
@@ -89,7 +103,9 @@ public class Vector2D implements Vector {
         this.y = y2;
     }
 
-
+    /**
+     * @return Euclidean distance between this vector and parameter vectoe
+     */
     public double getEuclideanDistance(Vector2D vector2D) {
         return Math.sqrt(
                 Math.pow(this.x - vector2D.getX(), 2) +
@@ -135,12 +151,6 @@ public class Vector2D implements Vector {
             return new Vector2D(0 , 1);
     }
 
-    public Vector2D copyOf() {
-        return new Vector2D(
-                this.x,
-                this.y
-        );
-    }
 
     public Vector2D add(double x , double y) {
         return new Vector2D(
@@ -150,10 +160,10 @@ public class Vector2D implements Vector {
     }
     public Vector2D scaleDown(double scale){
         double magnitude = this.getMagnitude();
-        if(this.getMagnitude()>scale){
+        if (this.getMagnitude() > scale) {
 
-            x = x/magnitude*scale;
-            y = y/magnitude*scale;
+            x = x / magnitude * scale;
+            y = y / magnitude * scale;
             return this;
         }
         return this;

@@ -17,17 +17,32 @@ import physics.Vector2D;
  */
 public class TestShot implements Comparable<TestShot>{
 
-    private final Ball ball;
     private final Universe universe = Main.getUniverse();
+
+    // copy of the ball from Universe class
+    private final Ball ball;
+
+    // where to shoot the ball (could be target or node on the path to the target)
     private final Vector2D targetPosition;
+
+    // indicates how to evaluate the shoot (see enum options)
     private Heuristics heuristics = Heuristics.allPositions;
 
+    // distance between the ball and the target depending on the heuristics
     private double testResult = Integer.MAX_VALUE;
-    private static final double WATER_PUNISHMENT = 10; // subtract the score when the ball is hit
-    private static final double OBSTACLE_PUNISHMENT = 0; // subtract the score when the obstacle is hit
+
+    // subtract the score when the ball is hit
+    private static final double WATER_PUNISHMENT = 10;
+
+    // subtract the score when the obstacle is hit
+    private static final double OBSTACLE_PUNISHMENT = 0;
 
     private double tolerance = 0.025;
 
+    /**
+     * @param velocity to shoot the ball with
+     * @param targetPosition where to shoot the ball (could be target or node on the path to the target)
+     */
     public TestShot(Vector2D velocity, Vector2D targetPosition) {
         this.ball = universe.getBall().copyOf();
         this.ball.setVelocity(velocity);
@@ -36,6 +51,11 @@ public class TestShot implements Comparable<TestShot>{
         initiate(velocity);
     }
 
+    /**
+     * @param velocity to shoot the ball with
+     * @param targetPosition where to shoot the ball (could be target or node on the path to the target)
+     * @param heuristics indicates how to evaluate the shoot (see enum options)
+     */
     public TestShot(Vector2D velocity, Vector2D targetPosition, Heuristics heuristics) {
         this.ball = universe.getBall().copyOf();
         this.ball.setVelocity(velocity);
@@ -44,6 +64,9 @@ public class TestShot implements Comparable<TestShot>{
         initiate(velocity);
     }
 
+    /**
+     * @param velocity to shoot the ball with
+     */
     private void initiate(Vector2D velocity) {
         if (velocity.getMagnitude() > 5) {
             Vector2D unit_vector = velocity.getUnitVector();
@@ -55,13 +78,13 @@ public class TestShot implements Comparable<TestShot>{
 
     private void start() {
 
-        // while ball is moving do
+        // while ball is moving iterate
         while (true) {
 
             universe.getSolver().nextStep(ball);
             double distance = ball.getPosition().getEuclideanDistance(this.targetPosition);
 
-//             subtract points if ball hit the water
+            // subtract points if ball hit the water
             if (TerrainGenerator.getHeight(ball.getPosition()) < 0) {
                 distance+= WATER_PUNISHMENT;
             }

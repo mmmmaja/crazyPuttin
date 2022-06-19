@@ -66,7 +66,7 @@ public abstract class Bot implements Runnable {
      * kill the thread and shoot the ball with best velocity
      */
     public synchronized void stop() {
-        System.out.println(this);
+
         this.running = false;
 
         if (this.shootBall) {

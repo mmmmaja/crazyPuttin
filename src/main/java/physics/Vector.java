@@ -2,20 +2,20 @@ package physics;
 
 public interface Vector {
 
-	public double getX();
+	double getX();
 
-	public double getY();
+	double getY();
 
-	public void setX(double x);
+	void setX(double x);
 
-	public void setY(double y);
+	void setY(double y);
 
-	public double getMagnitude();
+	double getMagnitude();
 
-	public Vector getUnitVector();
+	Vector getUnitVector();
 
-	public Vector reverseUnitVector();
+	Vector reverseUnitVector();
 
-	public void reverseVector();
+	void reverseVector();
 
 }

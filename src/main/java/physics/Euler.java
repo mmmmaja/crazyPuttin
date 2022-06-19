@@ -5,10 +5,17 @@ import java.util.Arrays;
 
 public class Euler extends Solver {
 
+	/**
+	 * @param position of the ball
+	 * @param velocity of the ball
+	 * @param H step
+	 * @return array of new position and velocity for the ball
+	 */
 	public Vector2D[] calculateNext(Vector2D position , Vector2D velocity , double H) {
 		double[] a = { 1 };
 		double[] b = { 1 };
 		double[] c = { 0.d , 1.d };
+
 		double denominator = Arrays.stream(c).sum();
 
 		Vector2D k1a = PHYSICS.calculateAcceleration(position, velocity);
@@ -23,7 +30,10 @@ public class Euler extends Solver {
 		Vector2D newPosition = new Vector2D(x , y);
 		Vector2D newVelocity = new Vector2D(vX,vY);
 
-		return new Vector2D[]{ newPosition , newVelocity };
+		return new Vector2D[] {
+				newPosition ,
+				newVelocity
+		};
 	}
 
 }

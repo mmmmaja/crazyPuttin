@@ -13,17 +13,18 @@ public class HillClimbingBot extends Bot {
 
 
     public HillClimbingBot() {
+
         setTestNumber(50);
         setName("HillClimbingBot");
+
     }
 
+    /**
+     * find initial velocity that with improvedRandomBot
+     * later initial velocity will be used for HillClimbing
+     */
+    private void findInitialVelocity() {
 
-    @Override
-    public void run() {
-
-        double step = 0.01;
-
-        // find the starting velocity
         CountDownLatch improvedBotLatch = new CountDownLatch(1);
         ImprovedRandomBot bot = new ImprovedRandomBot();
         bot.setTestNumber(this.getTestNumber());
@@ -31,12 +32,24 @@ public class HillClimbingBot extends Bot {
         bot.setTargetPosition(this.getTargetPosition());
         bot.setBotLatch(improvedBotLatch);
         bot.start();
+
         try {
             // wait for the response from the Thread
             improvedBotLatch.await();
         } catch (InterruptedException ignored) {}
 
-        setBestResult(new TestShot(getBestVelocity(), getTargetPosition(), Heuristics.finalPosition).getTestResult());
+        setBestResult(new TestShot(bot.getBestVelocity(), bot.getTargetPosition(), Heuristics.finalPosition).getTestResult());
+        setBestVelocity(bot.getBestVelocity());
+        setShotCounter(bot.getShotCounter());
+    }
+
+
+    @Override
+    public void run() {
+
+        findInitialVelocity();
+
+        double step = 0.01;
 
         double[][] stepArray = {
                 {step, -step},
@@ -50,13 +63,15 @@ public class HillClimbingBot extends Bot {
         };
 
         boolean play = true;
+
+        // start iterating adjusting bestVelocity
         while (play && isRunning()) {
             play = false;
             setShotCounter(getShotCounter() + 1);
             for (double[] stepCase : stepArray) {
 
                 Vector2D testVelocity = new Vector2D(getBestVelocity().getX() + stepCase[0], getBestVelocity().getY() + stepCase[1]);
-                double testResult = new TestShot(testVelocity, this.getTargetPosition(),Heuristics.finalPosition).getTestResult();
+                double testResult = new TestShot(testVelocity, this.getTargetPosition(), Heuristics.finalPosition).getTestResult();
                 // target was reached: break all
                 if (testResult == 0) {
                     setBestVelocity(testVelocity);

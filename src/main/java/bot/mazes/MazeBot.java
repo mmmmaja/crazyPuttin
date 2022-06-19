@@ -4,6 +4,11 @@ import Main.Main;
 import Main.Shot;
 import bot.*;
 import graphics.Display;
+import graphics.SmartGroup;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.PhongMaterial;
+import javafx.scene.shape.Sphere;
+import objects.TerrainGenerator;
 import physics.Vector2D;
 import java.util.ArrayList;
 import java.util.concurrent.CountDownLatch;
@@ -13,8 +18,11 @@ import java.util.concurrent.CountDownLatch;
  */
 public class MazeBot extends Bot {
 
+
     // list of positions that will lead to the target
-    private final ArrayList<Cell> path;
+    // is updated within the game loop
+    private ArrayList<Cell> path;
+
 
     public MazeBot() {
         this.path = findPath();
@@ -23,15 +31,22 @@ public class MazeBot extends Bot {
 
     @Override
     public void run() {
+        while (!universe.getBall().isOnTarget(universe.getTarget())) {
 
-        int index = Math.min(path.size() - 1, 10) ;
-        while (evaluate(index)) {
-            index++;
+            int index = Math.min(path.size() - 1, 10);
+            while (evaluate(index)) {
+                index++;
+            }
+            this.path = findPath();
         }
+
         stop();
     }
 
-
+    /**
+     * @param index of the cell from the path list
+     * @return true if it's possible to make shot to the cell at given index
+     */
     public boolean evaluate(int index) {
 
         // how close the ball has to reach the target
@@ -49,16 +64,17 @@ public class MazeBot extends Bot {
             CountDownLatch botLatch = new CountDownLatch(1);
             String heightFunction = Main.getUniverse().getFileReader().getHeightFunction();
 
-            // for flat surface use Rule Based bot
-//            if (!heightFunction.contains("x") && !heightFunction.contains("y")) {
-//                bot = new RuleBasedBot();
-//                TOLERANCE = Main.getUniverse().getTarget().getCylinder().getRadius();
-//            }
-            // for curved terrain choose advanced bot
-//            else {
+            // for flat surface use Rule Based bot: no simulations
+            if (!heightFunction.contains("x") && !heightFunction.contains("y")) {
+                bot = new RuleBasedBot();
+                TOLERANCE = Main.getUniverse().getTarget().getCylinder().getRadius();
+            }
+
+            // for curved terrain choose on of the advanced bot
+            else {
                 bot = new HillClimbingBot();
-                bot.setTestNumber(1500);
-//            }
+                bot.setTestNumber(100);
+            }
             bot.setShootBall(false);
             bot.setTargetPosition(temp);
             bot.setBotLatch(botLatch);
@@ -69,7 +85,7 @@ public class MazeBot extends Bot {
                 botLatch.await();
             } catch (InterruptedException ignored) {}
 
-            // make final shot more accurate
+            // make final shot more accurate: lower the tolerance
             if (cell.getNodeDescription().equals(NodeDescription.target)){
                 TOLERANCE = Main.getUniverse().getTarget().getCylinder().getRadius() / 2.d;
             }
@@ -83,14 +99,20 @@ public class MazeBot extends Bot {
 
                 // latch is used to wait for the Thread from the Shot class to stop before going further in this class
                 CountDownLatch latch = new CountDownLatch(1);
+
                 // shoot the ball with bestVelocity
-                new Shot(velocity, latch);
+                Shot shot = new Shot(velocity);
+                shot.setLatch(latch);
+                shot.start();
+
                 try {
                     // wait for the response from the Thread
                     latch.await();
                 } catch (InterruptedException ignored) {}
-                //Display.shotCounter++;
-                //Display.updatePanel();
+
+                // update panel from Display class
+                Display.shotCounter++;
+                Display.updatePanel();
                 return false;
             }
         }
@@ -105,10 +127,15 @@ public class MazeBot extends Bot {
      */
     public ArrayList<Cell> findPath(){
 
+        // path leading from starting cell to the target cell
         ArrayList<Cell> path = new ArrayList<>();
+
+        // list of cells left to still be visited
         ArrayList<Cell> toVisit = new ArrayList<>() ;
 
         Graph graph = new Graph();
+
+        // find neighbours for each cell
         graph.connectNeighbors();
 
         Cell start = graph.getStartingCell();
@@ -117,7 +144,9 @@ public class MazeBot extends Bot {
         Cell currentCell = start ;
         toVisit.add(start);
 
-        while( !toVisit.isEmpty() && !currentCell.equals(target)) {
+        while ( !toVisit.isEmpty() && !currentCell.equals(target)) {
+
+            // find index of the closest cell
             int indexOfWinner = 0 ;
             for (int i = 0 ; i < toVisit.size() ; i++) {
                 if ( toVisit.get(i).getTotalCost() < toVisit.get(indexOfWinner).getTotalCost()  )
@@ -126,6 +155,8 @@ public class MazeBot extends Bot {
 
             Cell winner = toVisit.get(indexOfWinner) ;
             currentCell= winner;
+
+            // target was found
             if ( winner.equals(target) ) {
                 break;
             }
@@ -133,6 +164,7 @@ public class MazeBot extends Bot {
             winner.setVisited(true);
             toVisit.remove(winner);
 
+            // find the best neighbour and continue looping
             for (Cell neighbor : winner.getNeighbors()) {
                 if (
                         !neighbor.isVisited() &&
@@ -151,12 +183,16 @@ public class MazeBot extends Bot {
             }
         }
 
+        // loop back and find entire path
         while (currentCell.getPrevious() != null) {
             path.add(0, currentCell.getPrevious() );
             currentCell = currentCell.getPrevious();
         }
 
+        // do not include cell with the ball
         path.remove(0);
+
+        // add cell with target
         Cell targetPosition = new Cell(
                 (int) this.getTargetPosition().getX(),
                 (int) this.getTargetPosition().getY()
@@ -164,5 +200,13 @@ public class MazeBot extends Bot {
         path.add(targetPosition);
         return path;
     }
+
+    /**
+     * @return list of positions that lead to the target
+     */
+    public ArrayList<Cell> getPath() {
+        return path;
+    }
+
 
 }

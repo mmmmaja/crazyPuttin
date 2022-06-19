@@ -29,12 +29,23 @@ import java.util.ArrayList;
 public class EventHandler {
 
     private final Universe universe = Main.getUniverse();
+
+    // where all the 3D objects are added to the display
     private final SmartGroup group;
+
+    // material to set for the rocks
     private final PhongMaterial rockMaterial;
 
+    // material to set for the tree cylinder
+    private final PhongMaterial cylinderMaterial;
+
+    /**
+     * @param group where all the 3D objects are added to the display
+     */
     public EventHandler(SmartGroup group) {
         this.group = group;
         this.rockMaterial = createRockMaterial();
+        this.cylinderMaterial = createCylinderMaterial();
 
         mousePressed();
     }
@@ -130,16 +141,22 @@ public class EventHandler {
                     this.group.getChildren().add(tree.getSphere());
 
                     Cylinder cylinder = tree.getCylinder();
-                    Image cylinderImage = new Image("file:src/main/java/resources/Bark Dark_3D_p.png", 0.3, 0.01, false, false);
-                    PhongMaterial cylinderMaterial = new PhongMaterial();
-                    cylinderMaterial.setDiffuseMap(cylinderImage);
-                    cylinder.setMaterial(cylinderMaterial);
-
+                    cylinder.setMaterial(this.cylinderMaterial);
                     this.group.getChildren().add(cylinder);
                     universe.addTree(tree);
                 }
             }
         });
+    }
+
+    /**
+     * @return the material for the tree cylinder
+     */
+    private PhongMaterial createCylinderMaterial() {
+        Image cylinderImage = new Image("file:src/main/java/resources/Bark Dark_3D_p.png", 0.3, 0.01, false, false);
+        PhongMaterial cylinderMaterial = new PhongMaterial();
+        cylinderMaterial.setDiffuseMap(cylinderImage);
+        return cylinderMaterial;
     }
 
 

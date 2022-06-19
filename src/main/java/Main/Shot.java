@@ -16,38 +16,32 @@ import java.util.concurrent.CountDownLatch;
  */
 public class Shot extends Display implements Runnable {
 
+    private final Universe universe = Main.getUniverse();
+
     // used to inform other users of the Thread that the action is finished
     private CountDownLatch latch = null;
 
-    public static int SPEED = 40; // speed for the ball animation
+    // speed for the ball animation
+    public static int SPEED = 40;
 
-    private final Universe universe = Main.getUniverse();
+    // ball object from the Universe class
     private final Ball ball;
+
+    // if thread is running or not
     public boolean running;
+
+    // thread on which all the computations are executed
     private Thread thread;
 
+    // velocity to shoot the ball with
+    private Vector2D velocity;
 
+    /**
+     * @param velocity to shoot the ball with
+     */
     public Shot(Vector2D velocity) {
         this.ball = universe.getBall();
-        this.ball.setVelocity(velocity);
-
-        if (velocity.getMagnitude() > 5) {
-            Vector2D unit_vector = velocity.getUnitVector();
-            this.ball.setVelocity(new Vector2D(unit_vector.getX() * 5, unit_vector.getY() * 5)) ;
-        }
-        start();
-    }
-
-    public Shot(Vector2D velocity, CountDownLatch latch) {
-        this.latch = latch;
-        this.ball = universe.getBall();
-        this.ball.setVelocity(velocity);
-
-        if (velocity.getMagnitude() > 5) {
-            Vector2D unit_vector = velocity.getUnitVector();
-            this.ball.setVelocity(new Vector2D(unit_vector.getX() * 5, unit_vector.getY() * 5)) ;
-        }
-        start();
+        this.velocity = velocity;
     }
 
 
@@ -55,6 +49,14 @@ public class Shot extends Display implements Runnable {
      * starts the animation and creates a new Thread object
      */
     public synchronized void start() {
+
+        if (this.velocity.getMagnitude() > 5) {
+            Vector2D unit_vector = velocity.getUnitVector();
+            this.ball.setVelocity(new Vector2D(unit_vector.getX() * 5, unit_vector.getY() * 5)) ;
+        }
+        else {
+            this.ball.setVelocity(this.velocity);
+        }
 
         running = true;
         this.thread = new Thread(this);
@@ -65,7 +67,9 @@ public class Shot extends Display implements Runnable {
      * kills the thread when the ball is in the resting position
      */
     public synchronized void stop() {
-        //Display.updatePanel();
+
+        Display.updatePanel();
+
         this.ball.setWillMove(false);
         this.running = false;
 
@@ -116,4 +120,10 @@ public class Shot extends Display implements Runnable {
         stop();
     }
 
+    /**
+     * @param latch to inform other object if the thread is finished
+     */
+    public void setLatch(CountDownLatch latch) {
+        this.latch = latch;
+    }
 }

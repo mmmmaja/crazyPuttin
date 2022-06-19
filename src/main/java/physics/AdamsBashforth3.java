@@ -3,14 +3,17 @@ package physics;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class AdamsBashforth3 extends Solver{
-    public AdamsBashforth3(){
-        positions = new ArrayList<>();
-        velocities = new ArrayList<>();
-        accelerations = new ArrayList<>();
-    }
+
+public class AdamsBashforth3 extends Solver {
+
+
+    /**
+     * @param position of the ball
+     * @param velocity of the ball
+     * @param H step
+     * @return array of new position and velocity for the ball
+     */
     public Vector2D[] calculateNext(Vector2D position , Vector2D velocity , double H) {
-//        if(velocities==null || accelerations==null )return new Vector2D[]{position,new Vector2D(0,0)};
 
         double[] c = {23, -16, 5};
         double denominator = 12.d;
@@ -22,8 +25,8 @@ public class AdamsBashforth3 extends Solver{
             velocities.add(next[1]);
             accelerations.add(PHYSICS.calculateAcceleration(next[0], next[1]));
             return next;
-        } else {
-//            System.out.println(velocities.size());
+        }
+        else {
             int n = velocities.size() - 1;
             double prediction_x = positions.get(n).getX()  + H * average(c,new double[]{   velocities.get(n).getX(),    velocities.get(n - 1).getX()   ,   velocities.get(n - 2).getX()},denominator);
             double prediction_y = positions.get(n).getY()  + H * average(c,new double[]{   velocities.get(n).getY(),    velocities.get(n - 1).getY()   ,   velocities.get(n - 2).getY()},denominator);
@@ -45,6 +48,13 @@ public class AdamsBashforth3 extends Solver{
             return new Vector2D[]{predictPos, predictVel};
         }
     }
+
+    /**
+     * @param position of the ball
+     * @param velocity of the ball
+     * @param H step
+     * @return array of new position and velocity for the ball
+     */
     public Vector2D[] bootstrap(Vector2D position , Vector2D velocity , double H) {
 
         double[] a = { 1/2.d , 1/2.d ,1 };
@@ -76,7 +86,10 @@ public class AdamsBashforth3 extends Solver{
         Vector2D newPosition = new Vector2D(x , y);
         Vector2D newVelocity = new Vector2D(vX,vY);
 
-        return new Vector2D[]{ newPosition , newVelocity };
+        return new Vector2D[] {
+                newPosition ,
+                newVelocity
+        };
     }
 
 }

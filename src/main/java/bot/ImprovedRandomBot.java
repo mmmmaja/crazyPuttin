@@ -44,8 +44,9 @@ public class ImprovedRandomBot extends Bot {
         int rangeToSearch = 88;
 
         int amountOfShotEachAngle = getTestNumber() / rangeToSearch;
-        if(amountOfShotEachAngle < 1 ) amountOfShotEachAngle = 1;
-
+        if (amountOfShotEachAngle < 1 ) {
+            amountOfShotEachAngle = 1;
+        }
         for (int i = 0; i < getTestNumber(); i++) {
             // widen the range of the rotation angle
             if (range < rangeToSearch && i % amountOfShotEachAngle == 0 ) {
@@ -58,6 +59,7 @@ public class ImprovedRandomBot extends Bot {
                     rotate(getRandomWithinTwoRanges(-range, -range, range, range));
             double result = new TestShot(velocity, this.getTargetPosition(),Heuristics.finalPosition).getTestResult();
 
+            // better velocity was found
             if (result < getBestResult()) {
                 setBestResult(result);
                 setBestVelocity(velocity);

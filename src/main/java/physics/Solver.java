@@ -1,12 +1,12 @@
 package physics;
 
-import objects.Ball;
+
 import objects.GameObject;
 import objects.TerrainGenerator;
-
 import java.util.ArrayList;
 
 public abstract class Solver {
+
 	public ArrayList<Vector2D> positions = new ArrayList<>();
 	public ArrayList<Vector2D> velocities = new ArrayList<>();
 	public ArrayList<Vector2D> accelerations = new ArrayList<>();
@@ -27,7 +27,6 @@ public abstract class Solver {
 			if ( PHYSICS.getCollisionCoordinates(gameObject) != null){
 				clearPreviousSteps();
 				Vector2D[] collision_state = PHYSICS.getCollisionCoordinates(gameObject);
-//				System.out.println(collision_state[1]);
 				gameObject.setState(collision_state[0] , collision_state[1]);
 
 				next = calculateNext(gameObject.getPosition() , gameObject.getVelocity(), H );
@@ -55,20 +54,34 @@ public abstract class Solver {
 		return sum / denominator;
 	}
 
-	public Vector2D[] calculateNext(Vector2D position , Vector2D velocity , double H) {
-		return null;
-	}
+	/**
+	 * to be implemented by each Solver
+	 * @param position of the ball
+	 * @param velocity of the ball
+	 * @param H step
+	 * @return array of new position and velocity for the ball
+	 */
+	public abstract Vector2D[] calculateNext(Vector2D position , Vector2D velocity , double H);
 
+	/**
+	 * clears all the arrays
+	 */
 	public void clearPreviousSteps(){
 		velocities = new ArrayList<>();
 		positions = new ArrayList<>();
 		accelerations = new ArrayList<>() ;
 	}
 
+	/**
+	 * @return Physics Engine
+	 */
 	public PhysicsEngine getPHYSICS() {
 		return PHYSICS;
 	}
 
+	/**
+	 * @param PHYSICS Physics Engine
+	 */
 	public void setPHYSICS(PhysicsEngine PHYSICS) {
 		this.PHYSICS = PHYSICS;
 	}
