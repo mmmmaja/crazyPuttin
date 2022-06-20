@@ -16,8 +16,8 @@ public class Terrain extends TerrainGenerator {
     private final Vector2D sandPitX;
     private final Vector2D sandPitY;
 
-    public static final int TERRAIN_WIDTH = 20;
-    public static final int TERRAIN_HEIGHT = 20;
+    public static final int TERRAIN_WIDTH = 10;
+    public static final int TERRAIN_HEIGHT = 10;
 
     // the size of each polygon in the mesh
     public static final double STEP = 1;

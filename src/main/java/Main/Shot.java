@@ -22,7 +22,7 @@ public class Shot extends Display implements Runnable {
     private CountDownLatch latch = null;
 
     // speed for the ball animation
-    public static int SPEED = 40;
+    public static int SPEED = 60;
 
     // ball object from the Universe class
     private final Ball ball;
@@ -34,7 +34,7 @@ public class Shot extends Display implements Runnable {
     private Thread thread;
 
     // velocity to shoot the ball with
-    private Vector2D velocity;
+    private final Vector2D velocity;
 
     /**
      * @param velocity to shoot the ball with

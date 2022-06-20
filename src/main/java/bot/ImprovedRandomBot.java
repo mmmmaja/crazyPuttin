@@ -55,9 +55,9 @@ public class ImprovedRandomBot extends Bot {
             setShotCounter(getShotCounter() + 1);
 
             Vector2D velocity = direction.
-                    multiply(getRandomDoubleBetween(1, 5)).
-                    rotate(getRandomWithinTwoRanges(-range, -range, range, range));
-            double result = new TestShot(velocity, this.getTargetPosition(),Heuristics.finalPosition).getTestResult();
+                    multiply(getRandomDoubleBetween(0.1, 5)).
+                    rotate(getRandomWithinTwoRanges(-range - 2, -range, range, range + 2));
+            double result = new TestShot(velocity, this.getTargetPosition(), Heuristics.finalPosition).getTestResult();
 
             // better velocity was found
             if (result < getBestResult()) {

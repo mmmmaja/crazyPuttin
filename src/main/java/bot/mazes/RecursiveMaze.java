@@ -15,6 +15,7 @@ import java.util.Random;
  * levels from 1 to 7
  */
 public class RecursiveMaze {
+    int counter = 0;
 
     private final Random random = new Random();
 
@@ -98,7 +99,8 @@ public class RecursiveMaze {
         if (neighbors.size() != 0) {
 
             // choose random next cell
-            int nextCellIndex = random.nextInt(neighbors.size());
+            int nextCellIndex = counter++ % neighbors.size();
+//            int nextCellIndex = random.nextInt(neighbors.size());
             cell = neighbors.get(nextCellIndex);
             cell.setWall(false);
             this.path.add(cell);

@@ -60,10 +60,7 @@ public class Vector2D implements Vector {
 
     @Override
     public String toString() {
-        return "Vector2D{" +
-                "x=" + x +
-                ", y=" + y +
-                '}';
+        return "Vector2D(" + x + ", " + y + ')';
     }
 
     @Override

@@ -14,8 +14,9 @@ public class HillClimbingBot extends Bot {
 
     public HillClimbingBot() {
 
-        setTestNumber(50);
+        setTestNumber(500);
         setName("HillClimbingBot");
+        setShootBall(true);
 
     }
 
@@ -26,7 +27,7 @@ public class HillClimbingBot extends Bot {
     private void findInitialVelocity() {
 
         CountDownLatch improvedBotLatch = new CountDownLatch(1);
-        ImprovedRandomBot bot = new ImprovedRandomBot();
+        SimulatedAnnealing bot = new SimulatedAnnealing();
         bot.setTestNumber(this.getTestNumber());
         bot.setShootBall(false);
         bot.setTargetPosition(this.getTargetPosition());
@@ -41,6 +42,7 @@ public class HillClimbingBot extends Bot {
         setBestResult(new TestShot(bot.getBestVelocity(), bot.getTargetPosition(), Heuristics.finalPosition).getTestResult());
         setBestVelocity(bot.getBestVelocity());
         setShotCounter(bot.getShotCounter());
+
     }
 
 

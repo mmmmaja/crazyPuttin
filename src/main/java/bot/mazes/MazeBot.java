@@ -8,6 +8,7 @@ import graphics.SmartGroup;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Sphere;
+import objects.Terrain;
 import objects.TerrainGenerator;
 import physics.Vector2D;
 import java.util.ArrayList;
@@ -31,16 +32,20 @@ public class MazeBot extends Bot {
 
     @Override
     public void run() {
-        while (!universe.getBall().isOnTarget(universe.getTarget())) {
 
-            int index = Math.min(path.size() - 1, 10);
-            while (evaluate(index)) {
+        int index = 0;
+        while (!universe.getBall().isOnTarget(universe.getTarget())) {
+            setShotCounter(getShotCounter()+1);
+            int endIndex = Math.min(path.size() - 1, index + 20);
+            while (evaluate(endIndex)) {
+                endIndex++;
                 index++;
             }
-            this.path = findPath();
+            index--;
         }
-
+        test();
         stop();
+
     }
 
     /**
@@ -50,7 +55,7 @@ public class MazeBot extends Bot {
     public boolean evaluate(int index) {
 
         // how close the ball has to reach the target
-        double TOLERANCE = 1;
+        double TOLERANCE = 0.5;
 
         Vector2D velocity;
 
@@ -73,7 +78,7 @@ public class MazeBot extends Bot {
             // for curved terrain choose on of the advanced bot
             else {
                 bot = new HillClimbingBot();
-                bot.setTestNumber(100);
+                bot.setTestNumber(500);
             }
             bot.setShootBall(false);
             bot.setTargetPosition(temp);
@@ -137,7 +142,10 @@ public class MazeBot extends Bot {
 
         // find neighbours for each cell
         graph.connectNeighbors();
-
+        if(graph.getStartingCell() == null){
+            System.out.println("No starting cell");
+            return null ;
+        }
         Cell start = graph.getStartingCell();
         Cell target = graph.getTargetCell();
 
@@ -192,11 +200,9 @@ public class MazeBot extends Bot {
         // do not include cell with the ball
         path.remove(0);
 
-        // add cell with target
-        Cell targetPosition = new Cell(
-                (int) this.getTargetPosition().getX(),
-                (int) this.getTargetPosition().getY()
-        );
+        Cell targetPosition = graph.getGraphMatrix()
+                [Terrain.TERRAIN_WIDTH+ (int) getTargetPosition().getX()]
+                [Terrain.TERRAIN_WIDTH+ (int) getTargetPosition().getY()];
         path.add(targetPosition);
         return path;
     }
@@ -206,6 +212,13 @@ public class MazeBot extends Bot {
      */
     public ArrayList<Cell> getPath() {
         return path;
+    }
+
+
+    private void test() {
+        System.out.println("mazeBot");
+        System.out.println("time: " + getTime());
+        System.out.println("shotCounter: " + getShotCounter());
     }
 
 

@@ -94,7 +94,7 @@ public abstract class Bot implements Runnable {
      * shoot the ball creating new Shot() object with bestVelocity
      */
     public void shootBall() {
-        new Shot(this.bestVelocity);
+        new Shot(this.bestVelocity).start();
     }
 
     /**
@@ -129,10 +129,10 @@ public abstract class Bot implements Runnable {
         double r = random.nextDouble();
         double rand;
         if (r < 0.5) {
-            rand = getRandomDoubleBetween(a1,a2);
+            rand = getRandomDoubleBetween(a1 , a2);
         }
         else {
-            rand = getRandomDoubleBetween(b1,b2);
+            rand = getRandomDoubleBetween(b1 , b2);
         }
         return rand;
     }

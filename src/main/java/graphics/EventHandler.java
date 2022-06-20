@@ -123,7 +123,8 @@ public class EventHandler {
                 if (!collides(clickPosition, 0.5)) {
 
                     Obstacle obstacle = new Obstacle(clickPosition);
-                    System.out.println(clickPosition);
+                    System.out.println("universe.addObstacle(new Obstacle(new "+clickPosition+"));");
+
                     Box box = obstacle.getBox();
                     box.setMaterial(rockMaterial);
 

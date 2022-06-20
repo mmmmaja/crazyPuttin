@@ -71,7 +71,7 @@ public class PhysicsEngine {
 
 		// check all TREES in universe
 		ArrayList<Tree> trees = Main.getUniverse().getTrees();
-		double errorTolerance = 0.01;
+		double errorTolerance = 0.0001;
 		for (Tree tree : trees) {
 			double treeXPos = tree.getPosition().getX();
 			double treeYPos = tree.getPosition().getY();

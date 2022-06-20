@@ -19,6 +19,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
+import javafx.scene.shape.Box;
 import javafx.scene.shape.MeshView;
 import javafx.scene.shape.Sphere;
 import javafx.scene.text.Font;
@@ -26,6 +27,7 @@ import javafx.scene.text.Text;
 
 import javafx.stage.Stage;
 import Main.Universe;
+import objects.Obstacle;
 import objects.TerrainGenerator;
 import physics.*;
 
@@ -117,12 +119,26 @@ public class Display extends Application {
         addTerrainMeshes(); // add three types of meshes from the display that represent the terrain
         addFlag(); // add the flag to the display (pole and the material)
         addPanel(); // adds panel at the right-hand side with the buttons to the frame
+        addObstacles();
 
         // add rest of the objects to the SmartGroup
         this.group.getChildren().add(universe.getBall().getSphere());
         this.group.getChildren().add(universe.getTarget().getCylinder());
     }
 
+
+    private void addObstacles() {
+        Image rockImage = new Image("file:src/main/java/resources/rockTexture.jpg");
+        PhongMaterial rockMaterial = new PhongMaterial();
+        rockMaterial.setDiffuseMap(rockImage);
+
+        for (Obstacle obstacle : universe.getObstacles()) {
+            Box box = obstacle.getBox();
+            box.setMaterial(rockMaterial);
+
+            this.group.getChildren().add(box);
+        }
+    }
 
     /**
      * add the flag and its pole to the display
