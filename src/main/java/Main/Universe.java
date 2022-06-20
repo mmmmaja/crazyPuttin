@@ -37,10 +37,14 @@ public class Universe {
         createTarget();
         createPole();
         createFlag();
-        createObstacles();
+
+        //createObstacles();
 
     }
 
+    /**
+     * in order to create maze-like course from the presentation and experiments
+     */
     private void createObstacles() {
         addObstacle(new Obstacle(new Vector2D(7.5, -9.5)));
         addObstacle(new Obstacle(new Vector2D(7.5, -8.5)));

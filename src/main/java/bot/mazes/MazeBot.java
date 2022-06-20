@@ -32,7 +32,7 @@ public class MazeBot extends Bot {
         // while target has not been hit
         while (!universe.getBall().isOnTarget(universe.getTarget())) {
 
-            int endIndex = Math.min(path.size() - 1, 20);
+            int endIndex = Math.min(path.size() - 1, 10);
             while (evaluate(endIndex)) {
                 endIndex++;
             }
@@ -41,7 +41,6 @@ public class MazeBot extends Bot {
             // update the path to the target after shooting the ball
             this.path = findPath();
         }
-        test();
 
         stop();
 
@@ -74,9 +73,9 @@ public class MazeBot extends Bot {
                 TOLERANCE = Main.getUniverse().getTarget().getCylinder().getRadius();
             }
 
-            // for curved terrain choose on of the advanced bot
+            // for curved terrain choose on of the advanced bot: the best one: hillClimbing
             else {
-                bot = new ImprovedRandomBot();
+                bot = new HillClimbingBot();
                 bot.setTestNumber(1500);
             }
             bot.setShootBall(false);
@@ -217,13 +216,6 @@ public class MazeBot extends Bot {
      */
     public ArrayList<Cell> getPath() {
         return path;
-    }
-
-
-    private void test() {
-        System.out.println("mazeBot");
-        System.out.println("time: " + getTime());
-        System.out.println("shotCounter: " + getShotCounter());
     }
 
 
