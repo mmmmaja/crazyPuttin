@@ -14,6 +14,7 @@ public abstract class Solver {
 	public PhysicsEngine PHYSICS = new PhysicsEngine();
 	public double H = PHYSICS.getSTEP();
 
+
 	public void nextStep(GameObject gameObject) {
 
 

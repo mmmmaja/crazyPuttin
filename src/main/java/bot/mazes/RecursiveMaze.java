@@ -15,6 +15,9 @@ import java.util.Random;
  * levels from 1 to 7
  */
 public class RecursiveMaze {
+
+    // specify if maze is to be created randomly, or we should each time follow the same direction
+    boolean randomMaze = false;
     int counter = 0;
 
     private final Random random = new Random();
@@ -98,9 +101,14 @@ public class RecursiveMaze {
         // there is a possibility to move from the current cell
         if (neighbors.size() != 0) {
 
-            // choose random next cell
-            int nextCellIndex = counter++ % neighbors.size();
-//            int nextCellIndex = random.nextInt(neighbors.size());
+            int nextCellIndex;
+            if (this.randomMaze) {
+                nextCellIndex = random.nextInt(neighbors.size());
+            }
+            else {
+                nextCellIndex = counter++ % neighbors.size();
+            }
+
             cell = neighbors.get(nextCellIndex);
             cell.setWall(false);
             this.path.add(cell);
@@ -139,7 +147,9 @@ public class RecursiveMaze {
      * @return array of obstacles to be added to the display and the universe
      */
     public ArrayList<Obstacle> getObstacles() {
-        double SIDE_LENGTH = 0.5; // side of each obstacle
+
+        // side of each obstacle
+        double SIDE_LENGTH = 0.5;
 
         ArrayList<Obstacle> obstacles = new ArrayList<>();
         for (int i = 0; i < graph.getGraphMatrix().length; i++) {

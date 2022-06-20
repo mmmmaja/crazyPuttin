@@ -5,16 +5,21 @@ import Main.*;
 import objects.*;
 import physics.Vector2D;
 
+import java.util.ArrayList;
+
+
 /**
  * class that holds the graph consisting of cells used for creating mazes and for the mazeBot and A* algorithm
  */
 public class Graph {
 
+    private final Universe universe = Main.getUniverse();
     private Cell[][] graphMatrix;
 
-    private final Universe universe = Main.getUniverse();
-
+    // distance between each cell
     private final double STEP = Terrain.STEP;
+
+    // dimensions of the matrix
     private final int WIDTH = (int) (Terrain.TERRAIN_WIDTH / STEP * 2 - 1);
     private final int HEIGHT = (int) (Terrain.TERRAIN_HEIGHT / STEP * 2);
 
@@ -35,6 +40,7 @@ public class Graph {
         createGraphMatrix();
     }
 
+
     /**
      * fill this.graphMatrix with cells
      */
@@ -46,9 +52,11 @@ public class Graph {
             for (int j = 0, y = -Terrain.TERRAIN_HEIGHT ; j < HEIGHT; j++ , y+=STEP) {
                 Cell cell = new Cell(x, y);
 
+                // specify type of the cell
                 cell.setNodeDescription(nodeDescription(cell));
-                cell.setAllCosts(targetPosition, ballPosition);
+                // indices of this cell in the graphMatrix
                 cell.setIndex(i, j);
+                cell.setAllCosts(targetPosition, ballPosition);
 
                 this.graphMatrix[i][j] = cell ;
 
@@ -58,13 +66,14 @@ public class Graph {
 
 
     /**
-     * adds the neighbours to each cell from this.graphMatrix
+     * adds the neighbours of each cell from this.graphMatrix
      */
     public void connectNeighbors() {
 
         if (this.graphMatrix == null) {
             createGraphMatrix();
         }
+
         for (int i = 0; i < WIDTH; i++) {
             for (int j = 0; j < HEIGHT; j++) {
 
@@ -84,6 +93,28 @@ public class Graph {
                 }
             }
         }
+    }
+
+    /**
+     * @return cell that has a description grass and is adjacent to the one with the ball
+     */
+    public Cell recalculateStartingCell() {
+
+        int x = (int) ballPosition.getX();
+        int y = (int) ballPosition.getY();
+
+        ArrayList<Cell> cellsAroundBall = new ArrayList<>();
+        cellsAroundBall.add(fetCellFromTerrain(x, y));
+        cellsAroundBall.add(fetCellFromTerrain(x, y + 1));
+        cellsAroundBall.add(fetCellFromTerrain(x + 1, y));
+        cellsAroundBall.add(fetCellFromTerrain(x + 1, y + 1));
+
+        for (Cell cell : cellsAroundBall) {
+            if (cell.getNodeDescription() == NodeDescription.grass || cell.getNodeDescription() == NodeDescription.sand) {
+                return cell;
+            }
+        }
+        return null;
     }
 
     /**
@@ -176,4 +207,19 @@ public class Graph {
         return targetCell;
     }
 
+    /**
+     * @return cell that is equivalent to position (x, y) from the terrain
+     */
+    private Cell fetCellFromTerrain(int x , int y){
+        return getGraphMatrix()
+                [Terrain.TERRAIN_WIDTH + x]
+                [Terrain.TERRAIN_HEIGHT + y];
+    }
+
+    /**
+     * @param startingCell cell on which position ball is placed
+     */
+    public void setStartingCell(Cell startingCell) {
+        this.startingCell = startingCell;
+    }
 }

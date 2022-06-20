@@ -8,7 +8,7 @@ import physics.Vector2D;
 public class Obstacle {
 
     private final Vector2D position;
-    public double SIDE_LENGTH = 1;
+    public double SIDE_LENGTH = 0.9;
     private final Box box;
 
     /**

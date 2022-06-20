@@ -27,7 +27,7 @@ public class HillClimbingBot extends Bot {
     private void findInitialVelocity() {
 
         CountDownLatch improvedBotLatch = new CountDownLatch(1);
-        SimulatedAnnealing bot = new SimulatedAnnealing();
+        ImprovedRandomBot bot = new ImprovedRandomBot();
         bot.setTestNumber(this.getTestNumber());
         bot.setShootBall(false);
         bot.setTargetPosition(this.getTargetPosition());
@@ -51,7 +51,7 @@ public class HillClimbingBot extends Bot {
 
         findInitialVelocity();
 
-        double step = 0.01;
+        double step = 0.1;
 
         double[][] stepArray = {
                 {step, -step},
@@ -74,6 +74,7 @@ public class HillClimbingBot extends Bot {
 
                 Vector2D testVelocity = new Vector2D(getBestVelocity().getX() + stepCase[0], getBestVelocity().getY() + stepCase[1]);
                 double testResult = new TestShot(testVelocity, this.getTargetPosition(), Heuristics.finalPosition).getTestResult();
+
                 // target was reached: break all
                 if (testResult == 0) {
                     setBestVelocity(testVelocity);
@@ -81,6 +82,7 @@ public class HillClimbingBot extends Bot {
                     play = false;
                     stop();
                 }
+
                 // climb the hill
                 else if (testResult <= getBestResult()) {
                     setBestVelocity(testVelocity);

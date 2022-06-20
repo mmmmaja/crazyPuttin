@@ -10,7 +10,7 @@ public class ImprovedRandomBot extends Bot {
 
 
     public ImprovedRandomBot() {
-        setTestNumber(360);
+        setTestNumber(1080);
         setName("Improved Random Bot");
     }
 
@@ -41,7 +41,9 @@ public class ImprovedRandomBot extends Bot {
         if (getBestResult() == 0) {
             stop();
         }
-        int rangeToSearch = 88;
+
+        // how wide angle from each side we want to search
+        int rangeToSearch = 180;
 
         int amountOfShotEachAngle = getTestNumber() / rangeToSearch;
         if (amountOfShotEachAngle < 1 ) {

@@ -227,7 +227,7 @@ public class Universe {
      */
     public Solver getSolver(){
         if (solver == null) {
-            solver = new Euler();
+            solver = new RK4();
             return solver;
         }
         return this.solver;

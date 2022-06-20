@@ -4,18 +4,14 @@ import Main.Main;
 import Main.Shot;
 import bot.*;
 import graphics.Display;
-import graphics.SmartGroup;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.PhongMaterial;
-import javafx.scene.shape.Sphere;
 import objects.Terrain;
-import objects.TerrainGenerator;
 import physics.Vector2D;
 import java.util.ArrayList;
 import java.util.concurrent.CountDownLatch;
 
+
 /**
- * Bot that find the path in the maze
+ * Bot that finds the path in the maze using Graph object
  */
 public class MazeBot extends Bot {
 
@@ -33,17 +29,20 @@ public class MazeBot extends Bot {
     @Override
     public void run() {
 
-        int index = 0;
+        // while target has not been hit
         while (!universe.getBall().isOnTarget(universe.getTarget())) {
-            setShotCounter(getShotCounter()+1);
-            int endIndex = Math.min(path.size() - 1, index + 20);
+
+            int endIndex = Math.min(path.size() - 1, 20);
             while (evaluate(endIndex)) {
                 endIndex++;
-                index++;
             }
-            index--;
+            setShotCounter(getShotCounter() + 1);
+
+            // update the path to the target after shooting the ball
+            this.path = findPath();
         }
         test();
+
         stop();
 
     }
@@ -55,7 +54,7 @@ public class MazeBot extends Bot {
     public boolean evaluate(int index) {
 
         // how close the ball has to reach the target
-        double TOLERANCE = 0.5;
+        double TOLERANCE = 0.75;
 
         Vector2D velocity;
 
@@ -77,8 +76,8 @@ public class MazeBot extends Bot {
 
             // for curved terrain choose on of the advanced bot
             else {
-                bot = new HillClimbingBot();
-                bot.setTestNumber(500);
+                bot = new ImprovedRandomBot();
+                bot.setTestNumber(1500);
             }
             bot.setShootBall(false);
             bot.setTargetPosition(temp);
@@ -88,11 +87,12 @@ public class MazeBot extends Bot {
             try {
                 // wait for the response from the Thread
                 botLatch.await();
-            } catch (InterruptedException ignored) {}
+            }
+            catch (InterruptedException ignored) {}
 
             // make final shot more accurate: lower the tolerance
             if (cell.getNodeDescription().equals(NodeDescription.target)){
-                TOLERANCE = Main.getUniverse().getTarget().getCylinder().getRadius() / 2.d;
+                TOLERANCE = Main.getUniverse().getTarget().getCylinder().getRadius() ;
             }
 
             // target was hit
@@ -100,6 +100,7 @@ public class MazeBot extends Bot {
                 if (i == index && (index != path.size() - 1)) {
                     return true;
                 }
+
                 velocity = bot.getBestVelocity();
 
                 // latch is used to wait for the Thread from the Shot class to stop before going further in this class
@@ -110,14 +111,18 @@ public class MazeBot extends Bot {
                 shot.setLatch(latch);
                 shot.start();
 
+
                 try {
                     // wait for the response from the Thread
                     latch.await();
-                } catch (InterruptedException ignored) {}
+                }
+                catch (InterruptedException ignored) {}
 
                 // update panel from Display class
                 Display.shotCounter++;
                 Display.updatePanel();
+
+                // not possible to reach cell at the given index
                 return false;
             }
         }
@@ -139,13 +144,13 @@ public class MazeBot extends Bot {
         ArrayList<Cell> toVisit = new ArrayList<>() ;
 
         Graph graph = new Graph();
+        if (graph.getStartingCell() == null){
+            graph.setStartingCell(graph.recalculateStartingCell());
+        }
 
         // find neighbours for each cell
         graph.connectNeighbors();
-        if(graph.getStartingCell() == null){
-            System.out.println("No starting cell");
-            return null ;
-        }
+
         Cell start = graph.getStartingCell();
         Cell target = graph.getTargetCell();
 
@@ -201,8 +206,8 @@ public class MazeBot extends Bot {
         path.remove(0);
 
         Cell targetPosition = graph.getGraphMatrix()
-                [Terrain.TERRAIN_WIDTH+ (int) getTargetPosition().getX()]
-                [Terrain.TERRAIN_WIDTH+ (int) getTargetPosition().getY()];
+                [Terrain.TERRAIN_WIDTH + (int) getTargetPosition().getX()]
+                [Terrain.TERRAIN_WIDTH + (int) getTargetPosition().getY()];
         path.add(targetPosition);
         return path;
     }
